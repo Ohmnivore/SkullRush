@@ -19,7 +19,8 @@
 	<assets path="assets" />
 	<assets path="../Shared/assets" rename="shared" />
 	
-	<haxelib name="openfl" />
+	<haxelib name="openfl" version="1.3.0"/>
+	<haxelib name="lime" version="0.9.6"/>
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->

@@ -60,28 +60,5 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		
-		if (server != null)
-		{
-			var e:ENetEvent = ENet.poll(server, 0);
-			
-			if (e.type != ENetEvent.E_NONE)
-			{
-				trace(e.type, e.address, e.port);
-				
-				if (e.type == ENetEvent.E_CONNECT)
-				{
-					ENet.sendMsg(server, e.address, e.port, "Hullo there", 0, ENet.ENET_PACKET_FLAG_RELIABLE);
-				}
-			}
-		}
-		
-		else
-		{
-			if (FlxG.keys.justPressed.S)
-				server = ENet.server(null, 1234, 1, 1);
-			if (FlxG.keys.justPressed.C)
-				server = ENet.client("", 1234, 1, 1);
-		}
 	}	
 }

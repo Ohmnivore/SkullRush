@@ -23,6 +23,8 @@ class SkullServer extends Server
 		trace("Peer connected!");
 		
 		peers.set(ENet.peerKey(e.address, e.port), "");
+		
+		sendMsg(e.address, e.port, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	override public function onPeerDisonnect(e:ENetEvent):Void 
