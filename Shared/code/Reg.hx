@@ -1,5 +1,6 @@
 package;
 
+import enet.NetBase;
 import flixel.util.FlxSave;
 
 /**
@@ -9,6 +10,22 @@ import flixel.util.FlxSave;
  */
 class Reg
 {
+	#if CLIENT
+	/**
+	 * Static client reference
+	 */
+	static public var client:SkullClient;
+	#else
+	/**
+	 * Static server reference
+	 */
+	static public var server:SkullServer;
+	#end
+	
+	/**
+	 * Current playstate
+	 */
+	static public var state:PlayState;
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
 	 * Example usage: Storing the levels of a platformer.

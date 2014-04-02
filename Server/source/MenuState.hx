@@ -15,6 +15,7 @@ import enet.ENetEvent;
  */
 class MenuState extends FlxState
 {
+	public static var init:Bool = false;
 	public var server:Dynamic = null;
 	
 	/**
@@ -32,14 +33,16 @@ class MenuState extends FlxState
 		super.create();
 		FlxG.autoPause = false;
 		
-		ENet.init();
+		if (!init)
+		{
+			ENet.init();
+			Msg.initMsg();
+			Reg.server = new SkullServer(null, 6666, 2, 32);
+			
+			init = false;
+		}
 		
-		var m:Message = new Message(0, ["posx", "posy"]);
-		m.data.set("posx", 5);
-		
-		trace(m.serialize());
-		
-		//trace(separateMessage("1.hello"));
+		FlxG.switchState(new PlayState());
 	}
 	
 	/**

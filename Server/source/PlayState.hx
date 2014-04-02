@@ -3,7 +3,9 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 
@@ -12,6 +14,11 @@ import flixel.util.FlxMath;
  */
 class PlayState extends FlxState
 {
+	public var current_map:String;
+	
+	public var collidemap:FlxTilemap;
+	public var maps:FlxGroup;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -25,6 +32,10 @@ class PlayState extends FlxState
 		#end
 		
 		super.create();
+		Reg.state = this;
+		
+		maps = new FlxGroup();
+		add(maps);
 	}
 	
 	/**
@@ -42,5 +53,7 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
+		Reg.server.poll();
 	}	
 }

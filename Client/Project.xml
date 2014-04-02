@@ -13,12 +13,16 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
+	<classpath name="./../Shared/code" />
 	
 	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
 	<assets path="assets" />
+	<assets path="../Shared/assets" rename="shared" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
+	
+	<haxedef name="CLIENT" />
 	
 	<!--In case you want to use the addons package-->
 	<!--<haxelib name="flixel-addons" />-->

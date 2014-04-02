@@ -27,15 +27,15 @@ class NetBase
 	 * Internal hash table that keeps track of registered messages
 	 * You really shouldn't touch this either.
 	 */
-	private var messages:Map <Int, Message>;
+	private var messages:Map<Int, Message>;
 	
 	/**
 	 * Initializes hash tables
 	 */
 	public function new() 
 	{
-		peers = new Map();
-		messages = new Map();
+		peers = new Map<String, Dynamic>();
+		messages = new Map<Int, Message>();
 	}
 	
 	/**
