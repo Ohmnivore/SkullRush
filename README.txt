@@ -1,2 +1,2 @@
 TODO:
-Begin work on player synchro
+Implement player synchro

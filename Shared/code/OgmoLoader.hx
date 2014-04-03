@@ -58,7 +58,7 @@ class OgmoLoader
 				{
 					for (ent in x.elements)
 					{
-						//Type.createInstance(Type.resolveClass("entities." + ent.name), [ent]);
+						Type.createInstance(Type.resolveClass("entities." + ent.name), [ent]);
 					}
 				}
 				
@@ -70,8 +70,7 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					//map.loadMap(mapdata.arr, tilemaps.get("grid"), 16, 16, 0, 0, 0, 0);
-					map.loadMap(mapdata.arr, "assets/images/gridtiles2.png", 16, 16, 0, 0, 0, 0);
+					map.loadMap(mapdata.arr, "shared/images/gridtiles2.png", 16, 16, 0, 0, 0, 0);
 					makeTileCollisions(map);
 					State.maps.add(map);
 					

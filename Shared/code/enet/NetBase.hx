@@ -71,21 +71,29 @@ class NetBase
 		
 		if (e.type == ENetEvent.E_RECEIVE)
 		{
-			var res:Array<Dynamic> = separateMessage(e.message);
-			
-			var m:Message = messages.get(res[0]);
-			
-			if (isServer && m.isServerSideOnly)
+			try
 			{
-				//don't allow this message's content to be set by an incoming packet
+				var res:Array<Dynamic> = separateMessage(e.message);
+				
+				var m:Message = messages.get(res[0]);
+				
+				if (isServer && m.isServerSideOnly)
+				{
+					//don't allow this message's content to be set by an incoming packet
+				}
+				
+				else
+				{
+					m.unserialize(res[1]);
+				}
+				
+				onReceive(res[0]);
 			}
 			
-			else
+			catch (e:Dynamic)
 			{
-				m.unserialize(res[1]);
+				trace("Error receiving message");
 			}
-			
-			onReceive(res[0]);
 		}
 		
 		else if (e.type == ENetEvent.E_CONNECT)
@@ -140,8 +148,8 @@ class NetBase
 	public function sendMsg(Address:String, Port:Int,
 		MsgID:Int, Channel:Int = 0, Flags:Int = 0):Int
 	{
-		return ENet.sendMsg(_host, ENet.peerKey(Address, Port), Channel,
-			messages.get(MsgID).serialize(), Flags);
+		return ENet.sendMsg(_host, Address, Port, messages.get(MsgID).serialize(),
+			Channel, Flags);
 	}
 	
 	/**

@@ -13,7 +13,8 @@ class SkullServer extends Server
 	{
 		super(IP, Port, Channels, Players);
 		
-		Msg.addToHost(this);
+		//Msg.addToHost(this);
+		addMessage(Msg.MapMsg);
 	}
 	
 	override public function onPeerConnect(e:ENetEvent):Void
