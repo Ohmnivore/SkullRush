@@ -20,6 +20,8 @@ class PlayState extends FlxState
 	
 	public var collidemap:FlxTilemap;
 	public var maps:FlxGroup;
+	public var tocollide:FlxGroup;
+	public var players:FlxGroup;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -27,7 +29,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		// Set a background color
-		FlxG.cameras.bgColor = 0xff131c1b;
+		//FlxG.cameras.bgColor = 0xff131c1b;
 		// Show the mouse (in case it hasn't been disabled)
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = true;
@@ -38,10 +40,14 @@ class PlayState extends FlxState
 		
 		maps = new FlxGroup();
 		add(maps);
+		tocollide = new FlxGroup();
+		add(tocollide);
+		players = new FlxGroup();
+		tocollide.add(players);
 		
 		loadMap("Test");
 		
-		//FlxG.camera.zoom = 2;
+		FlxG.camera.zoom = 2;
 	}
 	
 	public function loadMap(Name:String):Void
@@ -70,6 +76,8 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
+		FlxG.collide(tocollide, collidemap);
 		
 		Reg.server.poll();
 	}	

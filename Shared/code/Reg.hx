@@ -23,6 +23,11 @@ class Reg
 	#end
 	
 	/**
+	 * Static host reference
+	 */
+	static public var host:NetBase;
+	
+	/**
 	 * Current playstate
 	 */
 	static public var state:PlayState;

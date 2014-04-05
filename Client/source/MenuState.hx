@@ -38,6 +38,7 @@ class MenuState extends FlxState
 			ENet.init();
 			Msg.initMsg();
 			Reg.client = new SkullClient("", 6666);
+			Reg.host = Reg.client;
 			
 			init = true;
 		}
