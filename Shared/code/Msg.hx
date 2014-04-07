@@ -8,10 +8,11 @@ import enet.NetBase;
  */
 class Msg
 {
+	//Core messages
 	static public var Manifest:Message;
 	static public var PlayerInfo:Message;
 	static public var PlayerInfoBack:Message;
-	//static public var PlayerInfoAnnounce:Message;
+	static public var PlayerInfoAnnounce:Message;
 	static public var PlayerDisco:Message;
 	static public var MapMsg:Message;
 	static public var PlayerInput:Message;
@@ -26,6 +27,7 @@ class Msg
 		PlayerInput = new Message(4, ["serialized"], false);
 		PlayerOutput = new Message(5, ["serialized"], true);
 		PlayerDisco = new Message(6, ["id"], true);
+		PlayerInfoAnnounce = new Message(7, ["id", "name", "color"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -37,5 +39,6 @@ class Msg
 		H.addMessage(PlayerInput);
 		H.addMessage(PlayerOutput);
 		H.addMessage(PlayerDisco);
+		H.addMessage(PlayerInfoAnnounce);
 	}
 }

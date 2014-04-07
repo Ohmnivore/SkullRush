@@ -1,6 +1,6 @@
 TODO:
-Finish Msg.PlayerInfoAnnounce
-
+Player health
+Team colors
 Announcer
 Chat
 Client config.txt

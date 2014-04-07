@@ -37,7 +37,7 @@ class Player extends FlxSprite
 	private var gun2:FlxSprite;
 	
 	private var healthBar:FlxBar;
-	private var header:FlxTextExt;
+	public var header:FlxTextExt;
 	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
@@ -240,6 +240,10 @@ class Player extends FlxSprite
 		a = _arr[3];
 		isRight = _arr[4];
 		shoot = Arr[5];
+		if (shoot)
+		{
+			fire();
+		}
 	}
 	
 	public function c_serialize():String

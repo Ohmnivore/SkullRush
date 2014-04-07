@@ -106,6 +106,30 @@ class SkullServer extends Server
 			id++;
 			
 			//Send peerinfo to all
+			Msg.PlayerInfoAnnounce.data.set("name", p.name);
+			Msg.PlayerInfoAnnounce.data.set("id", p.ID);
+			Msg.PlayerInfoAnnounce.data.set("color", 0xff000000);
+			for (pl in peermap.iterator())
+			{
+				if (p != pl)
+				{
+					sendMsg(ipmap.get(pl.ID), portmap.get(pl.ID), Msg.PlayerInfoAnnounce.ID, 1,
+							ENet.ENET_PACKET_FLAG_RELIABLE);
+				}
+			}
+			
+			for (pl in peermap.iterator())
+			{
+				if (p != pl)
+				{
+					Msg.PlayerInfoAnnounce.data.set("name", pl.name);
+					Msg.PlayerInfoAnnounce.data.set("id", pl.ID);
+					Msg.PlayerInfoAnnounce.data.set("color", 0xff000000);
+					
+					sendMsg(ipmap.get(p.ID), portmap.get(p.ID), Msg.PlayerInfoAnnounce.ID, 1,
+							ENet.ENET_PACKET_FLAG_RELIABLE);
+				}
+			}
 		}
 		
 		if (MsgID == Msg.PlayerInput.ID)

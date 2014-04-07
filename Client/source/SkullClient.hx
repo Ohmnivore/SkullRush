@@ -54,8 +54,19 @@ class SkullClient extends Client
 		{
 			Reg.state.player.name = Msg.PlayerInfoBack.data.get("name");
 			//TODO: set header.text and team/color
+			Reg.state.player.header.text = Msg.PlayerInfoBack.data.get("name");
 			
 			Reg.state.playermap.set(Msg.PlayerInfoBack.data.get("id"), Reg.state.player);
+		}
+		
+		if (MsgID == Msg.PlayerInfoAnnounce.ID)
+		{
+			var p:Player = new Player(Msg.PlayerInfoAnnounce.data.get("id"),
+										Msg.PlayerInfoAnnounce.data.get("name"),
+										50,
+										50);
+			
+			Reg.state.playermap.set(p.ID, p);
 		}
 		
 		if (MsgID == Msg.PlayerDisco.ID)
