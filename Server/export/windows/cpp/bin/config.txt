@@ -1,0 +1,1 @@
+manifesturl=https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json

@@ -87,7 +87,7 @@ class NetBase
 					m.unserialize(res[1]);
 				}
 				
-				onReceive(res[0]);
+				onReceive(res[0], e);
 			}
 			
 			catch (e:Dynamic)
@@ -113,7 +113,7 @@ class NetBase
 	 * immediately when this is called, as the message's contents will change
 	 * the next time it's received.
 	 */
-	public function onReceive(MsgID:Int):Void
+	public function onReceive(MsgID:Int, E:ENetEvent):Void
 	{
 		
 	}
@@ -140,7 +140,6 @@ class NetBase
 	 * @param	Address	Client's IP, in int_32 format (decimal/long ip format, not dotted quad)
 	 * @param	Port	Client's port
 	 * @param	MsgID	The ID of the message you intend to send. It's contents at the moment of the call will be sent.
-	 * @param	Content The string to send
 	 * @param	Channel Which channel to send through
 	 * @param	Flags	ENet flags, use | to unite flags, if they don't conflict
 	 * @return	Returns the target client's RTT, divide by two to obtain the traditional "ping"

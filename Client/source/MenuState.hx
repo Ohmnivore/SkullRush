@@ -1,9 +1,11 @@
 package;
 
 import enet.Message;
+import flixel.addons.display.FlxZoomCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.system.scaleModes.FillScaleMode;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
@@ -35,6 +37,21 @@ class MenuState extends FlxState
 		
 		if (!init)
 		{
+			//Setup zoom camera
+			if (FlxG.camera.zoom > 1)
+			{
+				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
+				FlxG.cameras.reset(cam);
+				FlxG.scaleMode = new FillScaleMode();
+				FlxG.cameras.bgColor = 0x00000000;
+			}
+			
+			else
+			{
+				FlxG.scaleMode = new FillScaleMode();
+				FlxG.cameras.bgColor = 0xff000000;
+			}
+			
 			ENet.init();
 			Msg.initMsg();
 			Reg.client = new SkullClient("", 6666);

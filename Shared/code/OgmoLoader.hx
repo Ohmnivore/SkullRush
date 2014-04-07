@@ -70,7 +70,7 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, "shared/images/gridtiles2.png", 16, 16, 0, 0, 0, 0);
+					map.loadMap(mapdata.arr, Assets.getImg("assets/images/gridtiles2.png"), 16, 16, 0, 0, 0, 0);
 					makeTileCollisions(map);
 					State.maps.add(map);
 					

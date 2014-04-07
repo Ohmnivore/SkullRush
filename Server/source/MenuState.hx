@@ -12,6 +12,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import enet.ENet;
 import enet.ENetEvent;
+import sys.io.File;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -42,20 +43,13 @@ class MenuState extends FlxState
 			if (FlxG.camera.zoom > 1)
 			{
 				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
-				//cam.followLead.x = 10.0;
-				//cam.followLead.y = 10.0;
-				//cam.followLerp = 30.0;
 				FlxG.cameras.reset(cam);
-				//FlxG.camera = cam;
-				//FlxG.scaleMode = new FillScaleMode();
-				//FlxG.cameras.bgColor = 0x00000000;
+				FlxG.scaleMode = new FillScaleMode();
+				FlxG.cameras.bgColor = 0x00000000;
 			}
 			
 			else
 			{
-				FlxG.camera.followLead.x = 10.0;
-				FlxG.camera.followLead.y = 10.0;
-				FlxG.camera.followLerp = 30.0;
 				FlxG.scaleMode = new FillScaleMode();
 				FlxG.cameras.bgColor = 0xff000000;
 			}
@@ -63,7 +57,7 @@ class MenuState extends FlxState
 			//Setup networking
 			ENet.init();
 			Msg.initMsg();
-			Reg.server = new SkullServer(null, 6666, 2, 32);
+			Reg.server = new SkullServer(null, 6666, 3, 32);
 			Reg.host = Reg.server;
 			
 			init = false;
