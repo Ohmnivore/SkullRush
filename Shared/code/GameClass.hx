@@ -21,6 +21,9 @@ class GameClass extends FlxGame
 	public function new()
 	{
 		FlxG.autoPause = false;
+		
+		Assets.loadConfig();
+		
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 

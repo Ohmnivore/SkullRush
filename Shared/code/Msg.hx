@@ -21,13 +21,13 @@ class Msg
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
-		PlayerInfo = new Message(2, ["name", "color"], false);
-		PlayerInfoBack = new Message(3, ["id", "name", "color"], true);
+		PlayerInfo = new Message(2, ["name", "team"], false);
+		PlayerInfoBack = new Message(3, ["id", "name", "color", "graphic"], true);
 		MapMsg = new Message(0, ["mapname", "mapstring"], true);
 		PlayerInput = new Message(4, ["serialized"], false);
 		PlayerOutput = new Message(5, ["serialized"], true);
 		PlayerDisco = new Message(6, ["id"], true);
-		PlayerInfoAnnounce = new Message(7, ["id", "name", "color"], true);
+		PlayerInfoAnnounce = new Message(7, ["id", "name", "color", "graphic"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void

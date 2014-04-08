@@ -1,6 +1,7 @@
 package ;
 import enet.Client;
 import enet.ENetEvent;
+import flixel.FlxG;
 import haxe.Unserializer;
 
 /**
@@ -52,11 +53,18 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.PlayerInfoBack.ID)
 		{
-			Reg.state.player.name = Msg.PlayerInfoBack.data.get("name");
-			//TODO: set header.text and team/color
-			Reg.state.player.header.text = Msg.PlayerInfoBack.data.get("name");
+			Reg.state.player = new Player(Msg.PlayerInfoBack.data.get("id"),
+								Msg.PlayerInfoBack.data.get("name"),
+								50,
+								50);
 			
-			Reg.state.playermap.set(Msg.PlayerInfoBack.data.get("id"), Reg.state.player);
+			Reg.state.player.setColor(Msg.PlayerInfoBack.data.get("color"),
+										Msg.PlayerInfoBack.data.get("graphic"));
+			
+			Reg.state.playermap.set(Reg.state.player.ID, Reg.state.player);
+			
+			FlxG.camera.follow(Reg.state.player);
+			FlxG.camera.followLerp = 15.0;
 		}
 		
 		if (MsgID == Msg.PlayerInfoAnnounce.ID)
@@ -65,6 +73,9 @@ class SkullClient extends Client
 										Msg.PlayerInfoAnnounce.data.get("name"),
 										50,
 										50);
+			
+			p.setColor(Msg.PlayerInfoBack.data.get("color"),
+						Msg.PlayerInfoBack.data.get("graphic"));
 			
 			Reg.state.playermap.set(p.ID, p);
 		}

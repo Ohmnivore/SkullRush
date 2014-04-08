@@ -18,6 +18,7 @@ import haxe.Unserializer;
  */
 class Player extends FlxSprite
 {
+	public var graphicKey:String;
 	public var name:String;
 	public var team:Int;
 	
@@ -52,16 +53,9 @@ class Player extends FlxSprite
 		ceilingwalk = false;
 		_arr = [];
 		
+		graphicKey = "assets/images/playerblue.png";
 		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, true, 24, 24);
-		animation.add("walking", [0, 1, 2, 3, 4, 5], 12, true);
-		animation.add("i_walking", [5, 4, 3, 2, 1, 0], 12, true);
-		animation.add("idle", [0]);
-		
-		animation.add("rwalking", [6, 7, 8, 9, 10, 11], 12, true);
-		animation.add("ri_walking", [11, 10, 9, 8, 7, 6], 12, true);
-		animation.add("ridle", [6]);
-		
-		animation.add("ledgeidle", [12]);
+		loadAnims();
 		
 		gun = new FlxSprite(0, 0, Assets.getImg("assets/images/gun.png"));
 		gun.loadRotatedGraphic(Assets.getImg("assets/images/gun.png"), 180, -1, false, false);
@@ -137,6 +131,27 @@ class Player extends FlxSprite
 		healthBar.kill();
 		cannon = null;
 		super.kill();
+	}
+	
+	public function loadAnims():Void
+	{
+		animation.add("walking", [0, 1, 2, 3, 4, 5], 12, true);
+		animation.add("i_walking", [5, 4, 3, 2, 1, 0], 12, true);
+		animation.add("idle", [0]);
+		
+		animation.add("rwalking", [6, 7, 8, 9, 10, 11], 12, true);
+		animation.add("ri_walking", [11, 10, 9, 8, 7, 6], 12, true);
+		animation.add("ridle", [6]);
+		
+		animation.add("ledgeidle", [12]);
+	}
+	
+	public function setColor(Color:Int, Asset:String):Void
+	{
+		header.color = Color;
+		graphicKey = Asset;
+		loadGraphic(Assets.getImg(graphicKey), true, true, 24, 24);
+		loadAnims();
 	}
 	
 	public function fire():Void
@@ -223,6 +238,7 @@ class Player extends FlxSprite
 		_arr.push(a);
 		_arr.push(isRight);
 		_arr.push(shoot);
+		_arr.push(health);
 		
 		return Serializer.run(_arr);
 	}
@@ -234,12 +250,15 @@ class Player extends FlxSprite
 		x = _arr[1];
 		y = _arr[2];
 		
-		velocity.x = (_arr[1] - x) * 0.75 + velocity.x * 0.25;
-		velocity.y = (_arr[2] - y) * 0.75 + velocity.y * 0.25;
+		//velocity.x = (_arr[1] - x) * 0.75 + velocity.x * 0.25;
+		//velocity.y = (_arr[2] - y) * 0.75 + velocity.y * 0.25;
 		
 		a = _arr[3];
 		isRight = _arr[4];
-		shoot = Arr[5];
+		shoot = _arr[5];
+		health = _arr[6];
+		//trace(health);
+		
 		if (shoot)
 		{
 			fire();
@@ -284,16 +303,16 @@ class Player extends FlxSprite
 		
 		if (move_jump) //jump
 		{
-			trace("jumping");
+			//trace("jumping");
 			if (isTouching(FlxObject.ANY))
 			{
-				trace("jumping for real");
+				//trace("jumping for real");
 				velocity.y = -280;
 			}
 			
 			else
 			{
-				trace("not jumping");
+				//trace("not jumping");
 				move_jump = false;
 			}
 		}

@@ -26,8 +26,7 @@ class SkullServer extends Server
 		peermap = new Map<Int, Player>();
 		playermap = new Map<String, Player>();
 		
-		config = readConfig();
-		manifestURL = config.get("manifesturl");
+		manifestURL = Assets.config.get("manifesturl");
 		
 		super(IP, Port, Channels, Players);
 		
@@ -91,6 +90,28 @@ class SkullServer extends Server
 			
 			var p:Player = new Player(id, name, 50, 50);
 			
+			var color:Int = Msg.PlayerInfo.data.get("team");
+			if (color == 0)
+			{
+				p.team = 0;
+				p.setColor(0xff13BF00, "assets/images/playergreen.png");
+			}
+			if (color == 1)
+			{
+				p.team = 1;
+				p.setColor(0xff0086BF, "assets/images/playerblue.png");
+			}
+			if (color == 2)
+			{
+				p.team = 2;
+				p.setColor(0xffE0DD00, "assets/images/playeryellow.png");
+			}
+			if (color == 3)
+			{
+				p.team = 3;
+				p.setColor(0xffD14900, "assets/images/playerred.png");
+			}
+			
 			peermap.set(id, p);
 			ipmap.set(id, E.address);
 			portmap.set(id, E.port);
@@ -98,7 +119,8 @@ class SkullServer extends Server
 			
 			Msg.PlayerInfoBack.data.set("id", p.ID);
 			Msg.PlayerInfoBack.data.set("name", p.name);
-			Msg.PlayerInfoBack.data.set("color", 0xff000000);
+			Msg.PlayerInfoBack.data.set("color", p.header.color);
+			Msg.PlayerInfoBack.data.set("graphic", p.graphicKey);
 			
 			sendMsg(E.address, E.port, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			sendMsg(E.address, E.port, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -108,7 +130,8 @@ class SkullServer extends Server
 			//Send peerinfo to all
 			Msg.PlayerInfoAnnounce.data.set("name", p.name);
 			Msg.PlayerInfoAnnounce.data.set("id", p.ID);
-			Msg.PlayerInfoAnnounce.data.set("color", 0xff000000);
+			Msg.PlayerInfoAnnounce.data.set("color", p.header.color);
+			Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
 			for (pl in peermap.iterator())
 			{
 				if (p != pl)
@@ -124,7 +147,8 @@ class SkullServer extends Server
 				{
 					Msg.PlayerInfoAnnounce.data.set("name", pl.name);
 					Msg.PlayerInfoAnnounce.data.set("id", pl.ID);
-					Msg.PlayerInfoAnnounce.data.set("color", 0xff000000);
+					Msg.PlayerInfoAnnounce.data.set("color", pl.header.color);
+					Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
 					
 					sendMsg(ipmap.get(p.ID), portmap.get(p.ID), Msg.PlayerInfoAnnounce.ID, 1,
 							ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -145,29 +169,5 @@ class SkullServer extends Server
 				
 			}
 		}
-	}
-	
-	public function readConfig():Map<String, String>
-	{
-		var map:Map<String, String> = new Map<String, String>();
-		
-		var str:String = File.getContent("config.txt");
-		
-		var key_value:Array<String> = str.split("\n");
-		
-		for (s in key_value)
-		{
-			StringTools.rtrim(s);
-			
-			var delimiter:Int = s.indexOf("=");
-			
-			var key:String = s.substring(0, delimiter);
-			
-			var value:String = s.substring(delimiter + 1, s.length);
-			
-			map.set(key, value);
-		}
-		
-		return map;
 	}
 }

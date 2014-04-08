@@ -1,4 +1,5 @@
 package ;
+import sys.io.File;
 
 /**
  * ...
@@ -7,6 +8,7 @@ package ;
 class Assets
 {
 	static public var images:Map<String, Dynamic>;
+	static public var config:Map<String, String>;
 	
 	static public function initAssets():Void
 	{
@@ -26,5 +28,34 @@ class Assets
 	static public function getImg(Key:String):Dynamic
 	{
 		return images.get(Key);
+	}
+	
+	static public function loadConfig():Void
+	{
+		config = readConfig();
+	}
+	
+	static public function readConfig():Map<String, String>
+	{
+		var map:Map<String, String> = new Map<String, String>();
+		
+		var str:String = File.getContent("config.txt");
+		
+		var key_value:Array<String> = str.split("\n");
+		
+		for (s in key_value)
+		{
+			StringTools.rtrim(s);
+			
+			var delimiter:Int = s.indexOf("=");
+			
+			var key:String = s.substring(0, delimiter);
+			
+			var value:String = s.substring(delimiter + 1, s.length);
+			
+			map.set(key, value);
+		}
+		
+		return map;
 	}
 }

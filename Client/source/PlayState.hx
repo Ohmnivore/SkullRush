@@ -95,8 +95,8 @@ class PlayState extends FlxState
 	{
 		trace("Loaded external assets.");
 		
-		Msg.PlayerInfo.data.set("name", "Ohmnivore");
-		Msg.PlayerInfo.data.set("color", 0xff000000);
+		Msg.PlayerInfo.data.set("name", Assets.config.get("name"));
+		Msg.PlayerInfo.data.set("team", Assets.config.get("team"));
 		
 		Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
@@ -106,10 +106,6 @@ class PlayState extends FlxState
 		current_map = MapName;
 		
 		OgmoLoader.loadXML(MapString, this);
-		
-		player = new Player(0, "Ohmnivore", 20, 20);
-		FlxG.camera.follow(player);
-		FlxG.camera.followLerp = 15.0;
 	}
 	
 	public function downloadError(e:LoaderErrorType):Void
@@ -164,7 +160,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.pressed.D)
 		{
 			player.move_right = true;
-			//player.velocity.x += 20;
+			player.velocity.x += 20;
 		}
 		else
 		{
@@ -175,7 +171,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.pressed.A)
 		{
 			player.move_left = true;
-			//player.velocity.x += -20;
+			player.velocity.x += -20;
 		}
 		else
 		{
@@ -188,7 +184,7 @@ class PlayState extends FlxState
 			if (player.isTouching(FlxObject.ANY))
 			{
 				player.move_jump = true;
-				//player.velocity.y = -280;
+				player.velocity.y = -280;
 			}
 		}
 		else

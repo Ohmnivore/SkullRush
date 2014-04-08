@@ -1,0 +1,3 @@
+name=Ohmnivore
+team=0
+ip=
