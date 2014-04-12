@@ -7,7 +7,7 @@ package enet;
 class Server extends enet.NetBase
 {
 	/**
-	 * The server's bind IP in dotted quad format
+	 * The server's bind IP in dotted quad format (xxx.xxx.xxx.xxx)
 	 */
 	public var ip:String;
 	

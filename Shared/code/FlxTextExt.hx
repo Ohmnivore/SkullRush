@@ -36,7 +36,8 @@ class FlxTextExt extends FlxText
 			}
 		}
 		
-		setRealWidth();
+		if (!autowidth)
+			setRealWidth();
 	}
 	
 	public function setRealWidth():Void
@@ -47,10 +48,10 @@ class FlxTextExt extends FlxText
 	public function markItUp(mark:FlxMarkup):Void
 	{
 		markups.push(mark);
-		_textField.setTextFormat(new TextFormat("system", mark.size, mark.color), 
-								mark.startindex, mark.endindex);
+		addFormat(new FlxTextFormat(mark.color, mark.bold, mark.startindex, mark.endindex), mark.startindex, mark.endindex);
 		calcFrame();
-		setRealWidth();
+		if (!autowidth)
+			setRealWidth();
 	}
 	
 	/**
@@ -66,7 +67,7 @@ class FlxTextExt extends FlxText
 			
 			arrm.push(m.startindex);
 			arrm.push(m.endindex);
-			arrm.push(m.size);
+			arrm.push(m.bold);
 			arrm.push(m.color);
 			
 			arr.push(arrm);

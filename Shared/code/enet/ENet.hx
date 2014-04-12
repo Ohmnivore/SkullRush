@@ -101,7 +101,7 @@ class ENet
 	/**
 	 * Internal, don't touch.
 	 */
-	static public function event_peer(Event:Dynamic):String
+	static public function event_peer(Event:Dynamic):Int
 	{
 		return _enet_event_peer(Event);
 	}
@@ -115,20 +115,18 @@ class ENet
 	}
 	
 	/**
-	 * Does what it says. Also returns the target client's RTT.
+	 * Does what it says.
 	 * 
 	 * @param	Host	An ENetHost*
-	 * @param	Address	Client's IP, in int_32 format (decimal/long ip format, not dotted quad)
-	 * @param	Port	Client's port
+	 * @param	ID		Peer's ID
 	 * @param	Content The string to send
 	 * @param	Channel Which channel to send through
 	 * @param	Flags	ENet flags, use | to unite flags, if they don't conflict
-	 * @return	Returns the target client's RTT, divide it by two to obtain the traditional "ping"
 	 */
-	static public function sendMsg(Host:Dynamic, Address:String, Port:Int,
-		Content:String, Channel:Int = 0, Flags:Int = 0):Int
+	static public function sendMsg(Host:Dynamic, ID:Int,
+		Content:String, Channel:Int = 0, Flags:Int = 0):Void
 	{
-		return _enet_peer_send(Host, peerKey(Address, Port), Channel, Content, Flags);
+		_enet_peer_send(Host, ID, Channel, Content, Flags);
 	}
 	
 	/**
@@ -145,23 +143,17 @@ class ENet
 	 * will be notified of the disconnection.
 	 * 
 	 * @param	Host	An ENetHost*
-	 * @param	Address The peer's IP, in int_32 format (decimal/long ip format, not dotted quad)
+	 * @param	ID	    The peer's ID
 	 * @param	Force   Wether the peer will be notified of the disconnection or just outright dropped off the host	
 	 */
-	static public function peerDisconnect(Host:Dynamic, Address:String, Port:Int, Force:Bool):Void
+	static public function peerDisconnect(Host:Dynamic, ID:Int, Force:Bool):Void
 	{
-		_enet_peer_disconnect(Host, peerKey(Address, Port), Bool);
+		_enet_peer_disconnect(Host, ID, Force);
 	}
 	
-	/**
-	 * Creates a sort of hash string out of an address and a port, 
-	 * usefull for maintaining a Map<String, Peer> sort of thing, 
-	 * whatever peer may be.
-	 * @param	Address The peer's IP, in int_32 format (decimal/long ip format, not dotted quad)
-	 */
-	static public function peerKey(Address:String, Port:Int):String
+	static public function getPeerPing(ID:Int):Int
 	{
-		return Address + ':' + Std.string(Port);
+		return _enet_get_peer_ping(ID);
 	}
 	
 	//All the C/C++ external loading
@@ -176,6 +168,7 @@ class ENet
 	static var _enet_event_message = Lib.load("EnetTesting", "enet_event_message", 1);
 	static var _enet_event_peer = Lib.load("EnetTesting", "enet_event_peer", 1);
 	static var _enet_event_destroy = Lib.load("EnetTesting", "enet_destroy_event", 1);
+	static var _enet_get_peer_ping = Lib.load("EnetTesting", "enet_get_peer_ping", 1);
 	
 	static var _enet_peer_send = Lib.load("EnetTesting", "enet_send_packet", 5);
 	static var _enet_peer_disconnect = Lib.load("EnetTesting", "enet_disconnect_peer", 3);

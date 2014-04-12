@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxRect;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -86,7 +87,12 @@ class Player extends FlxSprite
 		cannon = new FlxWeaponExt("launcher", this, FlxBullet, 0);
 		cannon.makePixelBullet(4, 4, 4, FlxColor.CYAN);
 		cannon.setBulletSpeed(220);
-		cannon.setBulletBounds(Reg.state.collidemap.getBounds());
+		var bounds:FlxRect = Reg.state.collidemap.getBounds();
+		bounds.x -= FlxG.width / 2;
+		bounds.width += FlxG.width;
+		bounds.y -= FlxG.height / 2;
+		bounds.height += FlxG.height;
+		cannon.setBulletBounds(bounds);
 		cannon.setFireRate(1200);
 		cannon.setBulletOffset(12, 12);
 		cannon.setBulletInheritance(0.5, 0.5);
@@ -137,13 +143,13 @@ class Player extends FlxSprite
 	{
 		animation.add("walking", [0, 1, 2, 3, 4, 5], 12, true);
 		animation.add("i_walking", [5, 4, 3, 2, 1, 0], 12, true);
-		animation.add("idle", [0]);
+		animation.add("idle", [0], 12, false);
 		
 		animation.add("rwalking", [6, 7, 8, 9, 10, 11], 12, true);
 		animation.add("ri_walking", [11, 10, 9, 8, 7, 6], 12, true);
-		animation.add("ridle", [6]);
+		animation.add("ridle", [6], 12, false);
 		
-		animation.add("ledgeidle", [12]);
+		animation.add("ledgeidle", [12], 12, false);
 	}
 	
 	public function setColor(Color:Int, Asset:String):Void
@@ -183,13 +189,26 @@ class Player extends FlxSprite
 	{
 		if (!ceilingwalk)
 		{
+			//if (isTouching(FlxObject.ANY))
+			//{
+				//if (facing == FlxObject.RIGHT && move_right) { animation.play("walking"); }
+				//if (facing == FlxObject.LEFT && move_left) { animation.play("walking"); }
+				//if (facing == FlxObject.RIGHT && move_left) { animation.play("i_walking"); }
+				//if (facing == FlxObject.LEFT && move_right) { animation.play("i_walking"); }
+				//else if (!move_left && !move_right) { animation.play("idle"); }
+			//}
+			//
+			//else
+			//{
+				//animation.play("idle");
+			//}
 			if (isTouching(FlxObject.ANY))
 			{
-				if (facing == FlxObject.RIGHT && move_right) { animation.play("walking"); }
-				if (facing == FlxObject.LEFT && move_left) { animation.play("walking"); }
-				if (facing == FlxObject.RIGHT && move_left) { animation.play("i_walking"); }
-				if (facing == FlxObject.LEFT && move_right) { animation.play("i_walking"); }
-				else if (!move_left && !move_right) { animation.play("idle"); }
+				if (facing == FlxObject.RIGHT && velocity.x > 0) { animation.play("walking"); }
+				if (facing == FlxObject.LEFT && velocity.x < 0) { animation.play("walking"); }
+				if (facing == FlxObject.RIGHT && velocity.x < 0) { animation.play("i_walking"); }
+				if (facing == FlxObject.LEFT && velocity.x > 0) { animation.play("i_walking"); }
+				else if (velocity.x == 0) { animation.play("idle"); }
 			}
 			
 			else
@@ -240,6 +259,9 @@ class Player extends FlxSprite
 		_arr.push(shoot);
 		_arr.push(health);
 		
+		_arr.push(velocity.x);
+		_arr.push(velocity.y);
+		
 		return Serializer.run(_arr);
 	}
 	
@@ -247,21 +269,26 @@ class Player extends FlxSprite
 	{
 		_arr = Arr;
 		
-		x = _arr[1];
-		y = _arr[2];
-		
-		//velocity.x = (_arr[1] - x) * 0.75 + velocity.x * 0.25;
-		//velocity.y = (_arr[2] - y) * 0.75 + velocity.y * 0.25;
-		
-		a = _arr[3];
-		isRight = _arr[4];
-		shoot = _arr[5];
-		health = _arr[6];
-		//trace(health);
-		
-		if (shoot)
+		if (_arr.length == 9) //used to be 7
 		{
-			fire();
+			x = _arr[1];
+			y = _arr[2];
+			
+			//velocity.x = (_arr[1] - x);
+			//velocity.y = (_arr[2] - y);
+			velocity.x = _arr[7];
+			velocity.y = _arr[8];
+			
+			a = _arr[3];
+			isRight = _arr[4];
+			shoot = _arr[5];
+			health = _arr[6];
+			//trace(health);
+			
+			if (shoot)
+			{
+				fire();
+			}
 		}
 	}
 	
@@ -284,42 +311,46 @@ class Player extends FlxSprite
 		_arr.splice(0, _arr.length);
 		
 		_arr = Unserializer.run(S);
-		move_right = _arr[0];
-		move_left = _arr[1];
-		move_jump = _arr[2];
-		a = _arr[3];
-		isRight = _arr[4];
-		shoot = _arr[5];
 		
-		if (move_right) //move right
+		if (_arr.length == 6)
 		{
-			velocity.x += 20;
-		}
-		
-		if (move_left) //move left
-		{
-			velocity.x += -20;
-		}
-		
-		if (move_jump) //jump
-		{
-			//trace("jumping");
-			if (isTouching(FlxObject.ANY))
+			move_right = _arr[0];
+			move_left = _arr[1];
+			move_jump = _arr[2];
+			a = _arr[3];
+			isRight = _arr[4];
+			shoot = _arr[5];
+			
+			if (move_right) //move right
 			{
-				//trace("jumping for real");
-				velocity.y = -280;
+				velocity.x += 20;
 			}
 			
-			else
+			if (move_left) //move left
 			{
-				//trace("not jumping");
-				move_jump = false;
+				velocity.x += -20;
 			}
-		}
-		
-		if (shoot) //shoot
-		{
-			fire();
+			
+			if (move_jump) //jump
+			{
+				//trace("jumping");
+				if (isTouching(FlxObject.ANY))
+				{
+					trace(_arr[2]);
+					velocity.y = -280;
+				}
+				
+				else
+				{
+					//trace("not jumping");
+					move_jump = false;
+				}
+			}
+			
+			if (shoot) //shoot
+			{
+				fire();
+			}
 		}
 	}
 }

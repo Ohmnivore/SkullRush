@@ -1,5 +1,7 @@
 package;
 
+import cpp.vm.Lock;
+import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
 import flixel.addons.weapon.FlxBullet;
@@ -9,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.text.FlxTextField;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
@@ -35,6 +38,11 @@ class PlayState extends FlxState
 	public var over_players:FlxGroup;
 	public var players:FlxGroup;
 	public var emitters:FlxGroup;
+	public var hud:FlxGroup;
+	
+	public var spect:Spectator;
+	
+	public var m:Mutex;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -65,11 +73,44 @@ class PlayState extends FlxState
 		add(over_players);
 		emitters = new FlxGroup();
 		add(emitters);
+		hud = new FlxGroup();
+		add(hud);
+		
+		Reg.chatbox = new ChatBox();
+		hud.add(Reg.chatbox);
+		Reg.chatbox.callback = sendChatMsg;
 		
 		Assets.initAssets();
 		loadMap("Test");
 		
+		m = new Mutex();
 		Thread.create(thread);
+	}
+	
+	public function sendChatMsg():Void
+	{
+		var t:String = Reg.chatbox.text.text;
+		Reg.chatbox.text.text = "";
+		
+		t = StringTools.trim(t);
+		
+		if (t.length > 0)
+		{
+			t = "Server: " + t;
+			
+			//Send to all
+			Msg.ChatToClient.data.set("id", 0);
+			Msg.ChatToClient.data.set("message", t);
+			Msg.ChatToClient.data.set("color", 0xffff0000);
+			
+			for (ID in Reg.server.peermap.iterator())
+			{
+				Reg.server.sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			}
+			
+			//Add to local chatbox
+			Reg.chatbox.addMsg(t, Msg.ChatToClient.data.get("color"));
+		}
 	}
 	
 	public function loadMap(Name:String):Void
@@ -82,7 +123,8 @@ class PlayState extends FlxState
 		
 		OgmoLoader.loadXML(current_map_string, this);
 		
-		add(new Spectator());
+		spect = new Spectator();
+		add(spect);
 	}
 	
 	/**
@@ -100,7 +142,9 @@ class PlayState extends FlxState
 		{
 			try
 			{
+				m.acquire();
 				Reg.server.poll();
+				m.release();
 				Sys.sleep(0.001);
 			}
 			catch (e:Dynamic)
@@ -115,35 +159,60 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		m.acquire();
 		super.update();
+		
+		if (FlxG.keys.justPressed.ENTER)
+		{
+			Reg.chatbox.toggle();
+			
+			if (Reg.chatbox.opened)
+			{
+				spect.active = false;
+			}
+			
+			else
+			{
+				spect.active = true;
+			}
+		}
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
 		
-		//Reg.server.poll();
-		
 		var arr:Array<String> = [];
 		
-		for (p in Reg.server.peermap.iterator())
-		{
-			arr.push(p.s_serialize());
-		}
-		
-		Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
-		
-		if (framebuffer > 0.03)
-		{
-			for (p in Reg.server.peermap.iterator())
+		//try
+		//{
+			//Reg.server.poll();
+			for (p in Reg.server.playermap.iterator())
 			{
-				//Reg.server.sendMsg(Reg.server.ipmap.get(p.ID), Reg.server.portmap.get(p.ID),
-									//Msg.PlayerOutput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
-				
-				Reg.server.sendMsg(Reg.server.ipmap.get(p.ID), Reg.server.portmap.get(p.ID),
-									Msg.PlayerOutput.ID, 0);
+				arr.push(p.s_serialize());
 			}
-		}
+			
+			Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
+			
+			if (framebuffer > 0.03)
+			{
+				for (p in Reg.server.playermap.iterator())
+				{
+					//Reg.server.sendMsg(p.ID,
+										//Msg.PlayerOutput.ID, 0);
+					
+					Reg.server.sendMsg(p.ID,
+										Msg.PlayerOutput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
+				}
+			}
+		//}
+		
+		//catch (e:Dynamic)
+		//{
+			//
+		//}
 		
 		framebuffer += FlxG.elapsed;
+		
+		m.release();
 	}
 	
 	private function bulletCollide(Bullet:FlxBullet, Tilemap:FlxTilemap):Void

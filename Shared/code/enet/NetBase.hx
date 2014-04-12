@@ -15,7 +15,7 @@ class NetBase
 	 * A hash table you should use for keeping track of your clients, use ENet.peerKey() 
 	 * to generate a key from an IP and a port
 	 */
-	public var peers:Map<String, Dynamic>;
+	public var peers:Map<Int, Dynamic>;
 	
 	/**
 	 * Internal host, stores an object returned by an external C++ function
@@ -34,7 +34,7 @@ class NetBase
 	 */
 	public function new() 
 	{
-		peers = new Map<String, Dynamic>();
+		peers = new Map<Int, Dynamic>();
 		messages = new Map<Int, Message>();
 	}
 	
@@ -137,18 +137,15 @@ class NetBase
 	/**
 	 * Does what it says. Also returns the target client's RTT.
 	 * 
-	 * @param	Address	Client's IP, in int_32 format (decimal/long ip format, not dotted quad)
-	 * @param	Port	Client's port
+	 * @param	ID		The peer's ID
 	 * @param	MsgID	The ID of the message you intend to send. It's contents at the moment of the call will be sent.
 	 * @param	Channel Which channel to send through
 	 * @param	Flags	ENet flags, use | to unite flags, if they don't conflict
 	 * @return	Returns the target client's RTT, divide by two to obtain the traditional "ping"
 	 */
-	public function sendMsg(Address:String, Port:Int,
-		MsgID:Int, Channel:Int = 0, Flags:Int = 0):Int
+	public function sendMsg(ID:Int, MsgID:Int, Channel:Int = 0, Flags:Int = 0):Void
 	{
-		return ENet.sendMsg(_host, Address, Port, messages.get(MsgID).serialize(),
-			Channel, Flags);
+		ENet.sendMsg(_host, ID, messages.get(MsgID).serialize(), Channel, Flags);
 	}
 	
 	/**
@@ -164,11 +161,11 @@ class NetBase
 	 * The advantage of smoothly disconnecting is that the peer
 	 * will be notified of the disconnection.
 	 * 
-	 * @param	Address The peer's IP, in int_32 format (decimal/long ip format, not dotted quad)
+	 * @param	ID	    The peer's ID
 	 * @param	Force   Wether the peer will be notified of the disconnection or just outright dropped off the host	
 	 */
-	public function peerDisconnect(Address:String, Port:Int, Force:Bool):Void
+	public function peerDisconnect(ID:Int, Force:Bool):Void
 	{
-		ENet.peerDisconnect(_host, Address, Port, Force);
+		ENet.peerDisconnect(_host, ID, Force);
 	}
 }

@@ -28,9 +28,15 @@ class Reg
 	static public var host:NetBase;
 	
 	/**
+	 * Chat box reference
+	 */
+	static public var chatbox:ChatBox;
+	
+	/**
 	 * Current playstate
 	 */
 	static public var state:PlayState;
+	
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
 	 * Example usage: Storing the levels of a platformer.

@@ -18,6 +18,10 @@ class Msg
 	static public var PlayerInput:Message;
 	static public var PlayerOutput:Message;
 	
+	//Chat messages
+	static public var ChatToClient:Message;
+	static public var ChatToServer:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -28,6 +32,9 @@ class Msg
 		PlayerOutput = new Message(5, ["serialized"], true);
 		PlayerDisco = new Message(6, ["id"], true);
 		PlayerInfoAnnounce = new Message(7, ["id", "name", "color", "graphic"], true);
+		
+		ChatToClient = new Message(8, ["id", "message", "color"], true);
+		ChatToServer = new Message(9, ["message"], false);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -40,5 +47,8 @@ class Msg
 		H.addMessage(PlayerOutput);
 		H.addMessage(PlayerDisco);
 		H.addMessage(PlayerInfoAnnounce);
+		
+		H.addMessage(ChatToClient);
+		H.addMessage(ChatToServer);
 	}
 }

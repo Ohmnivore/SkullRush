@@ -1,5 +1,6 @@
 package ;
 import enet.Client;
+import enet.ENet;
 import enet.ENetEvent;
 import flixel.FlxG;
 import haxe.Unserializer;
@@ -10,14 +11,24 @@ import haxe.Unserializer;
  */
 class SkullClient extends Client
 {
-	private var _sIP:String;
-	private var _sPort:Int;
+	public var rIP:String;
+	public var rPort:Int;
+	private var _s_id:Int;
 	
 	public function new(IP:String = "", Port:Int = 6666)
 	{
 		super(IP, Port, 3, 1);
 		
+		rIP = IP;
+		rPort = Port;
+		
 		Msg.addToHost(this);
+	}
+	
+	public function updatePingText():Void
+	{
+		if (_s_id > 0)
+			Reg.state.ping_text.text = Std.string(ENet.getPeerPing(_s_id));
 	}
 	
 	override public function onPeerConnect(e:ENetEvent):Void
@@ -25,8 +36,8 @@ class SkullClient extends Client
 		super.onPeerConnect(e);
 		
 		trace("Connected successfully!");
-		_sIP = e.address;
-		_sPort = e.port;
+		
+		_s_id = e.ID;
 	}
 	
 	override public function onPeerDisonnect(e:ENetEvent):Void 
@@ -42,8 +53,15 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.Manifest.ID)
 		{
-			var d:Downloader = new Downloader(Msg.Manifest.data.get("url"));
-			d.whenfinished = Reg.state.onLoaded;
+			if (Msg.Manifest.data.get("url") == "")
+			{
+				Reg.state.onLoaded();
+			}
+			else
+			{
+				var d:Downloader = new Downloader(Msg.Manifest.data.get("url"));
+				d.whenfinished = Reg.state.onLoaded;
+			}
 		}
 		
 		if (MsgID == Msg.MapMsg.ID)
@@ -121,6 +139,23 @@ class SkullClient extends Client
 				}
 			}
 		}
+		
+		if (MsgID == Msg.ChatToClient.ID)
+		{
+			var ID:Int = Msg.ChatToClient.data.get("id");
+			
+			if (ID == 0)
+			{
+				Reg.chatbox.addMsg(Msg.ChatToClient.data.get("message"),
+									Msg.ChatToClient.data.get("color"));
+			}
+			
+			else
+			{
+				Reg.chatbox.addMsg(Msg.ChatToClient.data.get("message"),
+									Msg.ChatToClient.data.get("color"));
+			}
+		}
 	}
 	
 	/**
@@ -131,8 +166,8 @@ class SkullClient extends Client
 	 * @param	Flags	ENet flags, use | to unite flags, if they don't conflict
 	 * @return	Returns the target client's RTT, divide by two to obtain the traditional "ping"
 	 */
-	public function send(MsgID:Int, Channel:Int = 0, Flags:Int = 0):Int 
+	public function send(MsgID:Int, Channel:Int = 0, Flags:Int = 0):Void 
 	{
-		return super.sendMsg(_sIP, _sPort, MsgID, Channel, Flags);
+		super.sendMsg(_s_id, MsgID, Channel, Flags);
 	}
 }

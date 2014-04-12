@@ -2,6 +2,7 @@ package ;
 import enet.ENet;
 import enet.ENetEvent;
 import enet.Server;
+//import flixel.text.FlxText;
 import sys.io.File;
 
 /**
@@ -12,19 +13,17 @@ class SkullServer extends Server
 {
 	public var config:Map<String, String>;
 	public var manifestURL:String;
-	public var ipmap:Map<Int, String>;
-	public var portmap:Map<Int, Int>;
-	public var peermap:Map<Int, Player>;
-	public var playermap:Map<String, Player>;
+	
+	public var peermap:Map<Player, Int>;
+	public var playermap:Map<Int, Player>;
 	
 	public var id:Int = 1;
+	//private var _pingtext:FlxText;
 	
 	public function new(IP:String = null, Port:Int = 0, Channels:Int = 3, Players:Int = 32) 
 	{
-		ipmap = new Map<Int, String>();
-		portmap = new Map<Int, Int>();
-		peermap = new Map<Int, Player>();
-		playermap = new Map<String, Player>();
+		playermap = new Map<Int, Player>();
+		peermap = new Map<Player, Int>();
 		
 		manifestURL = Assets.config.get("manifesturl");
 		
@@ -39,33 +38,31 @@ class SkullServer extends Server
 	{
 		super.onPeerConnect(e);
 		
-		trace("Peer connected!");
+		trace("Peer connected!", e.ID);
 		
-		sendMsg(e.address, e.port, Msg.Manifest.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		sendMsg(e.ID, Msg.Manifest.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	override public function onPeerDisonnect(e:ENetEvent):Void 
 	{
 		super.onPeerDisonnect(e);
 		
-		trace("Peer disconnected!");
+		trace("Peer disconnected!", e.ID);
 		
-		var p:Player = playermap.get(ENet.peerKey(e.address, e.port));
+		var p:Player = playermap.get(e.ID);
 		
 		//Send disconnect to everyone
-		Msg.PlayerDisco.data.set("id", p.ID);
-		for (pl in peermap.iterator())
+		Msg.PlayerDisco.data.set("id", e.ID);
+		for (pl in playermap.iterator())
 		{
-			if (p != pl)
+			if (e.ID != pl.ID)
 			{
-				sendMsg(ipmap.get(pl.ID), portmap.get(pl.ID), Msg.PlayerDisco.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+				sendMsg(pl.ID, Msg.PlayerDisco.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			}
 		}
 		
-		ipmap.remove(p.ID);
-		portmap.remove(p.ID);
-		peermap.remove(p.ID);
-		playermap.remove(ENet.peerKey(e.address, e.port));
+		peermap.remove(p);
+		playermap.remove(p.ID);
 		
 		p.kill();
 	}
@@ -76,11 +73,11 @@ class SkullServer extends Server
 		
 		if (MsgID == Msg.PlayerInfo.ID)
 		{
-			trace("PlayerInfo");
 			var name:String = Msg.PlayerInfo.data.get("name");
+			name = StringTools.trim(name);
 			if (name.length > 15) name = name.substr(0, 15);
 			
-			for (pl in peermap.iterator())
+			for (pl in playermap.iterator())
 			{
 				if (pl.name == name)
 				{
@@ -88,7 +85,11 @@ class SkullServer extends Server
 				}
 			}
 			
-			var p:Player = new Player(id, name, 50, 50);
+			var p:Player = new Player(E.ID, name, 50, 50);
+			
+			//_pingtext = new FlxText(0, 0, 70, "0");
+			//_pingtext.scrollFactor.set();
+			//Reg.state.over_players.add(_pingtext);
 			
 			var color:Int = Msg.PlayerInfo.data.get("team");
 			if (color == 0)
@@ -112,18 +113,16 @@ class SkullServer extends Server
 				p.setColor(0xffD14900, "assets/images/playerred.png");
 			}
 			
-			peermap.set(id, p);
-			ipmap.set(id, E.address);
-			portmap.set(id, E.port);
-			playermap.set(ENet.peerKey(E.address, E.port), p);
+			peermap.set(p, p.ID);
+			playermap.set(p.ID, p);
 			
 			Msg.PlayerInfoBack.data.set("id", p.ID);
 			Msg.PlayerInfoBack.data.set("name", p.name);
 			Msg.PlayerInfoBack.data.set("color", p.header.color);
 			Msg.PlayerInfoBack.data.set("graphic", p.graphicKey);
 			
-			sendMsg(E.address, E.port, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			sendMsg(E.address, E.port, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			sendMsg(E.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			sendMsg(E.ID, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			
 			id++;
 			
@@ -132,25 +131,25 @@ class SkullServer extends Server
 			Msg.PlayerInfoAnnounce.data.set("id", p.ID);
 			Msg.PlayerInfoAnnounce.data.set("color", p.header.color);
 			Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
-			for (pl in peermap.iterator())
+			for (pl in playermap.iterator())
 			{
-				if (p != pl)
+				if (p.ID != pl.ID)
 				{
-					sendMsg(ipmap.get(pl.ID), portmap.get(pl.ID), Msg.PlayerInfoAnnounce.ID, 1,
+					sendMsg(pl.ID, Msg.PlayerInfoAnnounce.ID, 1,
 							ENet.ENET_PACKET_FLAG_RELIABLE);
 				}
 			}
 			
-			for (pl in peermap.iterator())
+			for (pl in playermap.iterator())
 			{
-				if (p != pl)
+				if (p.ID != pl.ID)
 				{
 					Msg.PlayerInfoAnnounce.data.set("name", pl.name);
 					Msg.PlayerInfoAnnounce.data.set("id", pl.ID);
 					Msg.PlayerInfoAnnounce.data.set("color", pl.header.color);
-					Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
+					Msg.PlayerInfoAnnounce.data.set("graphic", pl.graphicKey);
 					
-					sendMsg(ipmap.get(p.ID), portmap.get(p.ID), Msg.PlayerInfoAnnounce.ID, 1,
+					sendMsg(p.ID, Msg.PlayerInfoAnnounce.ID, 1,
 							ENet.ENET_PACKET_FLAG_RELIABLE);
 				}
 			}
@@ -158,7 +157,7 @@ class SkullServer extends Server
 		
 		if (MsgID == Msg.PlayerInput.ID)
 		{
-			var p:Player = playermap.get(ENet.peerKey(E.address, E.port));
+			var p:Player = playermap.get(E.ID);
 			
 			try
 			{
@@ -166,7 +165,35 @@ class SkullServer extends Server
 			}
 			catch (e:Dynamic)
 			{
+				trace("ah");
+			}
+		}
+		
+		if (MsgID == Msg.ChatToServer.ID)
+		{
+			var p:Player = playermap.get(E.ID);
+			
+			if (p != null)
+			{
+				var t:String = Msg.ChatToServer.data.get("message");
 				
+				t = StringTools.trim(t);
+				
+				if (t.length > 0)
+				{
+					t = p.name + ": " + t;
+					
+					Msg.ChatToClient.data.set("id", p.ID);
+					Msg.ChatToClient.data.set("color", p.header.color);
+					Msg.ChatToClient.data.set("message", t);
+					
+					Reg.chatbox.addMsg(t, p.header.color);
+					
+					for (ID in peermap.iterator())
+					{
+						sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+					}
+				}
 			}
 		}
 	}

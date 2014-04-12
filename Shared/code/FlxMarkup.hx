@@ -6,7 +6,7 @@ package ;
  */
 class FlxMarkup 
 {
-	public var size:Int;
+	public var bold:Bool;
 	public var color:Int;
 	public var startindex:Int;
 	public var endindex:Int;
@@ -19,11 +19,11 @@ class FlxMarkup
 	 * @param	Size			The size. Default is the flixel default (8).
 	 * @param	Color			Markup color. Duh. Default is white like Tide!
 	 */
-	public function new(Startindex:Int, Endindex:Int, Size:Int = 8, Color:Int = 0xffffffff)
+	public function new(Startindex:Int, Endindex:Int, Bold:Bool = false, Color:Int = 0xffffffff)
 	{
 		startindex = Startindex;
 		endindex = Endindex;
-		size = Size;
+		bold = Bold;
 		color = Color;
 	}
 }

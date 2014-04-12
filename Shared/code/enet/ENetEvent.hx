@@ -19,14 +19,19 @@ class ENetEvent
 	public var message:String = null;
 	
 	/**
-	 * The peer's IP, in int_32 format (decimal/long ip format, not dotted quad)
+	 * The ID of the peer who sent/connected/disconnected
 	 */
-	public var address:String = null;
+	public var ID:Int;
 	
-	/**
-	 * The peer's port
-	 */
-	public var port:Int;
+	///**
+	 //* The peer's IP, in int_32 format (decimal/long ip format, not dotted quad)
+	 //*/
+	//public var address:String = null;
+	
+	///**
+	 //* The peer's port
+	 //*/
+	//public var port:Int;
 	
 	
 	/**
@@ -61,17 +66,19 @@ class ENetEvent
 		if (type > E_NONE)
 		{
 			//Setting address and port
-			var _addbuff:String = ENet.event_peer(EventFromC);
-			var _addbuff2:Array<String> = _addbuff.split(":");
-			address = _addbuff2[0];
-			port = Std.parseInt(_addbuff2[1]);
+			//var _addbuff:String = ENet.event_peer(EventFromC);
+			//var _addbuff2:Array<String> = _addbuff.split(":");
+			//address = _addbuff2[0];
+			//port = Std.parseInt(_addbuff2[1]);
+			ID = ENet.event_peer(EventFromC);
 			
 			if (type == E_RECEIVE)
 			{
 				message = ENet.event_message(EventFromC);
 			}
 			
-			ENet.event_destroy(EventFromC);
+			//ENet.event_destroy(EventFromC);
 		}
+		ENet.event_destroy(EventFromC);
 	}
 }

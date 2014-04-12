@@ -101,7 +101,7 @@ class Downloader
 					var myv:Int = Std.parseInt(File.getContent(Path.addTrailingSlash("downloads") +
 													Path.addTrailingSlash(s) + "version.txt"));
 					
-					if (myv != v) //Re-download if different version
+					if (myv != v || v < 0) //Re-download if different version
 					{
 						var w:FileOutput = File.write(Path.addTrailingSlash("downloads") +
 														Path.addTrailingSlash(s) + "version.txt", false);

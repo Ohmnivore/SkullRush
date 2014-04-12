@@ -1,5 +1,6 @@
 package;
 
+import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
 import flash.utils.ByteArray;
@@ -36,9 +37,14 @@ class PlayState extends FlxState
 	public var over_players:FlxGroup;
 	public var players:FlxGroup;
 	public var emitters:FlxGroup;
+	public var hud:FlxGroup;
 	
 	public var player:Player;
 	public var playermap:Map<Int, Player>;
+	
+	public var ping_text:FlxText;
+	
+	public var m:Mutex;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -70,9 +76,36 @@ class PlayState extends FlxState
 		add(over_players);
 		emitters = new FlxGroup();
 		add(emitters);
+		hud = new FlxGroup();
+		add(hud);
+		
+		Reg.chatbox = new ChatBox();
+		hud.add(Reg.chatbox);
+		Reg.chatbox.callback = sendChatMsg;
+		
+		ping_text = new FlxText(0, 0, 70, "0");
+		ping_text.scrollFactor.set();
+		over_players.add(ping_text);
 		
 		Assets.initAssets();
 		Thread.create(thread);
+		
+		m = new Mutex();
+	}
+	
+	public function sendChatMsg():Void
+	{
+		var t:String = Reg.chatbox.text.text;
+		Reg.chatbox.text.text = "";
+		
+		t = StringTools.trim(t);
+		
+		if (t.length > 0)
+		{
+			Msg.ChatToServer.data.set("message", t);
+			
+			Reg.client.send(Msg.ChatToServer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		}
 	}
 	
 	public function thread():Void
@@ -81,7 +114,9 @@ class PlayState extends FlxState
 		{
 			try
 			{
+				m.acquire();
 				Reg.client.poll();
+				m.release();
 				Sys.sleep(0.001);
 			}
 			catch (e:Dynamic)
@@ -140,10 +175,11 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		m.acquire();
+		
 		super.update();
 		
-		//if (player != null)
-			//updatePlayer();
+		Reg.client.updatePingText();
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
@@ -151,77 +187,86 @@ class PlayState extends FlxState
 		if (player != null)
 			updatePlayer();
 		
-		//Reg.client.poll();
+		if (FlxG.keys.justPressed.ENTER)
+		{
+			Reg.chatbox.toggle();
+		}
+		
+		m.release();
 	}
 	
 	private function updatePlayer():Void
 	{
-		//Move right
-		if (FlxG.keys.pressed.D)
+		if (!Reg.chatbox.opened)
 		{
-			player.move_right = true;
-			player.velocity.x += 20;
-		}
-		else
-		{
-			player.move_right = false;
-		}
-		
-		//Move left
-		if (FlxG.keys.pressed.A)
-		{
-			player.move_left = true;
-			player.velocity.x += -20;
-		}
-		else
-		{
-			player.move_left = false;
-		}
-		
-		//Jump
-		if (FlxG.keys.justPressed.W)
-		{
-			if (player.isTouching(FlxObject.ANY))
+			//Move right
+			if (FlxG.keys.pressed.D)
+			{
+				player.move_right = true;
+				player.velocity.x += 20;
+			}
+			else
+			{
+				player.move_right = false;
+			}
+			
+			//Move left
+			if (FlxG.keys.pressed.A)
+			{
+				player.move_left = true;
+				player.velocity.x += -20;
+			}
+			else
+			{
+				player.move_left = false;
+			}
+			
+			//Jump
+			if (FlxG.keys.pressed.W)
 			{
 				player.move_jump = true;
-				player.velocity.y = -280;
+				
+				if (player.isTouching(FlxObject.ANY))
+				{
+					player.velocity.y = -280;
+				}
 			}
+			else
+			{
+				player.move_jump = false;
+			}
+			
+			//Shoot
+			if (FlxG.mouse.pressed)
+			{
+				player.shoot = true;
+				player.fire();
+			}
+			else
+			{
+				player.shoot = false;
+			}
+			
+			if (FlxG.mouse.screenX > FlxG.width / 2)
+			{
+				player.isRight = true;
+			}
+			else
+			{
+				player.isRight = false;
+			}
+			
+			player.a = FlxAngle.angleBetweenMouse(player, true);
+			
+			if (framebuffer > 0.03)
+			{
+				Msg.PlayerInput.data.set("serialized", player.c_serialize());
+				Reg.client.send(Msg.PlayerInput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
+				//Reg.client.send(Msg.PlayerInput.ID, 0);
+			}
+			
+			framebuffer += FlxG.elapsed;
 		}
-		else
-		{
-			player.move_jump = false;
-		}
-		
-		//Shoot
-		if (FlxG.mouse.pressed)
-		{
-			player.shoot = true;
-			player.fire();
-		}
-		else
-		{
-			player.shoot = false;
-		}
-		
-		if (FlxG.mouse.screenX > FlxG.width / 2)
-		{
-			player.isRight = true;
-		}
-		else
-		{
-			player.isRight = false;
-		}
-		
-		player.a = FlxAngle.angleBetweenMouse(player, true);
-		
-		if (framebuffer > 0.03)
-		{
-			Msg.PlayerInput.data.set("serialized", player.c_serialize());
-			//Reg.client.send(Msg.PlayerInput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
-			Reg.client.send(Msg.PlayerInput.ID, 0);
-		}
-		
-		framebuffer += FlxG.elapsed;
 	}
 	
 	private function bulletCollide(Bullet:FlxBullet, Tilemap:FlxTilemap):Void
