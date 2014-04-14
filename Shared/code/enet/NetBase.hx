@@ -55,7 +55,7 @@ class NetBase
 		
 		var sep:Int = Str.indexOf(".");
 		
-		_res.push(Std.parseInt(Str.substr(0, sep - 2)));
+		_res.push(Std.parseInt(Str.substr(0, sep)));
 		
 		_res.push(Str.substr(sep + 1));
 		

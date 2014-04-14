@@ -83,6 +83,9 @@ class PlayState extends FlxState
 		hud.add(Reg.chatbox);
 		Reg.chatbox.callback = sendChatMsg;
 		
+		Reg.announcer = new Announcer();
+		hud.add(Reg.announcer);
+		
 		ping_text = new FlxText(0, 0, 70, "0");
 		ping_text.scrollFactor.set();
 		over_players.add(ping_text);
@@ -183,6 +186,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
+		FlxG.collide(bullets, players, bulletCollide);
 		
 		if (player != null)
 			updatePlayer();
@@ -237,7 +241,7 @@ class PlayState extends FlxState
 			}
 			
 			//Shoot
-			if (FlxG.mouse.pressed)
+			if (FlxG.mouse.pressed && player.health > 0)
 			{
 				player.shoot = true;
 				player.fire();
@@ -269,7 +273,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function bulletCollide(Bullet:FlxBullet, Tilemap:FlxTilemap):Void
+	private function bulletCollide(Bullet:FlxBullet, Tilemap:Dynamic):Void
 	{
 		var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
 													Bullet.y + Bullet.height / 2);

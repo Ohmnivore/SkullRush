@@ -92,8 +92,8 @@ class SkullClient extends Client
 										50,
 										50);
 			
-			p.setColor(Msg.PlayerInfoBack.data.get("color"),
-						Msg.PlayerInfoBack.data.get("graphic"));
+			p.setColor(Msg.PlayerInfoAnnounce.data.get("color"),
+						Msg.PlayerInfoAnnounce.data.get("graphic"));
 			
 			Reg.state.playermap.set(p.ID, p);
 		}
@@ -155,6 +155,11 @@ class SkullClient extends Client
 				Reg.chatbox.addMsg(Msg.ChatToClient.data.get("message"),
 									Msg.ChatToClient.data.get("color"));
 			}
+		}
+		
+		if (MsgID == Msg.Announce.ID)
+		{
+			Reg.announcer.parseMsg(Msg.Announce.data.get("message"), Msg.Announce.data.get("markup"));
 		}
 	}
 	

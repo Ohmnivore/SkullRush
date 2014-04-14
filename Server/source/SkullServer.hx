@@ -2,6 +2,8 @@ package ;
 import enet.ENet;
 import enet.ENetEvent;
 import enet.Server;
+import entities.Spawn;
+import flixel.FlxG;
 //import flixel.text.FlxText;
 import sys.io.File;
 
@@ -67,6 +69,23 @@ class SkullServer extends Server
 		p.kill();
 	}
 	
+	public function announce(Text:String, Markup:Array<FlxMarkup>):Void
+	{
+		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, Text, 12, false, Markup);
+		
+		//Add locally
+		Reg.announcer.addMsg(Text, Markup);
+		
+		//Send to clients
+		Msg.Announce.data.set("message", t.text);
+		Msg.Announce.data.set("markup", t.ExportMarkups());
+		
+		for (ID in peermap.iterator())
+		{
+			sendMsg(ID, Msg.Announce.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		}
+	}
+	
 	override public function onReceive(MsgID:Int, E:ENetEvent):Void 
 	{
 		super.onReceive(MsgID, E);
@@ -86,10 +105,6 @@ class SkullServer extends Server
 			}
 			
 			var p:Player = new Player(E.ID, name, 50, 50);
-			
-			//_pingtext = new FlxText(0, 0, 70, "0");
-			//_pingtext.scrollFactor.set();
-			//Reg.state.over_players.add(_pingtext);
 			
 			var color:Int = Msg.PlayerInfo.data.get("team");
 			if (color == 0)
@@ -113,6 +128,10 @@ class SkullServer extends Server
 				p.setColor(0xffD14900, "assets/images/playerred.png");
 			}
 			
+			var s:Spawn = Spawn.findSpawn(p.team);
+			p.x = s.x;
+			p.y = s.y;
+			
 			peermap.set(p, p.ID);
 			playermap.set(p.ID, p);
 			
@@ -131,11 +150,18 @@ class SkullServer extends Server
 			Msg.PlayerInfoAnnounce.data.set("id", p.ID);
 			Msg.PlayerInfoAnnounce.data.set("color", p.header.color);
 			Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
+			var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, name + " has joined!", 12, false,
+				[new FlxMarkup(0, name.length, false, p.header.color)]);
+			Reg.announcer.addMsg(name + " has joined!", [new FlxMarkup(0, name.length, false, p.header.color)]);
+			Msg.Announce.data.set("message", name + " has joined!");
+			Msg.Announce.data.set("markup", t.ExportMarkups());
 			for (pl in playermap.iterator())
 			{
 				if (p.ID != pl.ID)
 				{
 					sendMsg(pl.ID, Msg.PlayerInfoAnnounce.ID, 1,
+							ENet.ENET_PACKET_FLAG_RELIABLE);
+					sendMsg(pl.ID, Msg.Announce.ID, 1,
 							ENet.ENET_PACKET_FLAG_RELIABLE);
 				}
 			}
@@ -165,7 +191,7 @@ class SkullServer extends Server
 			}
 			catch (e:Dynamic)
 			{
-				trace("ah");
+				
 			}
 		}
 		

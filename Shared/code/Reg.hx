@@ -33,6 +33,11 @@ class Reg
 	static public var chatbox:ChatBox;
 	
 	/**
+	 * Announcer reference
+	 */
+	static public var announcer:Announcer;
+	
+	/**
 	 * Current playstate
 	 */
 	static public var state:PlayState;

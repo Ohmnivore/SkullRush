@@ -1,5 +1,11 @@
 package ;
 
+#if CLIENT
+
+#else
+import entities.Spawn;
+#end
+
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -21,6 +27,11 @@ class OgmoLoader
 	static public function initTilemaps():Void
 	{
 		//Initializing entities
+		#if CLIENT
+		
+		#else
+		Spawn;
+		#end
 		
 		tilemaps = new Map<String, String>();
 		tilemaps.set("grid", "assets/images/gridtiles2.png");

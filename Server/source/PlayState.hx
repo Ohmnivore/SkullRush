@@ -4,9 +4,11 @@ import cpp.vm.Lock;
 import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
+import entities.Spawn;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
@@ -44,6 +46,8 @@ class PlayState extends FlxState
 	
 	public var m:Mutex;
 	
+	public var spawns:Array<Spawn>;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -58,6 +62,7 @@ class PlayState extends FlxState
 		
 		super.create();
 		Reg.state = this;
+		spawns = [];
 		
 		maps = new FlxGroup();
 		add(maps);
@@ -79,6 +84,9 @@ class PlayState extends FlxState
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
 		Reg.chatbox.callback = sendChatMsg;
+		
+		Reg.announcer = new Announcer();
+		hud.add(Reg.announcer);
 		
 		Assets.initAssets();
 		loadMap("Test");
@@ -179,6 +187,11 @@ class PlayState extends FlxState
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
+		FlxG.collide(bullets, players, bulletCollide);
+		FlxG.collide(players, playerCollide);
+		FlxG.collide(players);
+		
+		checkIfFall();
 		
 		var arr:Array<String> = [];
 		
@@ -215,7 +228,71 @@ class PlayState extends FlxState
 		m.release();
 	}
 	
-	private function bulletCollide(Bullet:FlxBullet, Tilemap:FlxTilemap):Void
+	private function checkIfFall():Void
+	{
+		for (p in Reg.server.playermap.iterator())
+		{
+			if (p.y >= collidemap.y + collidemap.height + FlxG.width / 2 && p.alive)
+			{
+				announceFall(p);
+				p.health -= 100;
+			}
+		}
+	}
+	
+	private function announceFall(victim:Player):Void
+	{
+		var s:String = victim.name + " fell to his death.";
+		Reg.server.announce(s,
+			[new FlxMarkup(0, victim.name.length, false, victim.header.color)]);
+	}
+	
+	private function playerCollide(P:Player, P2:Player):Void
+	{
+		//if (P.team != P2.team)
+		//{
+			var winner:Player;
+			var loser:Player;
+			
+			if (P.y < P2.y)
+			{
+				winner = P;
+				loser = P2;
+				
+				P2.health = 0;
+				
+				announceSquish(winner, loser);
+			}
+			
+			if (P2.y < P.y)
+			{
+				winner = P2;
+				loser = P;
+				
+				P.health = 0;
+				
+				announceSquish(winner, loser);
+			}
+		//}
+	}
+	
+	private function announceSquish(winner:Player, loser:Player):Void
+	{
+		var s:String = winner.name + " pummeled " + loser.name;
+		Reg.server.announce(s,
+			[new FlxMarkup(0, winner.name.length, false, winner.header.color),
+			new FlxMarkup(winner.name.length + 10, s.length, false, loser.header.color)]);
+	}
+	
+	private function announceGun(winner:Player, loser:Player):Void
+	{
+		var s:String = winner.name + " gunned down " + loser.name;
+		Reg.server.announce(s,
+			[new FlxMarkup(0, winner.name.length, false, winner.header.color),
+			new FlxMarkup(winner.name.length + 13, s.length, false, loser.header.color)]);
+	}
+	
+	private function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
 	{
 		var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
 													Bullet.y + Bullet.height / 2);
@@ -245,6 +322,15 @@ class PlayState extends FlxState
 			
 			pl.velocity.x += v.x * 300 * dist_coeff;
 			pl.velocity.y += v.y * 300 * dist_coeff;
+			
+			//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
+			if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
+			{
+				var dmg:Float = dist_coeff * 75;
+				if (pl.health - dmg <= 0)
+					announceGun(cast (Bullet._weapon.parent, Player), pl);
+				pl.health -= dist_coeff * 75;
+			}
 		}
 		
 		Bullet.kill();

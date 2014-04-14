@@ -21,6 +21,8 @@ class Msg
 	//Chat messages
 	static public var ChatToClient:Message;
 	static public var ChatToServer:Message;
+	//Announce message
+	static public var Announce:Message;
 	
 	static public function initMsg():Void
 	{
@@ -35,6 +37,7 @@ class Msg
 		
 		ChatToClient = new Message(8, ["id", "message", "color"], true);
 		ChatToServer = new Message(9, ["message"], false);
+		Announce = new Message(10, ["message", "markup"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -50,5 +53,6 @@ class Msg
 		
 		H.addMessage(ChatToClient);
 		H.addMessage(ChatToServer);
+		H.addMessage(Announce);
 	}
 }
