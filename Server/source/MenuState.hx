@@ -55,10 +55,14 @@ class MenuState extends FlxState
 			}
 			
 			//Setup networking
+			Reg.maps = Reg.parseMaps();
+			Reg.mapname = Reg.maps[Reg.map_index];
 			ENet.init();
 			Msg.initMsg();
 			Reg.server = new SkullServer(null, 6666, 3, 32);
 			Reg.host = Reg.server;
+			
+			//FlxG.console.registerFunction("nextmap", Reg.nextMap);
 			
 			init = false;
 		}

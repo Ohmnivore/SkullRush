@@ -1,7 +1,13 @@
 package;
 
 import enet.NetBase;
+import flixel.FlxG;
 import flixel.util.FlxSave;
+#if CLIENT
+
+#else
+import gamemodes.BaseGamemode;
+#end
 
 /**
  * Handy, pre-built Registry class that can be used to store 
@@ -20,6 +26,54 @@ class Reg
 	 * Static server reference
 	 */
 	static public var server:SkullServer;
+	
+	/**
+	 * Current gamemode instance
+	 */
+	static public var gm:BaseGamemode;
+	
+	/**
+	 * Current map rotation
+	 */
+	static public var maps:Array<String>;
+	
+	/**
+	 * Current map index
+	 */
+	static public var map_index:Int = 0;
+	
+	/**
+	 * Current map's name
+	 */
+	static public var mapname:String;
+	
+	/**
+	 * Used for stopping threading
+	 */
+	static public var shutdown:Bool = false;
+	
+	static public function parseMaps():Array<String>
+	{
+		var s:String = Assets.config.get("maps");
+		
+		var maps:Array<String> = s.split(",");
+		
+		var r:Array<String> = [];
+		
+		var x:Int = 0;
+		for (m in maps)
+		{
+			m = StringTools.trim(m);
+			if (m.charAt(m.length - 1) == ",")
+			{
+				m = m.substr(0, m.length - 1);
+			}
+			r.push(m);
+			x++;
+		}
+		
+		return r;
+	}
 	#end
 	
 	/**

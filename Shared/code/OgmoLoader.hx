@@ -35,6 +35,7 @@ class OgmoLoader
 		
 		tilemaps = new Map<String, String>();
 		tilemaps.set("grid", "assets/images/gridtiles2.png");
+		tilemaps.set("tiles", "assets/images/scifitiles.png");
 	}
 	
 	static public function loadXML(XML:String, State:PlayState):Void
@@ -59,7 +60,7 @@ class OgmoLoader
 			if (x.has.tileset) //Tilemap
 			{
 				var map:FlxTilemap = new FlxTilemap();
-				map.loadMap(x.innerData, tilemaps.get(x.att.tileset), 16, 16, 0, 0, 0, 0);
+				map.loadMap(x.innerData, Assets.getImg("assets/images/scifitiles.png"), 16, 16, 0, 0, 0, 0);
 				State.maps.add(map);
 			}
 			

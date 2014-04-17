@@ -53,6 +53,7 @@ class MenuState extends FlxState
 			}
 			
 			ENet.init();
+			NReg.init();
 			Msg.initMsg();
 			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
 			Reg.host = Reg.client;

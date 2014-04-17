@@ -1,1 +1,12 @@
-manifesturl=https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
+############################
+#basic variables
+
+manifesturl=null
+#https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
+
+maps=Test
+
+############################
+
+#ffa config
+maxkills=30

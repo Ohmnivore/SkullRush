@@ -142,7 +142,6 @@ class PlayState extends FlxState
 	public function loadMap(MapName:String, MapString:String):Void
 	{
 		current_map = MapName;
-		
 		OgmoLoader.loadXML(MapString, this);
 	}
 	

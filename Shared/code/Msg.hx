@@ -24,6 +24,13 @@ class Msg
 	//Announce message
 	static public var Announce:Message;
 	
+	//Networked object messages
+	static public var NewLabel:Message;
+	static public var SetLabel:Message;
+	static public var NewCounter:Message;
+	static public var SetCounter:Message;
+	static public var DeleteHUD:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -38,6 +45,12 @@ class Msg
 		ChatToClient = new Message(8, ["id", "message", "color"], true);
 		ChatToServer = new Message(9, ["message"], false);
 		Announce = new Message(10, ["message", "markup"], true);
+		
+		NewLabel = new Message(11, ["id", "x", "y"], true);
+		SetLabel = new Message(12, ["id", "text", "color"], true);
+		DeleteHUD = new Message(13, ["id"], true);
+		NewCounter = new Message(14, ["id", "base", "x", "y"], true);
+		SetCounter = new Message(15, ["id", "base", "color", "count"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -54,5 +67,11 @@ class Msg
 		H.addMessage(ChatToClient);
 		H.addMessage(ChatToServer);
 		H.addMessage(Announce);
+		
+		H.addMessage(NewLabel);
+		H.addMessage(SetLabel);
+		H.addMessage(NewCounter);
+		H.addMessage(SetCounter);
+		H.addMessage(DeleteHUD);
 	}
 }

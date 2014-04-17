@@ -40,6 +40,14 @@ class FlxTextExt extends FlxText
 			setRealWidth();
 	}
 	
+	override private function set_text(Text:String):String 
+	{
+		return super.set_text(Text);
+		
+		if (!autowidth)
+			setRealWidth();
+	}
+	
 	public function setRealWidth():Void
 	{
 		width = textField.textWidth + 4;

@@ -3,6 +3,7 @@ import enet.Client;
 import enet.ENet;
 import enet.ENetEvent;
 import flixel.FlxG;
+import flixel.text.FlxText;
 import haxe.Unserializer;
 
 /**
@@ -53,7 +54,7 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.Manifest.ID)
 		{
-			if (Msg.Manifest.data.get("url") == "")
+			if (Msg.Manifest.data.get("url") == "null")
 			{
 				Reg.state.onLoaded();
 			}
@@ -160,6 +161,62 @@ class SkullClient extends Client
 		if (MsgID == Msg.Announce.ID)
 		{
 			Reg.announcer.parseMsg(Msg.Announce.data.get("message"), Msg.Announce.data.get("markup"));
+		}
+		
+		//Networked objects handling below
+		
+		if (MsgID == Msg.NewLabel.ID)
+		{
+			var t:FlxText = new FlxText(Msg.NewLabel.data.get("x"),
+												Msg.NewLabel.data.get("y"),
+												FlxG.width,
+												"",
+												12);
+			t.scrollFactor.set();
+			NReg.HUDS.set(Msg.NewLabel.data.get("id"), t);
+			
+			Reg.state.hud.add(t);
+		}
+		
+		if (MsgID == Msg.SetLabel.ID)
+		{
+			var t:FlxText = NReg.HUDS.get(Msg.SetLabel.data.get("id"));
+			
+			t.text = Msg.SetLabel.data.get("text");
+			t.color = Msg.SetLabel.data.get("color");
+		}
+		
+		if (MsgID == Msg.NewCounter.ID)
+		{
+			var t:FlxText = new FlxText(Msg.NewCounter.data.get("x"),
+												Msg.NewCounter.data.get("y"),
+												FlxG.width,
+												Msg.NewCounter.data.get("base") + ": 0",
+												12);
+			t.scrollFactor.set();
+			NReg.HUDS.set(Msg.NewCounter.data.get("id"), t);
+			
+			Reg.state.hud.add(t);
+		}
+		
+		if (MsgID == Msg.SetCounter.ID)
+		{
+			var t:FlxText = NReg.HUDS.get(Msg.SetCounter.data.get("id"));
+			
+			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
+			t.color = Msg.SetCounter.data.get("color");
+		}
+		
+		if (MsgID == Msg.DeleteHUD.ID)
+		{
+			var t:FlxText = NReg.HUDS.get(Msg.DeleteHUD.data.get("id"));
+			
+			NReg.HUDS.remove(Msg.DeleteHUD.data.get("id"));
+			
+			Reg.state.hud.remove(t, true);
+			
+			t.kill();
+			t.destroy();
 		}
 	}
 	

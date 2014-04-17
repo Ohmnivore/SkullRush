@@ -20,7 +20,11 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
+import gamemodes.DefaultHooks;
+import gamemodes.FFA;
+import gevents.ConfigEvent;
 import haxe.Serializer;
+import haxe.xml.Fast;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -89,10 +93,13 @@ class PlayState extends FlxState
 		hud.add(Reg.announcer);
 		
 		Assets.initAssets();
-		loadMap("Test");
+		loadMap(Reg.mapname);
 		
+		Reg.shutdown = false;
 		m = new Mutex();
 		Thread.create(thread);
+		
+		Admin.hookCommands();
 	}
 	
 	public function sendChatMsg():Void
@@ -123,8 +130,18 @@ class PlayState extends FlxState
 	
 	public function loadMap(Name:String):Void
 	{
+		//Reg.gm = new FFA();
+		//Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+		
 		current_map = Name;
 		current_map_string = Lvls.loadLVL(current_map);
+		
+		var xml = Xml.parse(current_map_string);
+		var fast = new Fast(xml.firstElement());
+		
+		Reg.gm = Type.createInstance(Type.resolveClass("gamemodes." + fast.att.Gamemode), []);
+		Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+		var gm:String = Type.getClassName(Type.getClass(Reg.gm));
 		
 		Msg.MapMsg.data.set("mapname", current_map);
 		Msg.MapMsg.data.set("mapstring", current_map_string);
@@ -133,6 +150,20 @@ class PlayState extends FlxState
 		
 		spect = new Spectator();
 		add(spect);
+		
+		for (i in Reg.server.playermap.keys())
+		{
+			var p:Player = Reg.server.playermap.get(i);
+			
+			var sp:Spawn = Spawn.findSpawn(p.team);
+			var p_new:Player = new Player(p.ID, p.name, sp.x, sp.y);
+			p_new.team = p.team;
+			p_new.setColor(p.header.color, p.graphicKey);
+			
+			Reg.server.playermap.set(i, p_new);
+		}
+		
+		trace('Loaded map $current_map and gamemode $gm.');
 	}
 	
 	/**
@@ -142,11 +173,20 @@ class PlayState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
+		
+		m.acquire;
+		Reg.shutdown = true;
+		m.release;
+		
+		current_map = null;
+		current_map_string = null;
+		m = null;
+		spawns = null;
 	}
 	
 	public function thread():Void
 	{
-		while (true)
+		while (!Reg.shutdown)
 		{
 			try
 			{
@@ -167,8 +207,27 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		if (!Reg.shutdown)
+		{
 		m.acquire();
+		//if (FlxG.keys.justPressed.R)
+		//{
+			//FlxG.switchState(new PlayState());
+			//return;
+		//}
 		super.update();
+		
+		if (Reg.gm != null)
+		{
+			if (FlxG.keys.justPressed.C)
+			{
+				Assets.loadConfig();
+				
+				Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+			}
+			
+			Reg.gm.update(FlxG.elapsed);
+		}
 		
 		if (FlxG.keys.justPressed.ENTER)
 		{
@@ -185,22 +244,20 @@ class PlayState extends FlxState
 			}
 		}
 		
-		FlxG.collide(tocollide, collidemap);
-		FlxG.collide(bullets, collidemap, bulletCollide);
-		FlxG.collide(bullets, players, bulletCollide);
-		FlxG.collide(players, playerCollide);
-		FlxG.collide(players);
-		
-		checkIfFall();
-		
 		var arr:Array<String> = [];
 		
-		//try
-		//{
+		try
+		{
 			//Reg.server.poll();
 			for (p in Reg.server.playermap.iterator())
 			{
-				arr.push(p.s_serialize());
+				if (p != null)
+				{
+					if (p.velocity != null)
+					{
+						arr.push(p.s_serialize());
+					}
+				}
 			}
 			
 			Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
@@ -216,123 +273,16 @@ class PlayState extends FlxState
 										Msg.PlayerOutput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
 				}
 			}
-		//}
+		}
 		
-		//catch (e:Dynamic)
-		//{
-			//
-		//}
+		catch (e:Dynamic)
+		{
+			
+		}
 		
 		framebuffer += FlxG.elapsed;
 		
 		m.release();
-	}
-	
-	private function checkIfFall():Void
-	{
-		for (p in Reg.server.playermap.iterator())
-		{
-			if (p.y >= collidemap.y + collidemap.height + FlxG.width / 2 && p.alive)
-			{
-				announceFall(p);
-				p.health -= 100;
-			}
 		}
-	}
-	
-	private function announceFall(victim:Player):Void
-	{
-		var s:String = victim.name + " fell to his death.";
-		Reg.server.announce(s,
-			[new FlxMarkup(0, victim.name.length, false, victim.header.color)]);
-	}
-	
-	private function playerCollide(P:Player, P2:Player):Void
-	{
-		//if (P.team != P2.team)
-		//{
-			var winner:Player;
-			var loser:Player;
-			
-			if (P.y < P2.y)
-			{
-				winner = P;
-				loser = P2;
-				
-				P2.health = 0;
-				
-				announceSquish(winner, loser);
-			}
-			
-			if (P2.y < P.y)
-			{
-				winner = P2;
-				loser = P;
-				
-				P.health = 0;
-				
-				announceSquish(winner, loser);
-			}
-		//}
-	}
-	
-	private function announceSquish(winner:Player, loser:Player):Void
-	{
-		var s:String = winner.name + " pummeled " + loser.name;
-		Reg.server.announce(s,
-			[new FlxMarkup(0, winner.name.length, false, winner.header.color),
-			new FlxMarkup(winner.name.length + 10, s.length, false, loser.header.color)]);
-	}
-	
-	private function announceGun(winner:Player, loser:Player):Void
-	{
-		var s:String = winner.name + " gunned down " + loser.name;
-		Reg.server.announce(s,
-			[new FlxMarkup(0, winner.name.length, false, winner.header.color),
-			new FlxMarkup(winner.name.length + 13, s.length, false, loser.header.color)]);
-	}
-	
-	private function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
-	{
-		var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
-													Bullet.y + Bullet.height / 2);
-		
-		emitters.add(emitter);
-		
-		emitter.setRotation(0, 0);
-		emitter.setMotion(0, 17, 1, 360, 25, 1);
-		emitter.setAlpha(1, 1, 0, 0);
-		emitter.setColor(0xffE69137, 0xffFFFB17);
-		emitter.setXSpeed(150, 150);
-		emitter.setYSpeed(150, 150);
-		emitter.makeParticles(Assets.getImg("assets/images/explosionparticle.png"), 35);
-		
-		emitter.start(true, 0.9, 0, 35);
-		
-		for (p in players.members)
-		{
-			var pl:Player = cast (p, Player);
-			
-			var v:FlxVector = new FlxVector(1, 0);
-			
-			v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
-			
-			var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-			if (dist_coeff < 0) dist_coeff = 0;
-			
-			pl.velocity.x += v.x * 300 * dist_coeff;
-			pl.velocity.y += v.y * 300 * dist_coeff;
-			
-			//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
-			if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
-			{
-				var dmg:Float = dist_coeff * 75;
-				if (pl.health - dmg <= 0)
-					announceGun(cast (Bullet._weapon.parent, Player), pl);
-				pl.health -= dist_coeff * 75;
-			}
-		}
-		
-		Bullet.kill();
 	}
 }

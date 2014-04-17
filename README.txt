@@ -1,8 +1,11 @@
 TODO:
-Announcer
-Chat
-Client GUI
-DefaultHooks
-gamemode package
+Networked HUD protocol
 Networked FlxSprite
-Sound
+Networked Sound
+Networked particle system
+Plugins
+
+Masterserver
+LAN server discovery
+
+Client GUI

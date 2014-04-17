@@ -33,7 +33,7 @@ class Player extends PlayerBase
 				alive = false;
 				allowCollisions = FlxObject.NONE;
 				
-				respawnIn(4);
+				//respawnIn(4);
 			}
 		}
 	}

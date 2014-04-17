@@ -23,6 +23,7 @@ class Assets
 		images.set("assets/images/playerred.png", "shared/images/playerred.png");
 		images.set("assets/images/playeryellow.png", "shared/images/playeryellow.png");
 		images.set("assets/images/trail.png", "shared/images/trail.png");
+		images.set("assets/images/scifitiles.png", "shared/images/scifitiles.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic
@@ -45,15 +46,19 @@ class Assets
 		
 		for (s in key_value)
 		{
-			StringTools.rtrim(s);
-			
-			var delimiter:Int = s.indexOf("=");
-			
-			var key:String = s.substring(0, delimiter);
-			
-			var value:String = s.substring(delimiter + 1, s.length);
-			
-			map.set(key, value);
+			if (s.charAt(0) != "#")
+			{
+				StringTools.trim(s);
+				
+				var delimiter:Int = s.indexOf("=");
+				
+				var key:String = s.substring(0, delimiter);
+				
+				var value:String = s.substring(delimiter + 1, s.length);
+				value = StringTools.trim(value);
+				
+				map.set(key, value);
+			}
 		}
 		
 		return map;

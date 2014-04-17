@@ -121,6 +121,11 @@ class PlayerBase extends FlxSprite
 		super.update();
 	}
 	
+	override public function destroy():Void 
+	{
+		//super.destroy();
+	}
+	
 	override public function kill():Void 
 	{
 		Reg.state.under_players.remove(trail, true);
@@ -138,6 +143,37 @@ class PlayerBase extends FlxSprite
 		cannon = null;
 		super.kill();
 	}
+	
+	//public function killForReal():Void 
+	//{
+		//Reg.state.under_players.remove(trail, true);
+		//Reg.state.bullets.remove(cannon.group, true);
+		//Reg.state.players.remove(this, true);
+		//Reg.state.over_players.remove(header, true);
+		//Reg.state.over_players.remove(healthBar, true);
+		//Reg.state.over_players.remove(gun2, true);
+		//Reg.state.over_players.remove(gun, true);
+		//
+		//gun.kill();
+		//gun2.kill();
+		//header.kill();
+		//healthBar.kill();
+		//cannon = null;
+		//super.kill();
+		//
+		//super.destroy();
+	//}
+	
+	//public function addToState():Void
+	//{
+		//Reg.state.under_players.add(trail);
+		//Reg.state.bullets.add(cannon.group);
+		//Reg.state.players.add(this);
+		//Reg.state.over_players.add(header);
+		//Reg.state.over_players.add(healthBar);
+		//Reg.state.over_players.add(gun2);
+		//Reg.state.over_players.add(gun);
+	//}
 	
 	public function hide():Void
 	{

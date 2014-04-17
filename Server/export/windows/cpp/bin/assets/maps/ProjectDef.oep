@@ -24,7 +24,9 @@
     <Height>480</Height>
   </CameraSize>
   <ExportCameraPosition>false</ExportCameraPosition>
-  <LevelValueDefinitions />
+  <LevelValueDefinitions>
+    <ValueDefinition xsi:type="StringValueDefinition" Name="Gamemode" Default="FFA" MaxChars="-1" MultiLine="false" />
+  </LevelValueDefinitions>
   <LayerDefinitions>
     <LayerDefinition xsi:type="GridLayerDefinition">
       <Name>TilesGrid</Name>
@@ -39,6 +41,18 @@
       <Color A="255" R="0" G="0" B="0" />
       <ExportMode>Bitstring</ExportMode>
     </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>TilesSciFi</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>Entities</Name>
       <Grid>
@@ -51,7 +65,17 @@
       </ScrollFactor>
     </LayerDefinition>
   </LayerDefinitions>
-  <Tilesets />
+  <Tilesets>
+    <Tileset>
+      <Name>tiles</Name>
+      <FilePath>..\..\..\Shared\assets\images\scifitiles.png</FilePath>
+      <TileSize>
+        <Width>16</Width>
+        <Height>16</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+  </Tilesets>
   <EntityDefinitions>
     <EntityDefinition Name="Spawn" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
