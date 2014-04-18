@@ -21,7 +21,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_NO_GAMEPAD&#xA;FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=1.2.6&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;FLX_NO_TOUCH&#xA;display&#xA;CLIENT&#xA;windows&#xA;desktop" />
+    <option directives="FLX_NO_GAMEPAD&#xA;FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=1.2.6&#xA;HXCPP_STACK_TRACE&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;HXCPP_STACK_LINE&#xA;HXCPP_DEBUG_LINK&#xA;FLX_NO_TOUCH&#xA;display&#xA;CLIENT&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
@@ -33,6 +33,7 @@
     <library name="openfl" />
     <library name="flixel" />
     <library name="openfl" />
+    <library name="mloader" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

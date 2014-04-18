@@ -11,6 +11,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import enet.ENet;
 import enet.ENetEvent;
+import networkobj.NReg;
 
 /**
  * A FlxState which can be used for the game's menu.

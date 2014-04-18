@@ -25,6 +25,7 @@ import gamemodes.FFA;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
+import networkobj.NTimer;
 
 /**
  * A FlxState which can be used for the actual gameplay.

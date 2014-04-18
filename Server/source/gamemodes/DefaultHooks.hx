@@ -11,6 +11,7 @@ import flixel.util.FlxVector;
 import gevents.ReceiveEvent;
 import networkobj.NCounter;
 import networkobj.NLabel;
+import networkobj.NTimer;
 
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -348,10 +349,12 @@ class DefaultHooks
 			}
 		}
 		
-		var testl:NLabel = new NLabel(5, 5, p.ID, true);
-		testl.setLabel("Welcome!", 0xff000000);
-		var testc:NCounter = new NCounter("TestCounter", 5, 20, 0, true);
-		testc.setCount(5, 0xff000000, "TestCount");
+		//var testl:NLabel = new NLabel(5, 5, p.ID, true);
+		//testl.setLabel("Welcome!", 0xff000000);
+		//var testc:NCounter = new NCounter("TestCounter", 5, 20, 0, true);
+		//testc.setCount(5, 0xff000000, "TestCount");
+		//var testt:NTimer = new NTimer("TestTimer", 5, 35, 0, true);
+		//testt.setTimer(40, 0xffff0000, NTimer.TICKING);
 	}
 	
 	static public function update(elapsed:Float):Void

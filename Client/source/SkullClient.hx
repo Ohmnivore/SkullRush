@@ -5,6 +5,8 @@ import enet.ENetEvent;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import haxe.Unserializer;
+import networkobj.NReg;
+import networkobj.NTimer;
 
 /**
  * ...
@@ -205,6 +207,26 @@ class SkullClient extends Client
 			
 			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
 			t.color = Msg.SetCounter.data.get("color");
+		}
+		
+		if (MsgID == Msg.NewTimer.ID)
+		{
+			var t:NTimer = new NTimer(Msg.NewTimer.data.get("base"),
+											Msg.NewTimer.data.get("x"),
+											Msg.NewTimer.data.get("y"));
+			t.scrollFactor.set();
+			NReg.HUDS.set(Msg.NewTimer.data.get("id"), t);
+			
+			Reg.state.hud.add(t);
+		}
+		
+		if (MsgID == Msg.SetTimer.ID)
+		{
+			var t:NTimer = cast(NReg.HUDS.get(Msg.SetTimer.data.get("id")), NTimer);
+			t.base = Msg.SetTimer.data.get("base");
+			t.color = Msg.SetTimer.data.get("color");
+			t.status = Msg.SetTimer.data.get("status");
+			t.count = Msg.SetTimer.data.get("count");
 		}
 		
 		if (MsgID == Msg.DeleteHUD.ID)

@@ -29,6 +29,8 @@ class Msg
 	static public var SetLabel:Message;
 	static public var NewCounter:Message;
 	static public var SetCounter:Message;
+	static public var NewTimer:Message;
+	static public var SetTimer:Message;
 	static public var DeleteHUD:Message;
 	
 	static public function initMsg():Void
@@ -51,6 +53,8 @@ class Msg
 		DeleteHUD = new Message(13, ["id"], true);
 		NewCounter = new Message(14, ["id", "base", "x", "y"], true);
 		SetCounter = new Message(15, ["id", "base", "color", "count"], true);
+		NewTimer = new Message(16, ["id", "base", "x", "y"], true);
+		SetTimer = new Message(17, ["id", "base", "color", "count", "status"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -72,6 +76,8 @@ class Msg
 		H.addMessage(SetLabel);
 		H.addMessage(NewCounter);
 		H.addMessage(SetCounter);
+		H.addMessage(NewTimer);
+		H.addMessage(SetTimer);
 		H.addMessage(DeleteHUD);
 	}
 }
