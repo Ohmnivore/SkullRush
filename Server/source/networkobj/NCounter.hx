@@ -8,11 +8,8 @@ import enet.ENet;
  * ...
  * @author Ohmnivore
  */
-class NCounter
+class NCounter extends NHUD
 {
-	public var local:Bool;
-	public var player:Int;
-	
 	public var ID:Int;
 	public var t:FlxText;
 	public var x:Int;
@@ -23,6 +20,7 @@ class NCounter
 	
 	public function new(Base:String, X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
 	{
+		super();
 		local = Local;
 		player = P;
 		x = X;
@@ -41,8 +39,9 @@ class NCounter
 		announce(player);
 	}
 	
-	public function announce(P:Int = 0):Void
+	override public function announce(P:Int = 0):Void
 	{
+		super.announce(P);
 		Msg.NewCounter.data.set("id", ID);
 		Msg.NewCounter.data.set("base", base);
 		Msg.NewCounter.data.set("x", x);
@@ -94,8 +93,9 @@ class NCounter
 		}
 	}
 	
-	public function delete():Void
+	override public function delete():Void
 	{
+		super.delete();
 		Msg.DeleteHUD.data.set("id", ID);
 		
 		if (player == 0)

@@ -395,7 +395,7 @@ class PlayerBase extends FlxSprite
 				//trace("jumping");
 				if (isTouching(FlxObject.ANY))
 				{
-					trace(_arr[2]);
+					//trace(_arr[2]);
 					velocity.y = -280;
 				}
 				

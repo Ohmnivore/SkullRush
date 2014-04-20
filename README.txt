@@ -1,5 +1,4 @@
 TODO:
-Networked FlxSprite
 Networked Sound
 Networked particle system
 Plugins

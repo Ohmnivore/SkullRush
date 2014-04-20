@@ -12,10 +12,7 @@ class NTimer extends FlxObject
 {
 	public var local:Bool;
 	public var player:Int;
-	
 	public var t:FlxText;
-	//public var x:Int;
-	//public var y:Int;
 	
 	public var base:String;
 	public var count:Float = 0;
@@ -94,6 +91,8 @@ class NTimer extends FlxObject
 		
 		if (player == 0)
 		{
+			NReg.timers.push(this);
+			
 			for (p in Reg.server.playermap.keys())
 			{
 				Reg.server.sendMsg(p, Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -146,6 +145,8 @@ class NTimer extends FlxObject
 		
 		if (player == 0)
 		{
+			NReg.timers.remove(this);
+			
 			for (p in Reg.server.playermap.keys())
 			{
 				Reg.server.sendMsg(p, Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);

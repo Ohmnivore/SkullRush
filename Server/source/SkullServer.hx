@@ -8,6 +8,7 @@ import gamemodes.DefaultHooks;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NReg;
 //import flixel.text.FlxText;
 import sys.io.File;
 
@@ -73,10 +74,6 @@ class SkullServer extends Server
 	
 	override public function onReceive(MsgID:Int, E:ENetEvent):Void 
 	{
-		super.onReceive(MsgID, E);
-		
-		Reg.gm.dispatchEvent(new ReceiveEvent(ReceiveEvent.RECEIVE_EVENT, MsgID, E));
-		
 		if (MsgID == Msg.PlayerInfo.ID)
 		{
 			Reg.gm.dispatchEvent(new JoinEvent(JoinEvent.JOIN_EVENT, E));
@@ -121,6 +118,32 @@ class SkullServer extends Server
 						sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 					}
 				}
+			}
+		}
+		
+		super.onReceive(MsgID, E);
+		
+		Reg.gm.dispatchEvent(new ReceiveEvent(ReceiveEvent.RECEIVE_EVENT, MsgID, E));
+		
+		if (MsgID == Msg.PlayerInfo.ID)
+		{
+			Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
+			
+			sendMsg(E.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			for (s in NReg.sprites)
+			{
+				s.announce(E.ID);
+			}
+			
+			for (h in NReg.huds)
+			{
+				h.announce(E.ID);
+			}
+			
+			for (t in NReg.timers)
+			{
+				t.announce(E.ID);
 			}
 		}
 	}

@@ -3,9 +3,11 @@ import enet.Client;
 import enet.ENet;
 import enet.ENetEvent;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.text.FlxText;
 import haxe.Unserializer;
 import networkobj.NReg;
+import networkobj.NTemplate;
 import networkobj.NTimer;
 
 /**
@@ -239,6 +241,49 @@ class SkullClient extends Client
 			
 			t.kill();
 			t.destroy();
+		}
+		
+		if (MsgID == Msg.AnnounceTemplates.ID)
+		{
+			NReg.templates = Unserializer.run(Msg.AnnounceTemplates.data.get("serialized"));
+		}
+		
+		if (MsgID == Msg.NewSprite.ID)
+		{
+			var templ:NTemplate = NReg.templates.get(Msg.NewSprite.data.get("template_id"));
+			
+			var s:FlxSprite = new FlxSprite(Msg.NewSprite.data.get("x"),
+											Msg.NewSprite.data.get("y"),
+											Assets.images.get(templ.graphicKey));
+			
+			s.drag.x = templ.drag_x;
+			s.acceleration.y = templ.gravity_force;
+			s.maxVelocity.x = templ.maxspeed_x;
+			
+			NReg.sprites.set(Msg.NewSprite.data.get("id"), s);
+			
+			Reg.state.ent.add(s);
+		}
+		
+		if (MsgID == Msg.UpdateSprite.ID)
+		{
+			var s:FlxSprite = NReg.sprites.get(Msg.UpdateSprite.data.get("id"));
+			
+			s.x = Msg.UpdateSprite.data.get("x");
+			s.y = Msg.UpdateSprite.data.get("y");
+			s.velocity.x = Msg.UpdateSprite.data.get("velocity.x");
+			s.velocity.y = Msg.UpdateSprite.data.get("velocity.y");
+		}
+		
+		if (MsgID == Msg.DeleteSprite.ID)
+		{
+			var s:FlxSprite = NReg.sprites.get(Msg.DeleteSprite.data.get("id"));
+			
+			NReg.sprites.remove(Msg.DeleteSprite.data.get("id"));
+			Reg.state.ent.remove(s, true);
+			
+			//s.kill();
+			//s.destroy();
 		}
 	}
 	

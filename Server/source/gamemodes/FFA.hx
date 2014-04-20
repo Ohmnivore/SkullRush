@@ -1,5 +1,6 @@
 package gamemodes;
 
+import enet.ENet;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -7,6 +8,9 @@ import gevents.HurtInfo;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NReg;
+import networkobj.NSprite;
+import networkobj.NTemplate;
 
 /**
  * ...
@@ -14,13 +18,20 @@ import gevents.ReceiveEvent;
  */
 class FFA extends BaseGamemode
 {
-
+	public var testt:NTemplate;
+	public var tests:NSprite;
+	
 	public var maxkills:Int = 25;
 	
 	public function new() 
 	{
 		super();
 		DefaultHooks.hookEvents(this);
+		
+		testt = new NTemplate("assets/images/gun.png");
+		NReg.registerTemplate(testt);
+		
+		tests = new NSprite(10, 50, testt);
 	}
 	
 	override public function update(elapsed:Float):Void

@@ -7,11 +7,8 @@ import flixel.text.FlxText;
  * ...
  * @author Ohmnivore
  */
-class NLabel
+class NLabel extends NHUD
 {
-	public var local:Bool;
-	public var player:Int;
-	
 	public var ID:Int;
 	public var t:FlxText;
 	public var x:Int;
@@ -19,6 +16,7 @@ class NLabel
 	
 	public function new(X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
 	{
+		super();
 		local = Local;
 		player = P;
 		x = X;
@@ -36,8 +34,9 @@ class NLabel
 		announce(player);
 	}
 	
-	public function announce(P:Int = 0):Void
+	override public function announce(P:Int = 0):Void
 	{
+		super.announce(P);
 		Msg.NewLabel.data.set("id", ID);
 		Msg.NewLabel.data.set("x", x);
 		Msg.NewLabel.data.set("y", y);
@@ -82,8 +81,9 @@ class NLabel
 		}
 	}
 	
-	public function delete():Void
+	override public function delete():Void
 	{
+		super.delete();
 		Msg.DeleteHUD.data.set("id", ID);
 		
 		if (player == 0)

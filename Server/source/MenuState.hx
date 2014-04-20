@@ -12,6 +12,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import enet.ENet;
 import enet.ENetEvent;
+import networkobj.NReg;
 import sys.io.File;
 
 /**
@@ -59,6 +60,7 @@ class MenuState extends FlxState
 			Reg.mapname = Reg.maps[Reg.map_index];
 			ENet.init();
 			Msg.initMsg();
+			NReg.init();
 			Reg.server = new SkullServer(null, 6666, 3, 32);
 			Reg.host = Reg.server;
 			

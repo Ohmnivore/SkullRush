@@ -25,6 +25,7 @@ import gamemodes.FFA;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
+import networkobj.NReg;
 import networkobj.NTimer;
 
 /**
@@ -45,6 +46,7 @@ class PlayState extends FlxState
 	public var over_players:FlxGroup;
 	public var players:FlxGroup;
 	public var emitters:FlxGroup;
+	public var ent:FlxGroup;
 	public var hud:FlxGroup;
 	
 	public var spect:Spectator;
@@ -83,6 +85,9 @@ class PlayState extends FlxState
 		add(over_players);
 		emitters = new FlxGroup();
 		add(emitters);
+		ent = new FlxGroup();
+		add(ent);
+		tocollide.add(ent);
 		hud = new FlxGroup();
 		add(hud);
 		
@@ -272,6 +277,11 @@ class PlayState extends FlxState
 					
 					Reg.server.sendMsg(p.ID,
 										Msg.PlayerOutput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
+				}
+				
+				for (s in NReg.sprites)
+				{
+					s.sendUpdate();
 				}
 			}
 		}

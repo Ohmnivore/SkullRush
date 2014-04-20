@@ -31,7 +31,12 @@ class Msg
 	static public var SetCounter:Message;
 	static public var NewTimer:Message;
 	static public var SetTimer:Message;
+	static public var AnnounceTemplates:Message;
+	static public var NewSprite:Message;
+	static public var SetSprite:Message;
+	static public var UpdateSprite:Message;
 	static public var DeleteHUD:Message;
+	static public var DeleteSprite:Message;
 	
 	static public function initMsg():Void
 	{
@@ -55,6 +60,11 @@ class Msg
 		SetCounter = new Message(15, ["id", "base", "color", "count"], true);
 		NewTimer = new Message(16, ["id", "base", "x", "y"], true);
 		SetTimer = new Message(17, ["id", "base", "color", "count", "status"], true);
+		AnnounceTemplates = new Message(22, ["serialized"], true);
+		NewSprite = new Message(18, ["id", "x", "y", "template_id"], true);
+		SetSprite = new Message(19, ["id", "field", "value"], true);
+		UpdateSprite = new Message(20, ["id", "x", "y", "velocity.x", "velocity.y"], true);
+		DeleteSprite = new Message(21, ["id"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -79,5 +89,10 @@ class Msg
 		H.addMessage(NewTimer);
 		H.addMessage(SetTimer);
 		H.addMessage(DeleteHUD);
+		H.addMessage(NewSprite);
+		H.addMessage(SetSprite);
+		H.addMessage(UpdateSprite);
+		H.addMessage(DeleteSprite);
+		H.addMessage(AnnounceTemplates);
 	}
 }
