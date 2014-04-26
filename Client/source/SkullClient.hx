@@ -6,9 +6,11 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import haxe.Unserializer;
+import hxudp.UdpSocket;
 import networkobj.NReg;
 import networkobj.NTemplate;
 import networkobj.NTimer;
+import haxe.io.Bytes;
 
 /**
  * ...
@@ -28,6 +30,15 @@ class SkullClient extends Client
 		rPort = Port;
 		
 		Msg.addToHost(this);
+		
+		var s:UdpSocket = UdpSocket();
+		s.create();
+		s.setNonBlocking(true);
+		s.bind(1945);
+		s.setEnableBroadcast(true);
+		
+		s.connect("192.168.0.255", 1945);
+		s.sendAll(Bytes.ofString("request"));
 	}
 	
 	public function updatePingText():Void
@@ -284,6 +295,21 @@ class SkullClient extends Client
 			
 			//s.kill();
 			//s.destroy();
+		}
+		
+		if (MsgID == Msg.PlaySound.ID)
+		{
+			FlxG.sound.play(Assets.sounds.get(Msg.PlaySound.data.get("assetkey")));
+		}
+		
+		if (MsgID == Msg.PlayMusic.ID)
+		{
+			FlxG.sound.playMusic(Assets.sounds.get(Msg.PlayMusic.data.get("assetkey")));
+		}
+		
+		if (MsgID == Msg.StopMusic.ID)
+		{
+			FlxG.sound.music.stop();
 		}
 	}
 	

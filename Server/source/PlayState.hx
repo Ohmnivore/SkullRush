@@ -149,6 +149,8 @@ class PlayState extends FlxState
 		Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		var gm:String = Type.getClassName(Type.getClass(Reg.gm));
 		
+		Masterserver.setMapGM(current_map, fast.att.Gamemode);
+		
 		Msg.MapMsg.data.set("mapname", current_map);
 		Msg.MapMsg.data.set("mapstring", current_map_string);
 		
@@ -215,6 +217,8 @@ class PlayState extends FlxState
 	{
 		if (!Reg.shutdown)
 		{
+		Masterserver.updateHeartBeat(FlxG.elapsed);
+		
 		m.acquire();
 		//if (FlxG.keys.justPressed.R)
 		//{
@@ -294,6 +298,8 @@ class PlayState extends FlxState
 		framebuffer += FlxG.elapsed;
 		
 		m.release();
+		
+		//Reg.server.s.receive(
 		}
 	}
 }

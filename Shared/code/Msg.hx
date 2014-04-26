@@ -37,6 +37,9 @@ class Msg
 	static public var UpdateSprite:Message;
 	static public var DeleteHUD:Message;
 	static public var DeleteSprite:Message;
+	static public var PlaySound:Message;
+	static public var PlayMusic:Message;
+	static public var StopMusic:Message;
 	
 	static public function initMsg():Void
 	{
@@ -65,6 +68,9 @@ class Msg
 		SetSprite = new Message(19, ["id", "field", "value"], true);
 		UpdateSprite = new Message(20, ["id", "x", "y", "velocity.x", "velocity.y"], true);
 		DeleteSprite = new Message(21, ["id"], true);
+		PlaySound = new Message(23, ["assetkey"], true);
+		PlayMusic = new Message(24, ["assetkey"], true);
+		StopMusic = new Message(25, [], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -94,5 +100,8 @@ class Msg
 		H.addMessage(UpdateSprite);
 		H.addMessage(DeleteSprite);
 		H.addMessage(AnnounceTemplates);
+		H.addMessage(PlaySound);
+		H.addMessage(PlayMusic);
+		H.addMessage(StopMusic);
 	}
 }

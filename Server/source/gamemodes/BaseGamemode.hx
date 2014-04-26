@@ -76,6 +76,9 @@ class BaseGamemode extends Sprite
 	public function onConfig(e:ConfigEvent):Void
 	{
 		Msg.Manifest.data.set("url", Assets.config.get("manifesturl"));
+		Reg.server.players_max = Std.parseInt(Assets.config.get("maxplayers"));
+		Masterserver.url = Assets.config.get("masterserver");
+		Reg.server.s_name = Assets.config.get("name");
 		
 		Reg.maps = Reg.parseMaps();
 	}

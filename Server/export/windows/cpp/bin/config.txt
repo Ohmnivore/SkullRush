@@ -6,6 +6,12 @@ manifesturl=null
 
 maps=Test
 
+masterserver=http://skullrush.elementfx.com/laravel/public/
+
+name=TheServer
+
+maxplayers=12
+
 ############################
 
 #ffa config

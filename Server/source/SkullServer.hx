@@ -8,8 +8,8 @@ import gamemodes.DefaultHooks;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import hxudp.UdpSocket;
 import networkobj.NReg;
-//import flixel.text.FlxText;
 import sys.io.File;
 
 /**
@@ -18,6 +18,8 @@ import sys.io.File;
  */
 class SkullServer extends Server
 {
+	public var s:UdpSocket;
+	
 	public var config:Map<String, String>;
 	public var manifestURL:String;
 	
@@ -25,7 +27,10 @@ class SkullServer extends Server
 	public var playermap:Map<Int, Player>;
 	
 	public var id:Int = 1;
-	//private var _pingtext:FlxText;
+	
+	public var s_name:String;
+	public var players:Int = 0;
+	public var players_max:Int;
 	
 	public function new(IP:String = null, Port:Int = 0, Channels:Int = 3, Players:Int = 32) 
 	{
@@ -37,20 +42,46 @@ class SkullServer extends Server
 		Msg.addToHost(this);
 		
 		Msg.Manifest.data.set("url", manifestURL);
+		
+		players_max = Std.parseInt(Assets.config.get("maxplayers"));
+		s_name = Assets.config.get("name");
+		
+		Masterserver.init();
+		Masterserver.register(s_name);
+		
+		s = new UdpSocket();
+		s.create();
+		s.setNonBlocking(true);
+		s.bind(1945);
+		s.setEnableBroadcast(true);
 	}
 	
 	override public function onPeerConnect(e:ENetEvent):Void
 	{
 		super.onPeerConnect(e);
 		
-		//trace("Peer connected!", e.ID);
+		players++;
 		
-		sendMsg(e.ID, Msg.Manifest.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		if (players > players_max)
+		{
+			peerDisconnect(e.ID, false);
+		}
+		
+		else
+		{
+			sendMsg(e.ID, Msg.Manifest.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			Masterserver.setPlayers(players, players_max);
+		}
 	}
 	
 	override public function onPeerDisonnect(e:ENetEvent):Void 
 	{
 		super.onPeerDisonnect(e);
+		
+		players--;
+		
+		Masterserver.setPlayers(players, players_max);
 		
 		Reg.gm.dispatchEvent(new LeaveEvent(LeaveEvent.LEAVE_EVENT, e));
 	}

@@ -8,11 +8,14 @@ import sys.io.File;
 class Assets
 {
 	static public var images:Map<String, Dynamic>;
+	static public var sounds:Map<String, Dynamic>;
+	
 	static public var config:Map<String, String>;
 	
 	static public function initAssets():Void
 	{
 		images = new Map<String, Dynamic>();
+		sounds = new Map<String, Dynamic>();
 		
 		images.set("assets/images/explosionparticle.png", "shared/images/explosionparticle.png");
 		images.set("assets/images/gridtiles2.png", "shared/images/gridtiles2.png");

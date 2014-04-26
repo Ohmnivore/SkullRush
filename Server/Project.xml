@@ -22,6 +22,7 @@
 	<haxelib name="openfl" version="1.3.0"/>
 	<haxelib name="lime" version="0.9.6"/>
 	<haxelib name="flixel"/>
+	<haxelib name="random"/>
 	
 	<haxedef name="HXCPP_STACK_TRACE" />
 	<haxedef name="HXCPP_STACK_LINE" />
