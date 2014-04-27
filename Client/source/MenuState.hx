@@ -36,33 +36,10 @@ class MenuState extends FlxState
 		super.create();
 		FlxG.autoPause = false;
 		
-		if (!init)
-		{
-			//Setup zoom camera
-			if (FlxG.camera.zoom > 1)
-			{
-				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
-				FlxG.cameras.reset(cam);
-				FlxG.scaleMode = new FillScaleMode();
-				FlxG.cameras.bgColor = 0x00000000;
-			}
-			
-			else
-			{
-				FlxG.scaleMode = new FillScaleMode();
-				FlxG.cameras.bgColor = 0xff000000;
-			}
-			
-			ENet.init();
-			NReg.init();
-			Msg.initMsg();
-			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
-			Reg.host = Reg.client;
-			
-			init = true;
-		}
+		SkullClient.initClient();
 		
-		FlxG.switchState(new PlayState());
+		//FlxG.switchState(new PlayState());
+		FlxG.switchState(new Home());
 	}
 	
 	/**

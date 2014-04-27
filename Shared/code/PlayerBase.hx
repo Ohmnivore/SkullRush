@@ -197,6 +197,9 @@ class PlayerBase extends FlxSprite
 	
 	public function loadAnims():Void
 	{
+		setFacingFlip(FlxObject.RIGHT, false, false);
+		setFacingFlip(FlxObject.LEFT, true, false);
+		
 		animation.add("walking", [0, 1, 2, 3, 4, 5], 12, true);
 		animation.add("i_walking", [5, 4, 3, 2, 1, 0], 12, true);
 		animation.add("idle", [0], 12, false);
@@ -213,6 +216,7 @@ class PlayerBase extends FlxSprite
 		header.color = Color;
 		graphicKey = Asset;
 		loadGraphic(Assets.getImg(graphicKey), true, 24, 24);
+		this.flipX = true;
 		loadAnims();
 	}
 	

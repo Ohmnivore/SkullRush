@@ -2,8 +2,10 @@ package ;
 import enet.Client;
 import enet.ENet;
 import enet.ENetEvent;
+import flixel.addons.display.FlxZoomCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.scaleModes.FillScaleMode;
 import flixel.text.FlxText;
 import haxe.io.BytesInput;
 import haxe.Unserializer;
@@ -24,6 +26,37 @@ class SkullClient extends Client
 	public var rIP:String;
 	public var rPort:Int;
 	private var _s_id:Int;
+	
+	public static var init:Bool = false;
+	
+	public static function initClient():Void
+	{
+		if (!init)
+		{
+			//Setup zoom camera
+			if (FlxG.camera.zoom > 1)
+			{
+				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
+				FlxG.cameras.reset(cam);
+				FlxG.scaleMode = new FillScaleMode();
+				FlxG.cameras.bgColor = 0x00000000;
+			}
+			
+			else
+			{
+				FlxG.scaleMode = new FillScaleMode();
+				FlxG.cameras.bgColor = 0xff000000;
+			}
+			
+			ENet.init();
+			NReg.init();
+			Msg.initMsg();
+			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
+			Reg.host = Reg.client;
+			
+			init = true;
+		}
+	}
 	
 	public function new(IP:String = "", Port:Int = 6666)
 	{

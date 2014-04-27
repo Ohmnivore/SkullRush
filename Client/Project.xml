@@ -21,6 +21,7 @@
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
+	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="mloader" version="2.2.0" />
 	

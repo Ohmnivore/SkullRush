@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>	
+	<include id="_ui_globals"/>
+	
+	<sprite src="ui/palma" x="0" y="0"/>
+</data>
