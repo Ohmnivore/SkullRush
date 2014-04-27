@@ -21,7 +21,8 @@
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
-	<haxelib name="mloader"/>
+	<haxelib name="flixel-addons"/>
+	<haxelib name="mloader" version="2.2.0" />
 	
 	<haxedef name="CLIENT" />
 	<haxedef name="HXCPP_STACK_TRACE" />

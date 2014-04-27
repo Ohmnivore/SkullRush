@@ -55,7 +55,7 @@ class PlayerBase extends FlxSprite
 		_arr = [];
 		
 		graphicKey = "assets/images/playerblue.png";
-		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, true, 24, 24);
+		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, 24, 24);
 		loadAnims();
 		
 		gun = new FlxSprite(0, 0, Assets.getImg("assets/images/gun.png"));
@@ -212,7 +212,7 @@ class PlayerBase extends FlxSprite
 	{
 		header.color = Color;
 		graphicKey = Asset;
-		loadGraphic(Assets.getImg(graphicKey), true, true, 24, 24);
+		loadGraphic(Assets.getImg(graphicKey), true, 24, 24);
 		loadAnims();
 	}
 	

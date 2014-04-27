@@ -40,7 +40,8 @@ class Player extends PlayerBase
 	
 	public function respawnIn(Seconds:Float):Void
 	{
-		FlxTimer.start(Seconds, respawnCall, 1);
+		//FlxTimer.start(Seconds, respawnCall, 1);
+		new FlxTimer(Seconds, respawnCall, 1);
 	}
 	
 	public function respawnCall(T:FlxTimer):Void

@@ -55,6 +55,8 @@ class MenuState extends FlxState
 				FlxG.cameras.bgColor = 0xff000000;
 			}
 			
+			//FlxG.log.redirectTraces = true;
+			
 			//Setup networking
 			Reg.maps = Reg.parseMaps();
 			Reg.mapname = Reg.maps[Reg.map_index];

@@ -524,7 +524,8 @@ class FlxInputText extends FlxText
 		if (newFocus) 
 		{
 			if (_hasFocus != newFocus) {
-				caretTimer = FlxTimer.start(0.5, toggleCaret, 4);
+				//caretTimer = FlxTimer.start(0.5, toggleCaret, 4);
+				caretTimer = new FlxTimer(0.5, toggleCaret, 4);
 				caret.visible = true;
 				caretIndex = text.length;
 			}
@@ -535,7 +536,8 @@ class FlxInputText extends FlxText
 			// Graphics
 			caret.visible = false;		
 			if(caretTimer != null){
-				caretTimer.abort();
+				//caretTimer.abort();
+				caretTimer.cancel();
 			}
 		}
 		if (newFocus != _hasFocus) calcFrame();

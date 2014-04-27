@@ -18,6 +18,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxVector;
+import haxe.io.Bytes;
 import haxe.macro.Expr.Function;
 import mloader.Loader.LoaderErrorType;
 
@@ -181,6 +182,13 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		Reg.client.updateS();
+		
+		if (FlxG.keys.justPressed.I)
+		{
+			Reg.client.s.sendAll(Bytes.ofString("get_info"));
+		}
+		
 		m.acquire();
 		
 		super.update();

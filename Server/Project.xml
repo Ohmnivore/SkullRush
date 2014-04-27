@@ -19,10 +19,14 @@
 	<assets path="assets" />
 	<assets path="../Shared/assets" rename="shared" />
 	
-	<haxelib name="openfl" version="1.3.0"/>
+	<!--<haxelib name="openfl" version="1.3.0"/>
 	<haxelib name="lime" version="0.9.6"/>
+	<haxelib name="flixel" version="3.2.2"/>-->
+	
+	<haxelib name="openfl"/>
+	<haxelib name="lime"/>
 	<haxelib name="flixel"/>
-	<haxelib name="random"/>
+	<haxelib name="flixel-addons"/>
 	
 	<haxedef name="HXCPP_STACK_TRACE" />
 	<haxedef name="HXCPP_STACK_LINE" />

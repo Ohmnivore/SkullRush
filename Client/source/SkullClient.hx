@@ -5,6 +5,7 @@ import enet.ENetEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
+import haxe.io.BytesInput;
 import haxe.Unserializer;
 import hxudp.UdpSocket;
 import networkobj.NReg;
@@ -18,6 +19,8 @@ import haxe.io.Bytes;
  */
 class SkullClient extends Client
 {
+	public var s:UdpSocket;
+	
 	public var rIP:String;
 	public var rPort:Int;
 	private var _s_id:Int;
@@ -31,14 +34,22 @@ class SkullClient extends Client
 		
 		Msg.addToHost(this);
 		
-		var s:UdpSocket = UdpSocket();
+		s = new UdpSocket();
 		s.create();
+		s.bind(1990);
 		s.setNonBlocking(true);
-		s.bind(1945);
 		s.setEnableBroadcast(true);
+		s.connect(ENet.BROADCAST_ADDRESS, 1945);
+	}
+	
+	public function updateS():Void
+	{
+		var b = Bytes.alloc(80);
+		s.receive(b);
+		var msg:String = new BytesInput(b).readUntil(0);
 		
-		s.connect("192.168.0.255", 1945);
-		s.sendAll(Bytes.ofString("request"));
+		if (msg.length > 0)
+			trace(msg);
 	}
 	
 	public function updatePingText():Void

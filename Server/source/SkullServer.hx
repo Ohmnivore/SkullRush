@@ -8,9 +8,12 @@ import gamemodes.DefaultHooks;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
-import hxudp.UdpSocket;
+import haxe.io.Bytes;
+import haxe.io.BytesData;
+import haxe.io.BytesInput;
 import networkobj.NReg;
 import sys.io.File;
+import hxudp.UdpSocket;
 
 /**
  * ...
@@ -19,6 +22,7 @@ import sys.io.File;
 class SkullServer extends Server
 {
 	public var s:UdpSocket;
+	public var internal_ip:String;
 	
 	public var config:Map<String, String>;
 	public var manifestURL:String;
@@ -39,6 +43,8 @@ class SkullServer extends Server
 		
 		super(IP, Port, Channels, Players);
 		
+		internal_ip = ENet.getLocalIP();
+		
 		Msg.addToHost(this);
 		
 		Msg.Manifest.data.set("url", manifestURL);
@@ -51,9 +57,36 @@ class SkullServer extends Server
 		
 		s = new UdpSocket();
 		s.create();
-		s.setNonBlocking(true);
 		s.bind(1945);
+		s.setNonBlocking(true);
 		s.setEnableBroadcast(true);
+		s.connect(ENet.BROADCAST_ADDRESS, 1990);
+	}
+	
+	public function updateS():Void
+	{
+		var b = Bytes.alloc(80);
+		s.receive(b);
+		var msg:String = new BytesInput(b).readUntil(0);
+		if (msg.length > 0) trace("Msg: ", msg);
+		
+		if (msg == "get_info")
+		{
+			var info:String = '';
+			info += '[';
+			info += '"$s_name", ';
+			var mapname:String = Reg.mapname;
+			info += '"$mapname", ';
+			var gm_name:String = Reg.gm.name;
+			info += '"$gm_name", ';
+			info += '$players, ';
+			info += '$players_max, ';
+			info += '"$internal_ip"';
+			info += ']';
+			trace("Info: ", info);
+			
+			s.sendAll(Bytes.ofString(info));
+		}
 	}
 	
 	override public function onPeerConnect(e:ENetEvent):Void

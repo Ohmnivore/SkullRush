@@ -28,6 +28,8 @@ class ENet
 	 */
 	static public inline var ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT = (1 << 3);
 	
+	static public inline var BROADCAST_ADDRESS = "255.255.255.255";
+	
 	/**
 	 * Should be called once before using the library. 
 	 * Returns 0 if initialization is successfull.
@@ -156,6 +158,21 @@ class ENet
 		return _enet_get_peer_ping(ID);
 	}
 	
+	static public function getLocalIP():String
+	{
+		var ip:Dynamic = _enet_get_local_ip();
+		
+		if (ip == false)
+		{
+			return "";
+		}
+		
+		else
+		{
+			return ip;
+		}
+	}
+	
 	//All the C/C++ external loading
 	static var _enet_init = Lib.load("EnetTesting", "enet_init", 0);
 	static var _enet_create_server = Lib.load("EnetTesting", "enet_create_server", 4);
@@ -169,6 +186,7 @@ class ENet
 	static var _enet_event_peer = Lib.load("EnetTesting", "enet_event_peer", 1);
 	static var _enet_event_destroy = Lib.load("EnetTesting", "enet_destroy_event", 1);
 	static var _enet_get_peer_ping = Lib.load("EnetTesting", "enet_get_peer_ping", 1);
+	static var _enet_get_local_ip = Lib.load("EnetTesting", "enet_get_printable_ip", 0);
 	
 	static var _enet_peer_send = Lib.load("EnetTesting", "enet_send_packet", 5);
 	static var _enet_peer_disconnect = Lib.load("EnetTesting", "enet_disconnect_peer", 3);

@@ -29,8 +29,8 @@ class NSprite
 		s.maxVelocity.x = template.maxspeed_x;
 		
 		oldpos = new FlxPoint(s.x, s.y);
-		move_timer = FlxTimer.recycle();
-		move_timer.run(2);
+		move_timer = new FlxTimer(2);
+		//move_timer = FlxTimer.start(2);
 		
 		ID = NReg.getID();
 		

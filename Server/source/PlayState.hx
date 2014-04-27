@@ -220,11 +220,7 @@ class PlayState extends FlxState
 		Masterserver.updateHeartBeat(FlxG.elapsed);
 		
 		m.acquire();
-		//if (FlxG.keys.justPressed.R)
-		//{
-			//FlxG.switchState(new PlayState());
-			//return;
-		//}
+		
 		super.update();
 		
 		if (Reg.gm != null)
@@ -299,7 +295,7 @@ class PlayState extends FlxState
 		
 		m.release();
 		
-		//Reg.server.s.receive(
+		Reg.server.updateS();
 		}
 	}
 }

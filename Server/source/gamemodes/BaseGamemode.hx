@@ -25,6 +25,8 @@ class BaseGamemode extends Sprite
 	{
 		super();
 		
+		name = "BASE";
+		
 		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig, false, 0);
 		//for each (var plug:BasePlugin in ServerInfo.pl)
 		//{

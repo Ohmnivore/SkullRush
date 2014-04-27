@@ -26,6 +26,7 @@ class FFA extends BaseGamemode
 	public function new() 
 	{
 		super();
+		name = "FFA";
 		DefaultHooks.hookEvents(this);
 		
 		testt = new NTemplate("assets/images/gun.png");
