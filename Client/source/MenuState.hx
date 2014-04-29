@@ -12,6 +12,7 @@ import flixel.util.FlxMath;
 import enet.ENet;
 import enet.ENetEvent;
 import networkobj.NReg;
+import ui.Home;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -36,7 +37,7 @@ class MenuState extends FlxState
 		super.create();
 		FlxG.autoPause = false;
 		
-		SkullClient.initClient();
+		//SkullClient.initClient();
 		
 		//FlxG.switchState(new PlayState());
 		FlxG.switchState(new Home());

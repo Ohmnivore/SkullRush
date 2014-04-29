@@ -65,6 +65,8 @@ class SkullServer extends Server
 	
 	public function updateS():Void
 	{
+		//s.connect(s.getRemoteAddr(), 1990);
+		
 		var b = Bytes.alloc(80);
 		s.receive(b);
 		var msg:String = new BytesInput(b).readUntil(0);

@@ -25,8 +25,9 @@ class SkullClient extends Client
 	
 	public var rIP:String;
 	public var rPort:Int;
-	private var _s_id:Int;
+	public var _s_id:Int;
 	
+	public static var execute:Bool = false;
 	public static var init:Bool = false;
 	
 	public static function initClient():Void
@@ -54,6 +55,7 @@ class SkullClient extends Client
 			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
 			Reg.host = Reg.client;
 			
+			execute = true;
 			init = true;
 		}
 	}

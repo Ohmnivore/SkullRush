@@ -118,7 +118,7 @@ class PlayState extends FlxState
 	
 	public function thread():Void
 	{
-		while (true)
+		while (SkullClient.execute)
 		{
 			try
 			{
@@ -183,6 +183,11 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		Reg.client.updateS();
+		
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			openSubState(new Menu());
+		}
 		
 		if (FlxG.keys.justPressed.I)
 		{
@@ -303,17 +308,17 @@ class PlayState extends FlxState
 		
 		for (p in players.members)
 		{
-			var pl:Player = cast (p, Player);
-			
-			var v:FlxVector = new FlxVector(1, 0);
-			
-			v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
-			
-			var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-			if (dist_coeff < 0) dist_coeff = 0;
-			
-			pl.velocity.x += v.x * 300 * dist_coeff;
-			pl.velocity.y += v.y * 300 * dist_coeff;
+			//var pl:Player = cast (p, Player);
+			//
+			//var v:FlxVector = new FlxVector(1, 0);
+			//
+			//v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
+			//
+			//var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
+			//if (dist_coeff < 0) dist_coeff = 0;
+			//
+			//pl.velocity.x += v.x * 300 * dist_coeff;
+			//pl.velocity.y += v.y * 300 * dist_coeff;
 		}
 		
 		Bullet.kill();

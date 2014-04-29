@@ -5,6 +5,7 @@ import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
 import entities.Spawn;
+import flixel.addons.tile.FlxRayCastTilemap;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
@@ -38,7 +39,7 @@ class PlayState extends FlxState
 	public var current_map:String;
 	public var current_map_string:String;
 	
-	public var collidemap:FlxTilemap;
+	public var collidemap:FlxRayCastTilemap;
 	public var maps:FlxGroup;
 	public var under_players:FlxGroup;
 	public var bullets:FlxGroup;

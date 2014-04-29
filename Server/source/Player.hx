@@ -3,6 +3,7 @@ import entities.Spawn;
 import flixel.FlxObject;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+import haxe.Unserializer;
 
 /**
  * ...
@@ -10,6 +11,8 @@ import flixel.util.FlxTimer;
  */
 class Player extends PlayerBase
 {
+	public var canJump:Bool = true;
+	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
@@ -22,7 +25,22 @@ class Player extends PlayerBase
 	
 	override public function update():Void 
 	{
+		if (isTouching(FlxObject.DOWN))
+		{
+			canJump = true;
+		}
+		
 		super.update();
+		
+		//if (isTouching(FlxObject.DOWN))
+		//{
+			//canJump = true;
+		//}
+		
+		//if (justTouched(FlxObject.DOWN))
+		//{
+			//canJump = true;
+		//}
 		
 		if (health <= 0)
 		{
@@ -66,5 +84,54 @@ class Player extends PlayerBase
 		health = 100;
 		alive = true;
 		allowCollisions = FlxObject.ANY;
+	}
+	
+	override public function s_unserialize(S:String):Void 
+	{
+		_arr.splice(0, _arr.length);
+		
+		_arr = Unserializer.run(S);
+		
+		if (_arr.length == 6)
+		{
+			move_right = _arr[0];
+			move_left = _arr[1];
+			move_jump = _arr[2];
+			a = _arr[3];
+			isRight = _arr[4];
+			shoot = _arr[5];
+			
+			if (move_right) //move right
+			{
+				velocity.x += 20;
+			}
+			
+			if (move_left) //move left
+			{
+				velocity.x += -20;
+			}
+			
+			if (move_jump) //jump
+			{
+				//trace("jumping");
+				if (isTouching(FlxObject.ANY) && canJump)
+				{
+					//trace(_arr[2]);
+					velocity.y = -280;
+					canJump = false;
+				}
+				
+				else
+				{
+					//trace("not jumping");
+					move_jump = false;
+				}
+			}
+			
+			if (shoot && alive) //shoot
+			{
+				fire();
+			}
+		}
 	}
 }

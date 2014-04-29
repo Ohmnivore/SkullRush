@@ -6,6 +6,7 @@ package ;
 import entities.Spawn;
 #end
 
+import flixel.addons.tile.FlxRayCastTilemap;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -59,7 +60,7 @@ class OgmoLoader
 		{
 			if (x.has.tileset) //Tilemap
 			{
-				var map:FlxTilemap = new FlxTilemap();
+				var map:FlxRayCastTilemap = new FlxRayCastTilemap();
 				map.loadMap(x.innerData, Assets.getImg("assets/images/scifitiles.png"), 16, 16, 0, 0, 0, 0);
 				State.maps.add(map);
 			}
@@ -78,7 +79,7 @@ class OgmoLoader
 				{
 					var mapdata:GridData = loadGrid(x);
 					
-					var map:FlxTilemap = new FlxTilemap();
+					var map:FlxRayCastTilemap = new FlxRayCastTilemap();
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					

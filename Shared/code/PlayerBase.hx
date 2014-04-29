@@ -81,12 +81,13 @@ class PlayerBase extends FlxSprite
 		header.color = 0xff00A8C2;
 		
 		acceleration.y = 440;
-		drag.x = 120;
+		drag.x = 300;
 		maxVelocity.x = 150;
+		maxVelocity.y = 300;
 		
 		cannon = new FlxWeaponExt("launcher", this, FlxBullet, 0);
 		cannon.makePixelBullet(4, 4, 4, FlxColor.CYAN);
-		cannon.setBulletSpeed(220);
+		cannon.setBulletSpeed(255);
 		var bounds:FlxRect = Reg.state.collidemap.getBounds();
 		bounds.x -= FlxG.width / 2;
 		bounds.width += FlxG.width;

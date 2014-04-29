@@ -7,6 +7,7 @@ import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
 import gevents.ReceiveEvent;
 import networkobj.NCounter;
@@ -124,7 +125,13 @@ class DefaultHooks
 			var info:HurtInfo = new HurtInfo();
 			info.attacker = winner.ID;
 			info.victim = loser.ID;
-			info.dmg = Std.int(Math.abs(winner.velocity.y - loser.velocity.y) * 3);
+			if (winner.velocity.y > 0)
+			{
+				if (winner.y + winner.height <= loser.y)
+				{
+					info.dmg = 100;
+				}
+			}
 			info.type = BaseGamemode.JUMPKILL;
 			info.dmgsource = winner.getMidpoint();
 			
@@ -199,29 +206,40 @@ class DefaultHooks
 			
 			v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
 			
-			var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-			if (dist_coeff < 0) dist_coeff = 0;
+			//trace(Reg.state.collidemap.ray(Bullet.getMidpoint(), pl.getMidpoint(), new FlxPoint(), 2));
+			//var d:FlxPoint = FlxPoint.get(v.x, v.y);
+			//var res:FlxPoint = FlxPoint.get();
+			//Reg.state.collidemap.rayCast(Bullet.getMidpoint(), d, res);
+			//d.put();
+			//res.put();
 			
-			pl.velocity.x += v.x * 300 * dist_coeff;
-			pl.velocity.y += v.y * 300 * dist_coeff;
-			
-			//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
-			if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
-			{
-				var dmg:Float = dist_coeff * 75;
-				//if (pl.health - dmg <= 0)
-					//announceGun(cast (Bullet._weapon.parent, Player), pl);
-				//pl.health -= dist_coeff * 75;
+			//if (FlxMath.distanceToPoint(Bullet, res) >= FlxMath.distanceBetween(Bullet, pl) - 2)
+			//{
+				var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
+				if (dist_coeff < 0) dist_coeff = 0;
+				//if (dist_coeff > 0.5) dist_coeff = 0.5;
 				
-				var info:HurtInfo = new HurtInfo();
-				info.attacker = Reflect.field(Bullet._weapon.parent, "ID");
-				info.victim = pl.ID;
-				info.dmg = Std.int(dmg);
-				info.dmgsource = Bullet.getMidpoint();
-				info.type = BaseGamemode.BULLET;
+				pl.velocity.x += v.x * 300 * dist_coeff;
+				pl.velocity.y += v.y * 300 * dist_coeff;
 				
-				Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
-			}
+				//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
+				if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
+				{
+					var dmg:Float = dist_coeff * 75;
+					//if (pl.health - dmg <= 0)
+						//announceGun(cast (Bullet._weapon.parent, Player), pl);
+					//pl.health -= dist_coeff * 75;
+					
+					var info:HurtInfo = new HurtInfo();
+					info.attacker = Reflect.field(Bullet._weapon.parent, "ID");
+					info.victim = pl.ID;
+					info.dmg = Std.int(dmg);
+					info.dmgsource = Bullet.getMidpoint();
+					info.type = BaseGamemode.BULLET;
+					
+					Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
+				}
+			//}
 		}
 		
 		Bullet.kill();

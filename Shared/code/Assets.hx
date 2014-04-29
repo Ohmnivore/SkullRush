@@ -66,4 +66,37 @@ class Assets
 		
 		return map;
 	}
+	
+	static public function saveConfig():Void
+	{
+		var str:String = File.getContent("config.txt");
+		var ret:String = "";
+		
+		var key_value:Array<String> = str.split("\n");
+		
+		for (s in key_value)
+		{
+			if (s.charAt(0) != "#")
+			{
+				StringTools.trim(s);
+				
+				var delimiter:Int = s.indexOf("=");
+				
+				var key:String = s.substring(0, delimiter);
+				
+				if (key != null && Assets.config.get(key) != null)
+				{
+					if (key.length > 0)
+						ret += key + "=" + Assets.config.get(key) + "\n";
+				}
+			}
+			
+			else
+			{
+				ret += s + "\n";
+			}
+		}
+		
+		File.saveContent("config.txt", ret);
+	}
 }
