@@ -256,6 +256,24 @@ class PlayState extends FlxState
 				player.move_jump = false;
 			}
 			
+			if (FlxG.keys.justPressed.Q)
+			{
+				player.dash_left = true;
+			}
+			else
+			{
+				player.dash_left = false;
+			}
+			
+			if (FlxG.keys.justPressed.E)
+			{
+				player.dash_right = true;
+			}
+			else
+			{
+				player.dash_right = false;
+			}
+			
 			//Shoot
 			if (FlxG.mouse.pressed && player.health > 0)
 			{

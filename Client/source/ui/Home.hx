@@ -29,7 +29,7 @@ class Home extends FlxUIState
 		chrome.scrollFactor.set();
 		add(chrome);
 		
-		browse_p = new FlxUIButton(15, 10, "Browse public servers");
+		browse_p = new FlxUIButton(15, 10, "Browse public servers", browsePublic);
 		browse_l = new FlxUIButton(15, 50, "Browse local servers", browseLAN);
 		connect = new FlxUIButton(15, 90, "Connect to IP", directConnect);
 		settings = new FlxUIButton(15, 130, "Player settings", playerSettings);
@@ -48,6 +48,11 @@ class Home extends FlxUIState
 		add(connect);
 		add(settings);
 		add(auto_launch);
+	}
+	
+	public function browsePublic():Void
+	{
+		FlxG.switchState(new Public());
 	}
 	
 	public function browseLAN():Void

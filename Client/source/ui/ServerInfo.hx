@@ -30,6 +30,11 @@ class ServerInfo
 		ip = IP;
 	}
 	
+	public function getString():String
+	{
+		return '$name | $map | $gm | $players/$players_max | $ip';
+	}
+	
 	public function unserializeLAN(S:String):Void
 	{
 		var arr:Array<Dynamic> = cast (Json.parse(S), Array<Dynamic>);

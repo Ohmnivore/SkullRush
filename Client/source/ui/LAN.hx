@@ -31,27 +31,13 @@ class LAN extends FlxUIState
 		s.setEnableBroadcast(true);
 		s.connect(ENet.BROADCAST_ADDRESS, 1945);
 		
-		s = new UdpSocket();
-		s.create();
-		s.bind(1990);
-		s.setNonBlocking(true);
-		s.setEnableBroadcast(true);
-		s.connect(ENet.BROADCAST_ADDRESS, 1945);
-		
-		//s = new UdpSocket();
-		//s.create();
-		//s.bind(1990);
-		//s.setNonBlocking(true);
-		//s.setEnableBroadcast(true);
-		//s.connect(ENet.BROADCAST_ADDRESS, 1945);
-		//
-		//new FlxTimer(0.5, sendRequest);
-		//new FlxTimer(0.01, updateST, 0);
-		Thread.create(updateS);
+		new FlxTimer(0.5, sendRequest);
 	}
 	
 	override public function update():Void 
 	{
+		updateS();
+		
 		if (FlxG.keys.justPressed.I)
 		{
 			sendRequest(new FlxTimer(0.1));
@@ -72,18 +58,8 @@ class LAN extends FlxUIState
 	
 	public function updateS():Void
 	{
-		new SkullClient("", 6666);
-		s = new UdpSocket();
-		trace(s.create());
-		trace(s.bind(1990));
-		trace(s.setNonBlocking(true));
-		trace(s.setEnableBroadcast(true));
-		trace(s.connect(ENet.BROADCAST_ADDRESS, 1945));
-		
-		new FlxTimer(0.5, sendRequest);
-		
-		while (true)
-		{
+		//while (true)
+		//{
 		var b = Bytes.alloc(80);
 		trace(s.receive(b));
 		var msg:String = new BytesInput(b).readUntil(0);
@@ -93,7 +69,7 @@ class LAN extends FlxUIState
 			trace(msg);
 			//add(new FlxText(10, 200, 0, Std.string(Std.random(20))));
 		}
-		Sys.sleep(0.05);
-		}
+		//Sys.sleep(0.05);
+		//}
 	}
 }

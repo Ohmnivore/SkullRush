@@ -239,6 +239,11 @@ class DefaultHooks
 					
 					Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
 				}
+				
+				else
+				{
+					pl.canChoose = true;
+				}
 			//}
 		}
 		

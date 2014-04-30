@@ -30,6 +30,8 @@ class PlayerBase extends FlxSprite
 	public var move_jump:Bool;
 	public var shoot:Bool;
 	public var ceilingwalk:Bool;
+	public var dash_left:Bool;
+	public var dash_right:Bool;
 	
 	private var _arr:Array<Dynamic>;
 	private var cannon:FlxWeaponExt;
@@ -82,7 +84,7 @@ class PlayerBase extends FlxSprite
 		
 		acceleration.y = 440;
 		drag.x = 300;
-		maxVelocity.x = 150;
+		maxVelocity.x = 170;
 		maxVelocity.y = 300;
 		
 		cannon = new FlxWeaponExt("launcher", this, FlxBullet, 0);
@@ -326,6 +328,9 @@ class PlayerBase extends FlxSprite
 		_arr.push(velocity.x);
 		_arr.push(velocity.y);
 		
+		_arr.push(dash_left);
+		_arr.push(dash_right);
+		
 		return Serializer.run(_arr);
 	}
 	
@@ -333,7 +338,7 @@ class PlayerBase extends FlxSprite
 	{
 		_arr = Arr;
 		
-		if (_arr.length == 9) //used to be 7
+		if (_arr.length == 11) //used to be 7
 		{
 			x = _arr[1];
 			y = _arr[2];
@@ -347,7 +352,8 @@ class PlayerBase extends FlxSprite
 			isRight = _arr[4];
 			shoot = _arr[5];
 			health = _arr[6];
-			//trace(health);
+			dash_left = _arr[7];
+			dash_right = _arr[8];
 			
 			if (shoot)
 			{
@@ -366,6 +372,8 @@ class PlayerBase extends FlxSprite
 		_arr.push(a);
 		_arr.push(isRight);
 		_arr.push(shoot);
+		_arr.push(dash_left);
+		_arr.push(dash_right);
 		
 		return Serializer.run(_arr);
 	}
@@ -376,7 +384,7 @@ class PlayerBase extends FlxSprite
 		
 		_arr = Unserializer.run(S);
 		
-		if (_arr.length == 6)
+		if (_arr.length == 8)
 		{
 			move_right = _arr[0];
 			move_left = _arr[1];
@@ -384,6 +392,8 @@ class PlayerBase extends FlxSprite
 			a = _arr[3];
 			isRight = _arr[4];
 			shoot = _arr[5];
+			dash_left = _arr[6];
+			dash_right = _arr[7];
 			
 			if (move_right) //move right
 			{
