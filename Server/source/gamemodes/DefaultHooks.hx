@@ -96,28 +96,34 @@ class DefaultHooks
 		var winner:Player = P;
 		var loser:Player = P2;
 		
-		if (P.y < P2.y)
+		if (P.dashing_down)
 		{
-			winner = P;
-			loser = P2;
-			
-			//P2.health = 0;
-			
-			//announceSquish(winner, loser);
-			
-			iskill = true;
+			if (P.y < P2.y)
+			{
+				winner = P;
+				loser = P2;
+				
+				//P2.health = 0;
+				
+				//announceSquish(winner, loser);
+				
+				iskill = true;
+			}
 		}
 		
-		if (P2.y < P.y)
+		if (P2.dashing_down)
 		{
-			winner = P2;
-			loser = P;
-			
-			//P.health = 0;
-			
-			//announceSquish(winner, loser);
-			
-			iskill = true;
+			if (P2.y < P.y)
+			{
+				winner = P2;
+				loser = P;
+				
+				//P.health = 0;
+				
+				//announceSquish(winner, loser);
+				
+				iskill = true;
+			}
 		}
 		
 		if (iskill)

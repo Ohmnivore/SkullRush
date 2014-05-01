@@ -32,6 +32,7 @@ class PlayerBase extends FlxSprite
 	public var ceilingwalk:Bool;
 	public var dash_left:Bool;
 	public var dash_right:Bool;
+	public var dash_down:Bool;
 	
 	private var _arr:Array<Dynamic>;
 	private var cannon:FlxWeaponExt;
@@ -374,6 +375,7 @@ class PlayerBase extends FlxSprite
 		_arr.push(shoot);
 		_arr.push(dash_left);
 		_arr.push(dash_right);
+		_arr.push(dash_down);
 		
 		return Serializer.run(_arr);
 	}
@@ -384,7 +386,7 @@ class PlayerBase extends FlxSprite
 		
 		_arr = Unserializer.run(S);
 		
-		if (_arr.length == 8)
+		if (_arr.length == 9)
 		{
 			move_right = _arr[0];
 			move_left = _arr[1];
@@ -394,6 +396,7 @@ class PlayerBase extends FlxSprite
 			shoot = _arr[5];
 			dash_left = _arr[6];
 			dash_right = _arr[7];
+			dash_down = _arr[8];
 			
 			if (move_right) //move right
 			{

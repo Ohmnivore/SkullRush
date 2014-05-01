@@ -52,6 +52,7 @@ class SkullClient extends Client
 			ENet.init();
 			NReg.init();
 			Msg.initMsg();
+			//trace(Assets.config.get("ip"));
 			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
 			Reg.host = Reg.client;
 			

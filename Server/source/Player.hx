@@ -14,6 +14,7 @@ class Player extends PlayerBase
 	public var canJump:Bool = true;
 	public var canChoose:Bool = true;
 	public var dashing:Bool = false;
+	public var dashing_down:Bool = false;
 	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
@@ -31,6 +32,12 @@ class Player extends PlayerBase
 		{
 			canJump = true;
 			canChoose = false;
+			
+			if (dashing_down)
+			{
+				maxVelocity.y -= 300;
+				dashing_down = false;
+			}
 		}
 		
 		if (isTouching(FlxObject.ANY) || (velocity.x < 20 && velocity.x > -20))
@@ -115,7 +122,7 @@ class Player extends PlayerBase
 		
 		dashing = true;
 		canChoose = false;
-		new FlxTimer(1, stopDash);
+		new FlxTimer(0.35, stopDash);
 	}
 	
 	public function stopDash(T:FlxTimer):Void
@@ -141,7 +148,7 @@ class Player extends PlayerBase
 		
 		_arr = Unserializer.run(S);
 		
-		if (_arr.length == 8)
+		if (_arr.length == 9)
 		{
 			move_right = _arr[0];
 			move_left = _arr[1];
@@ -151,6 +158,7 @@ class Player extends PlayerBase
 			shoot = _arr[5];
 			dash_left = _arr[6];
 			dash_right = _arr[7];
+			dash_down = _arr[8];
 			
 			if (!dashing)
 			{
@@ -162,6 +170,14 @@ class Player extends PlayerBase
 				if (move_left) //move left
 				{
 					velocity.x += -20;
+				}
+				
+				if (canChoose && dash_down)
+				{
+					velocity.y += 300;
+					maxVelocity.y += 300;
+					canChoose = false;
+					dashing_down = true;
 				}
 			}
 			
@@ -178,7 +194,7 @@ class Player extends PlayerBase
 				}
 			}
 			
-			if (!dashing)
+			if (!dashing && canChoose)
 			{
 				if (dash_left)
 				{

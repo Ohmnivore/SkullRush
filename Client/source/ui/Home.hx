@@ -20,7 +20,7 @@ class Home extends FlxUIState
 	
 	override public function create() 
 	{
-		SkullClient.initClient();
+		//SkullClient.initClient();
 		
 		Util.initXML(this);
 		super.create();

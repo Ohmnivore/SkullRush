@@ -53,6 +53,8 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		SkullClient.initClient();
+		
 		// Set a background color
 		FlxG.cameras.bgColor = 0xffB8B8B8;
 		// Show the mouse (in case it hasn't been disabled)
@@ -254,6 +256,15 @@ class PlayState extends FlxState
 			else
 			{
 				player.move_jump = false;
+			}
+			
+			if (FlxG.keys.justPressed.S)
+			{
+				player.dash_down = true;
+			}
+			else
+			{
+				player.dash_down = false;
 			}
 			
 			if (FlxG.keys.justPressed.Q)
