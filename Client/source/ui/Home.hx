@@ -57,7 +57,7 @@ class Home extends FlxUIState
 	
 	public function browseLAN():Void
 	{
-		FlxG.switchState(new LAN());
+		//FlxG.switchState(new LAN());
 	}
 	
 	public function playerSettings():Void

@@ -1,6 +1,10 @@
 package gamemodes;
 
 import enet.ENet;
+import entities.Flag;
+import entities.Holder;
+import flixel.FlxG;
+import flixel.group.FlxGroup;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -8,9 +12,11 @@ import gevents.HurtInfo;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NCounter;
 import networkobj.NReg;
 import networkobj.NSprite;
 import networkobj.NTemplate;
+import networkobj.NTimer;
 
 /**
  * ...
@@ -18,18 +24,35 @@ import networkobj.NTemplate;
  */
 class CTF extends BaseGamemode
 {
-	public var testt:NTemplate;
-	public var maxkills:Int = 25;
+	static public var init:Bool = false;
+	public var flags:FlxGroup;
+	public var holders:FlxGroup;
+	public var greenCounter:NCounter;
+	public var blueCounter:NCounter;
+	public var timeLeft:NTimer;
+	public var maxtime:Int;
+	public var maxcaps:Int;
 	
 	public function new() 
 	{
 		super();
+		name = "CTF";
 		DefaultHooks.hookEvents(this);
 		
-		testt = new NTemplate("assets/images/gun.png");
-		NReg.registerTemplate(testt);
+		Assets.loadConfig();
 		
-		var tests:NSprite = new NSprite(10, 50, testt);
+		flags = new FlxGroup();
+		holders = new FlxGroup();
+		
+		Flag.init();
+		Holder.init();
+		
+		greenCounter = new NCounter("Green captures", 0xff00ff00, 5, 5, 0, true);
+		greenCounter.setCount(Holder.captures[0]);
+		blueCounter = new NCounter("Blue captures", 0xff0000ff, 5, 25, 0, true);
+		blueCounter.setCount(Holder.captures[1]);
+		
+		timeLeft = new NTimer("Time left", 0xff000000, 250, 0, 0, true);
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -37,6 +60,21 @@ class CTF extends BaseGamemode
 		super.update(elapsed);
 		
 		DefaultHooks.update(elapsed);
+		
+		Flag.updateFlags();
+		
+		FlxG.overlap(Reg.state.players, flags, Flag.collideFlag);
+		FlxG.overlap(Reg.state.players, holders, Holder.collideStand);
+		
+		for (f in flags.members)
+		{
+			var fl:Flag = cast NReg.sprites.get(f.ID);
+			
+			if (fl.s.y >= Reg.state.collidemap.y + Reg.state.collidemap.height + FlxG.height / 2)
+			{
+				Flag.returnFlag(null, fl);
+			}
+		}
 		
 		//for each (var p:Player in Registry.playstate.players)
 		//{
@@ -59,6 +97,18 @@ class CTF extends BaseGamemode
 	override public function onDeath(e:DeathEvent):Void
 	{
 		DefaultHooks.handleDeath(e.deathinfo);
+		
+		for (p in Flag.taken_flags.keys())
+		{
+			if (p.ID == e.deathinfo.victim)
+			{
+				p.solid = false;
+				var f:Flag = Flag.taken_flags.get(p);
+				
+				Flag.taken_flags.remove(f.owner);
+				f.owner = null;
+			}
+		}
 	}
 	
 	override public function onJoin(e:JoinEvent):Void
@@ -80,7 +130,14 @@ class CTF extends BaseGamemode
 	{
 		super.onConfig(e);
 		
-		maxkills = Std.parseInt(Assets.config.get("maxkills"));
+		maxtime = Std.parseInt(Assets.config.get("ctf_maxtime"));
+		maxcaps = Std.parseInt(Assets.config.get("ctf_maxcaps"));
+		
+		if (!init)
+		{
+			timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING, 0xff000000);
+			init = true;
+		}
 	}
 	
 	//override public function createScore():Void

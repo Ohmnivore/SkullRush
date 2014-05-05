@@ -23,6 +23,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
+import gamemodes.CTF;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
@@ -39,7 +40,7 @@ class PlayState extends FlxState
 	public var current_map:String;
 	public var current_map_string:String;
 	
-	public var collidemap:FlxRayCastTilemap;
+	public var collidemap:FlxTilemap;
 	public var maps:FlxGroup;
 	public var under_players:FlxGroup;
 	public var bullets:FlxGroup;
@@ -111,6 +112,8 @@ class PlayState extends FlxState
 	
 	public function sendChatMsg():Void
 	{
+		//var res:FlxPoint = new FlxPoint();
+		//trace(collidemap.ray(new FlxPoint(10, 10), new FlxPoint(50, 50)));
 		var t:String = Reg.chatbox.text.text;
 		Reg.chatbox.text.text = "";
 		
@@ -164,12 +167,15 @@ class PlayState extends FlxState
 		{
 			var p:Player = Reg.server.playermap.get(i);
 			
-			var sp:Spawn = Spawn.findSpawn(p.team);
-			var p_new:Player = new Player(p.ID, p.name, sp.x, sp.y);
+			var s:Spawn = Spawn.findSpawn(p.team);
+			var p_new:Player = new Player(p.ID, p.name, s.x, s.y);
 			p_new.team = p.team;
 			p_new.setColor(p.header.color, p.graphicKey);
 			
 			Reg.server.playermap.set(i, p_new);
+			
+			Reg.server.sendMsg(p.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			DefaultHooks.initPlayer(p);
 		}
 		
 		trace('Loaded map $current_map and gamemode $gm.');

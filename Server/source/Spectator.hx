@@ -24,6 +24,12 @@ class Spectator extends FlxSprite
 	
 	override public function update():Void 
 	{
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			x = Reg.state.collidemap.x + Reg.state.collidemap.width / 2;
+			y = Reg.state.collidemap.y + Reg.state.collidemap.height / 2;
+		}
+		
 		if (FlxG.keys.anyPressed(["W", "UP"]))
 		{
 			velocity.y -= 70;

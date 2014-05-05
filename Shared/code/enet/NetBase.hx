@@ -92,7 +92,7 @@ class NetBase
 			
 			catch (e:Dynamic)
 			{
-				trace("Error receiving message");
+				trace("Error receiving message, content: ", e.message);
 			}
 		}
 		

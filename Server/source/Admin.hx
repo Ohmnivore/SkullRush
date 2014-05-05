@@ -27,7 +27,7 @@ class Admin
 		
 		Reg.mapname = Reg.maps[Reg.map_index];
 		
-		FlxG.switchState(new PlayState());
+		Reg.reLaunch();
 	}
 	
 	static public function setMap(Name:String):Void
@@ -58,12 +58,12 @@ class Admin
 			Reg.mapname = Name;
 		}
 		
-		FlxG.switchState(new PlayState());
+		Reg.reLaunch();
 	}
 	
 	public static function reloadMap():Void
 	{
-		FlxG.switchState(new PlayState());
+		Reg.reLaunch();
 	}
 	
 	public static function reloadConfig():Void

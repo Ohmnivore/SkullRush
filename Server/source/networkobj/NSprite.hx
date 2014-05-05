@@ -33,10 +33,11 @@ class NSprite
 		//move_timer = FlxTimer.start(2);
 		
 		ID = NReg.getID();
+		s.ID = ID;
 		
 		Reg.state.ent.add(s);
 		
-		NReg.sprites.push(this);
+		NReg.sprites.set(ID, this);
 		announce(0);
 	}
 	
@@ -103,6 +104,6 @@ class NSprite
 		s.kill();
 		s.destroy();
 		
-		NReg.sprites.remove(this);
+		NReg.sprites.remove(ID);
 	}
 }

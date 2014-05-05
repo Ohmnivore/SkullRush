@@ -4,7 +4,7 @@
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
 
-maps=Test
+maps=TwinCapture, Test
 
 masterserver=http://skullrush.elementfx.com/laravel/public/
 
@@ -16,3 +16,7 @@ maxplayers=12
 
 #ffa config
 maxkills=30
+
+#ctf config
+ctf_maxtime=10
+ctf_maxcaps=5

@@ -16,9 +16,10 @@ class NCounter extends NHUD
 	public var y:Int;
 	
 	public var base:String;
+	public var color:Int;
 	public var count:Int = 0;
 	
-	public function new(Base:String, X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
+	public function new(Base:String, Color:Int = 0xff000000, X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
 	{
 		super();
 		local = Local;
@@ -26,12 +27,14 @@ class NCounter extends NHUD
 		x = X;
 		y = Y;
 		base = Base;
+		color = Color;
 		
 		ID = NReg.getID();
 		
 		if (local)
 		{
 			t = new FlxText(x, y, FlxG.width, '$base: $count', 12);
+			t.color = color;
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
 		}
@@ -47,31 +50,40 @@ class NCounter extends NHUD
 		Msg.NewCounter.data.set("x", x);
 		Msg.NewCounter.data.set("y", y);
 		
+		Msg.SetCounter.data.set("id", ID);
+		Msg.SetCounter.data.set("base", base);
+		Msg.SetCounter.data.set("color", color);
+		Msg.SetCounter.data.set("count", count);
+		
 		if (player == 0)
 		{
 			for (p in Reg.server.playermap.keys())
 			{
 				Reg.server.sendMsg(p, Msg.NewCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+				Reg.server.sendMsg(p, Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			}
 		}
 		
 		else
 		{
 			Reg.server.sendMsg(player, Msg.NewCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsg(player, Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 	}
 	
-	public function setCount(Count:Int, Color:Int, NewBase:String = null):Void
+	public function setCount(Count:Int, NewColor:Int = null, NewBase:String = null):Void
 	{
 		count = Count;
 		
+		if (NewColor != null)
+			color = NewColor;
 		if (NewBase != null)
 			base = NewBase;
 		
 		Msg.SetCounter.data.set("id", ID);
 		Msg.SetCounter.data.set("base", base);
-		Msg.SetCounter.data.set("color", Color);
-		Msg.SetCounter.data.set("count", Count);
+		Msg.SetCounter.data.set("color", color);
+		Msg.SetCounter.data.set("count", count);
 		
 		if (player == 0)
 		{
@@ -89,7 +101,7 @@ class NCounter extends NHUD
 		if (local)
 		{
 			t.text = '$base: $count';
-			t.color = Color;
+			t.color = color;
 		}
 	}
 	

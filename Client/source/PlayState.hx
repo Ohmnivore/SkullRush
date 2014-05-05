@@ -21,6 +21,7 @@ import flixel.util.FlxVector;
 import haxe.io.Bytes;
 import haxe.macro.Expr.Function;
 import mloader.Loader.LoaderErrorType;
+import networkobj.NReg;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -148,6 +149,13 @@ class PlayState extends FlxState
 	
 	public function loadMap(MapName:String, MapString:String):Void
 	{
+		for (m in maps.members.iterator())
+		{
+			m.kill();
+			maps.remove(m, true);
+			m.destroy();
+		}
+		
 		current_map = MapName;
 		OgmoLoader.loadXML(MapString, this);
 	}
@@ -204,7 +212,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
-		FlxG.collide(bullets, players, bulletCollide);
+		FlxG.collide(bullets, players, bulletCollidePl);
 		
 		if (player != null)
 			updatePlayer();
@@ -335,21 +343,29 @@ class PlayState extends FlxState
 		
 		emitter.start(true, 0.9, 0, 35);
 		
-		for (p in players.members)
-		{
-			//var pl:Player = cast (p, Player);
-			//
-			//var v:FlxVector = new FlxVector(1, 0);
-			//
-			//v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
-			//
-			//var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-			//if (dist_coeff < 0) dist_coeff = 0;
-			//
-			//pl.velocity.x += v.x * 300 * dist_coeff;
-			//pl.velocity.y += v.y * 300 * dist_coeff;
-		}
-		
 		Bullet.kill();
+	}
+	
+	private function bulletCollidePl(Bullet:FlxBullet, Pl:Player):Void
+	{
+		if (Pl.ID != Bullet._weapon.parent.ID)
+		{
+			var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
+														Bullet.y + Bullet.height / 2);
+			
+			emitters.add(emitter);
+			
+			emitter.setRotation(0, 0);
+			emitter.setMotion(0, 17, 1, 360, 25, 1);
+			emitter.setAlpha(1, 1, 0, 0);
+			emitter.setColor(0xffE69137, 0xffFFFB17);
+			emitter.setXSpeed(150, 150);
+			emitter.setYSpeed(150, 150);
+			emitter.makeParticles(Assets.getImg("assets/images/explosionparticle.png"), 35);
+			
+			emitter.start(true, 0.9, 0, 35);
+			
+			Bullet.kill();
+		}
 	}
 }

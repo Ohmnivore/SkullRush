@@ -1,4 +1,4 @@
-<level width="640" height="480" Gamemode="FFA">
+<level width="640" height="480" Gamemode="CTF">
   <TilesGrid exportMode="Bitstring">0000000000000000000000000000000000000000
 0000000000000000000000000000000000000000
 0000000000000000000000000000000000000000
@@ -64,5 +64,7 @@
     <Spawn id="1" x="464" y="288" Teams="1111" />
     <Spawn id="2" x="160" y="400" Teams="1111" />
     <Spawn id="3" x="0" y="400" Teams="1111" />
+    <Flag id="5" x="32" y="384" team="0" />
+    <Flag id="4" x="400" y="272" team="1" />
   </Entities>
 </level>

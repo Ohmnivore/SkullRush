@@ -1,5 +1,7 @@
 package ;
 import flash.utils.ByteArray;
+import gamemodes.CTF;
+import gamemodes.FFA;
 import sys.io.File;
 
 /**
@@ -13,6 +15,9 @@ class Lvls
 {
 	static public function loadLVL(Name:String):String
 	{
+		FFA;
+		CTF;
+		
 		return File.getContent("assets/maps/" + Name + ".oel");
 	}
 }

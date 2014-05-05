@@ -191,24 +191,24 @@ class SkullServer extends Server
 		
 		if (MsgID == Msg.PlayerInfo.ID)
 		{
-			Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
-			
-			sendMsg(E.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-			
-			for (s in NReg.sprites)
-			{
-				s.announce(E.ID);
-			}
-			
-			for (h in NReg.huds)
-			{
-				h.announce(E.ID);
-			}
-			
-			for (t in NReg.timers)
-			{
-				t.announce(E.ID);
-			}
+			//Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
+			//
+			//sendMsg(E.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+			//
+			//for (s in NReg.sprites)
+			//{
+				//s.announce(E.ID);
+			//}
+			//
+			//for (h in NReg.huds)
+			//{
+				//h.announce(E.ID);
+			//}
+			//
+			//for (t in NReg.timers)
+			//{
+				//t.announce(E.ID);
+			//}
 		}
 	}
 }

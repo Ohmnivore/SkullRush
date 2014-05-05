@@ -19,5 +19,4 @@ class NReg
 		templates = new Map<Int, NTemplate>();
 		sprites = new Map<Int, FlxSprite>();
 	}
-	
 }

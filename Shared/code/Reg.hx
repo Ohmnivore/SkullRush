@@ -3,6 +3,8 @@ package;
 import enet.NetBase;
 import flixel.FlxG;
 import flixel.util.FlxSave;
+import flixel.util.FlxTimer;
+import networkobj.NReg;
 #if CLIENT
 
 #else
@@ -51,6 +53,17 @@ class Reg
 	 * Used for stopping threading
 	 */
 	static public var shutdown:Bool = false;
+	
+	static public function reLaunch():Void
+	{
+		NReg.resetReg();
+		new FlxTimer(1, reLaunchWithTimer);
+	}
+	
+	static private function reLaunchWithTimer(T:FlxTimer):Void
+	{
+		FlxG.switchState(new PlayState());
+	}
 	
 	static public function parseMaps():Array<String>
 	{

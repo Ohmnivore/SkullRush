@@ -12,6 +12,7 @@ import flixel.util.FlxVector;
 import gevents.ReceiveEvent;
 import networkobj.NCounter;
 import networkobj.NLabel;
+import networkobj.NReg;
 import networkobj.NTimer;
 
 import gevents.DeathEvent;
@@ -286,6 +287,53 @@ class DefaultHooks
 		p.kill();
 	} 
 	
+	static public function initPlayer(P:Player):Void
+	{
+		//if (color == 0)
+		//{
+			//p.team = 0;
+			//p.setColor(0xff13BF00, "assets/images/playergreen.png");
+		//}
+		//if (color == 1)
+		//{
+			//p.team = 1;
+			//p.setColor(0xff0086BF, "assets/images/playerblue.png");
+		//}
+		//if (color == 2)
+		//{
+			//p.team = 2;
+			//p.setColor(0xffE0DD00, "assets/images/playeryellow.png");
+		//}
+		//if (color == 3)
+		//{
+			//p.team = 3;
+			//p.setColor(0xffD14900, "assets/images/playerred.png");
+		//}
+		
+		var s:Spawn = Spawn.findSpawn(P.team);
+		P.x = s.x;
+		P.y = s.y;
+		
+		Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
+		
+		Reg.server.sendMsg(P.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+		
+		for (s in NReg.sprites)
+		{
+			s.announce(P.ID);
+		}
+		
+		for (h in NReg.huds)
+		{
+			h.announce(P.ID);
+		}
+		
+		for (t in NReg.timers.iterator())
+		{
+			t.announce(P.ID);
+		}
+	}
+	
 	static public function onPeerConnect(e:JoinEvent):Void
 	{
 		var E:ENetEvent = e.joininfo;
@@ -378,12 +426,7 @@ class DefaultHooks
 			}
 		}
 		
-		//var testl:NLabel = new NLabel(5, 5, p.ID, true);
-		//testl.setLabel("Welcome!", 0xff000000);
-		//var testc:NCounter = new NCounter("TestCounter", 5, 20, 0, true);
-		//testc.setCount(5, 0xff000000, "TestCount");
-		//var testt:NTimer = new NTimer("TestTimer", 5, 35, 0, true);
-		//testt.setTimer(40, 0xffff0000, NTimer.TICKING);
+		initPlayer(p);
 	}
 	
 	static public function update(elapsed:Float):Void

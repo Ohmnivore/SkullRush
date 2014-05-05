@@ -265,8 +265,8 @@ class SkullClient extends Client
 		{
 			var t:FlxText = NReg.HUDS.get(Msg.SetCounter.data.get("id"));
 			
-			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
 			t.color = Msg.SetCounter.data.get("color");
+			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
 		}
 		
 		if (MsgID == Msg.NewTimer.ID)

@@ -15,6 +15,7 @@ class NTimer extends FlxObject
 	public var t:FlxText;
 	
 	public var base:String;
+	public var color:Int;
 	public var count:Float = 0;
 	
 	public var status:Int;
@@ -22,7 +23,7 @@ class NTimer extends FlxObject
 	static public inline var TICKING:Int = 1;
 	static public inline var UNTICKING:Int = 2;
 	
-	public function new(Base:String, X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
+	public function new(Base:String, Color:Int = 0xff000000, X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
 	{
 		super();
 		local = Local;
@@ -30,6 +31,7 @@ class NTimer extends FlxObject
 		x = X;
 		y = Y;
 		base = Base;
+		color = Color;
 		status = STOPPED;
 		
 		ID = NReg.getID();
@@ -39,6 +41,7 @@ class NTimer extends FlxObject
 		if (local)
 		{
 			t = new FlxText(x, y, FlxG.width, "0:00", 12);
+			t.color = Color;
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
 		}
@@ -89,35 +92,45 @@ class NTimer extends FlxObject
 		Msg.NewTimer.data.set("x", x);
 		Msg.NewTimer.data.set("y", y);
 		
-		if (player == 0)
+		Msg.SetTimer.data.set("id", ID);
+		Msg.SetTimer.data.set("base", base);
+		Msg.SetTimer.data.set("color", color);
+		Msg.SetTimer.data.set("count", count);
+		Msg.SetTimer.data.set("status", status);
+		
+		if (P == 0)
 		{
 			NReg.timers.push(this);
 			
 			for (p in Reg.server.playermap.keys())
 			{
 				Reg.server.sendMsg(p, Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+				Reg.server.sendMsg(p, Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			}
 		}
 		
 		else
 		{
-			Reg.server.sendMsg(player, Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsg(P, Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsg(P, Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 	}
 	
-	public function setTimer(Count:Int, Color:Int, Status:Int = TICKING, NewBase:String = null):Void
+	public function setTimer(Count:Int, Status:Int = TICKING, NewColor:Int = null, NewBase:String = null):Void
 	{
 		count = Count;
 		status = Status;
 		
+		if (NewColor != null)
+			color = NewColor;
 		if (NewBase != null)
 			base = NewBase;
 		
 		Msg.SetTimer.data.set("id", ID);
 		Msg.SetTimer.data.set("base", base);
-		Msg.SetTimer.data.set("color", Color);
-		Msg.SetTimer.data.set("count", Count);
-		Msg.SetTimer.data.set("status", Status);
+		Msg.SetTimer.data.set("color", color);
+		Msg.SetTimer.data.set("count", count);
+		Msg.SetTimer.data.set("status", status);
 		
 		if (player == 0)
 		{
@@ -135,7 +148,7 @@ class NTimer extends FlxObject
 		if (local)
 		{
 			t.text = '$base: $count';
-			t.color = Color;
+			t.color = color;
 		}
 	}
 	

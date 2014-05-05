@@ -13,20 +13,23 @@ class NLabel extends NHUD
 	public var t:FlxText;
 	public var x:Int;
 	public var y:Int;
+	public var color:Int;
 	
-	public function new(X:Int, Y:Int, P:Int = 0, Local:Bool = false) 
+	public function new(X:Int, Y:Int, Color:Int = 0xff000000, P:Int = 0, Local:Bool = false) 
 	{
 		super();
 		local = Local;
 		player = P;
 		x = X;
 		y = Y;
+		color = Color;
 		
 		ID = NReg.getID();
 		
 		if (local)
 		{
 			t = new FlxText(x, y, FlxG.width, "", 12);
+			t.color = Color;
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
 		}
@@ -37,29 +40,39 @@ class NLabel extends NHUD
 	override public function announce(P:Int = 0):Void
 	{
 		super.announce(P);
+		
 		Msg.NewLabel.data.set("id", ID);
 		Msg.NewLabel.data.set("x", x);
 		Msg.NewLabel.data.set("y", y);
+		
+		Msg.SetLabel.data.set("id", ID);
+		Msg.SetLabel.data.set("text", "");
+		Msg.SetLabel.data.set("color", color);
 		
 		if (player == 0)
 		{
 			for (p in Reg.server.playermap.keys())
 			{
 				Reg.server.sendMsg(p, Msg.NewLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+				Reg.server.sendMsg(p, Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			}
 		}
 		
 		else
 		{
 			Reg.server.sendMsg(player, Msg.NewLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsg(player, Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 	}
 	
-	public function setLabel(Text:String, Color:Int):Void
+	public function setLabel(Text:String, NewColor:Int = null):Void
 	{
+		if (NewColor != null)
+			color = NewColor;
+		
 		Msg.SetLabel.data.set("id", ID);
 		Msg.SetLabel.data.set("text", Text);
-		Msg.SetLabel.data.set("color", Color);
+		Msg.SetLabel.data.set("color", color);
 		
 		if (player == 0)
 		{
@@ -77,7 +90,7 @@ class NLabel extends NHUD
 		if (local)
 		{
 			t.text = Text;
-			t.color = Color;
+			t.color = color;
 		}
 	}
 	
