@@ -1,4 +1,4 @@
 name=Ohmnivore
 team=0
-ip=198.200.120.132
+ip=
 masterserver=http://skullrush.elementfx.com/laravel/public/

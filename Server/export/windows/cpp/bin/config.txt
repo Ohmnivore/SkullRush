@@ -4,7 +4,7 @@
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
 
-maps=TwinCapture, Test
+maps=Test, TwinCapture
 
 masterserver=http://skullrush.elementfx.com/laravel/public/
 
