@@ -8,12 +8,16 @@ import flixel.FlxSprite;
 import flixel.system.scaleModes.FillScaleMode;
 import flixel.text.FlxText;
 import haxe.io.BytesInput;
+import haxe.Serializer;
 import haxe.Unserializer;
 import hxudp.UdpSocket;
 import networkobj.NReg;
+import networkobj.NScoreboard;
 import networkobj.NTemplate;
 import networkobj.NTimer;
 import haxe.io.Bytes;
+import ui.DirectConnect;
+import ui.Spawn;
 
 /**
  * ...
@@ -357,6 +361,70 @@ class SkullClient extends Client
 		if (MsgID == Msg.StopMusic.ID)
 		{
 			FlxG.sound.music.stop();
+		}
+		
+		if (MsgID == Msg.NewBoard.ID)
+		{
+			var board:NScoreboard = new NScoreboard(
+										Msg.NewBoard.data.get("id"),
+										Msg.NewBoard.data.get("title"),
+										Unserializer.run(Msg.NewBoard.data.get("headers")),
+										Msg.NewBoard.data.get("color")
+										);
+			Reg.state.hud.add(board.group);
+		}
+		
+		if (MsgID == Msg.SetBoard.ID)
+		{
+			var board:NScoreboard = Reg.state.scores.scores.get(Msg.SetBoard.data.get("id"));
+			board.setData(Msg.SetBoard.data.get("serialized"));
+		}
+		
+		if (MsgID == Msg.DeleteBoard.ID)
+		{
+			var board:NScoreboard = Reg.state.scores.scores.get(Msg.DeleteBoard.data.get("id"));
+			
+			Reg.state.scores.removeBoard(board);
+			
+			board.destroy();
+		}
+		
+		if (MsgID == Msg.Teams.ID)
+		{
+			Reg.state.teams = [];
+			
+			var arr:Array<String> = cast Unserializer.run(Msg.Teams.data.get("serialized"));
+			for (s in arr)
+			{
+				var team:Team = new Team();
+				team.unserialize(s);
+				Reg.state.teams.push(team);
+			}
+			
+			trace(Reg.state.teams);
+		}
+		
+		if (MsgID == Msg.DeathInfo.ID)
+		{
+			Reg.state.openSubState(new Spawn(Reg.state.teams, Msg.DeathInfo.data.get("timer")));
+		}
+		
+		if (MsgID == Msg.SpawnConfirm.ID)
+		{
+			if (Reg.state.subState != null)
+			{
+				Reg.state.closeSubState();
+			}
+			
+			Reg.state.player.setColor(Msg.SpawnConfirm.data.get("color"),
+										Msg.SpawnConfirm.data.get("graphic"));
+		}
+		
+		if (MsgID == Msg.SetAppearance.ID)
+		{
+			var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
+			
+			p.setColor(Msg.SetAppearance.data.get("color"), Msg.SetAppearance.data.get("graphic"));
 		}
 	}
 	

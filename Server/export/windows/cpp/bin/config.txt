@@ -12,6 +12,8 @@ name=TheServer
 
 maxplayers=12
 
+spawntime=4
+
 ############################
 
 #ffa config

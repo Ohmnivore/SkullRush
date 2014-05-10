@@ -4,6 +4,7 @@ import enet.ENetEvent;
 import enet.Server;
 import entities.Spawn;
 import flixel.FlxG;
+import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
@@ -182,6 +183,31 @@ class SkullServer extends Server
 						sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 					}
 				}
+			}
+		}
+		
+		if (MsgID == Msg.BoardRequest.ID)
+		{
+			BaseGamemode.scores.sendAllToPlayer(E.ID);
+		}
+		
+		if (MsgID == Msg.SpawnRequest.ID)
+		{
+			var p:Player = playermap.get(E.ID);
+			var t:Int = Msg.SpawnRequest.data.get("team");
+			
+			if (p.canSpawn)
+			{
+				if (p.team != t)
+				{
+					if (Reg.gm.teams.length >= t)
+					{
+						p.team = t;
+						Reg.gm.setTeam(p, Reg.gm.teams[t]);
+					}
+				}
+				
+				p.respawn();
 			}
 		}
 		

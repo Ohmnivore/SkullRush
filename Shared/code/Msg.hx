@@ -40,6 +40,16 @@ class Msg
 	static public var PlaySound:Message;
 	static public var PlayMusic:Message;
 	static public var StopMusic:Message;
+	static public var NewBoard:Message;
+	static public var SetBoard:Message;
+	static public var DeleteBoard:Message;
+	static public var BoardRequest:Message;
+	
+	static public var Teams:Message;
+	static public var SpawnRequest:Message;
+	static public var DeathInfo:Message;
+	static public var SpawnConfirm:Message;
+	static public var SetAppearance:Message;
 	
 	static public function initMsg():Void
 	{
@@ -71,6 +81,16 @@ class Msg
 		PlaySound = new Message(23, ["assetkey"], true);
 		PlayMusic = new Message(24, ["assetkey"], true);
 		StopMusic = new Message(25, [], true);
+		NewBoard = new Message(26, ["id", "title", "color", "headers"], true);
+		SetBoard = new Message(30, ["id", "serialized"], true);
+		DeleteBoard = new Message(28, ["id"], true);
+		BoardRequest = new Message(29, [], false);
+		
+		Teams = new Message(31, ["serialized"], true);
+		SpawnRequest = new Message(32, ["team"], false);
+		DeathInfo = new Message(33, ["timer"], true);
+		SpawnConfirm = new Message(34, ["color", "graphic"], true);
+		SetAppearance = new Message(35, ["id", "color", "graphic"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -103,5 +123,14 @@ class Msg
 		H.addMessage(PlaySound);
 		H.addMessage(PlayMusic);
 		H.addMessage(StopMusic);
+		H.addMessage(NewBoard);
+		H.addMessage(SetBoard);
+		H.addMessage(DeleteBoard);
+		H.addMessage(BoardRequest);
+		
+		H.addMessage(Teams);
+		H.addMessage(SpawnRequest);
+		H.addMessage(DeathInfo);
+		H.addMessage(SpawnConfirm);
 	}
 }

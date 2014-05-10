@@ -8,6 +8,7 @@ import gevents.HurtEvent;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NScoreManager;
 
 class BaseGamemode extends Sprite
 {
@@ -21,11 +22,17 @@ class BaseGamemode extends Sprite
 	public static inline var JUMPKILL:Int = 2;
 	public static inline var BULLET:Int = 3;
 	
+	public static var scores:NScoreManager;
+	public var teams:Array<Team>;
+	public var spawn_time:Int;
+	
 	public function new() 
 	{
 		super();
 		
 		name = "BASE";
+		scores = new NScoreManager();
+		teams = [];
 		
 		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig, false, 0);
 		//for each (var plug:BasePlugin in ServerInfo.pl)
@@ -65,6 +72,16 @@ class BaseGamemode extends Sprite
 		
 	}
 	
+	public function initPlayer(P:Player):Void
+	{
+		
+	}
+	
+	public function setTeam(P:Player, T:Team):Void
+	{
+		
+	}
+	
 	public function onLeave(e:LeaveEvent):Void
 	{
 		
@@ -81,6 +98,7 @@ class BaseGamemode extends Sprite
 		Reg.server.players_max = Std.parseInt(Assets.config.get("maxplayers"));
 		Masterserver.url = Assets.config.get("masterserver");
 		Reg.server.s_name = Assets.config.get("name");
+		spawn_time = Std.parseInt(Assets.config.get("spawntime"));
 		
 		Reg.maps = Reg.parseMaps();
 	}

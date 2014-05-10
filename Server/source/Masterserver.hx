@@ -69,7 +69,7 @@ class Masterserver
 	{
 		elapsed += Elapsed;
 		
-		if (elapsed > 48)
+		if (elapsed > 35)
 		{
 			heartbeat();
 			elapsed = 0;

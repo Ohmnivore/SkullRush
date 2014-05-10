@@ -21,6 +21,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
+import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
 import gamemodes.CTF;
@@ -174,8 +175,13 @@ class PlayState extends FlxState
 			
 			Reg.server.playermap.set(i, p_new);
 			
-			Reg.server.sendMsg(p.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			DefaultHooks.initPlayer(p);
+			Reg.server.sendMsg(p_new.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			Msg.SpawnConfirm.data.set("color", p_new.header.color);
+			Msg.SpawnConfirm.data.set("graphic", p_new.graphicKey);
+			Reg.server.sendMsg(p_new.ID, Msg.SpawnConfirm.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			Reg.gm.initPlayer(p_new);
 		}
 		
 		trace('Loaded map $current_map and gamemode $gm.');
@@ -239,6 +245,8 @@ class PlayState extends FlxState
 				Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 			}
 			
+			//Reg.gm.scores.checkToggle();
+			BaseGamemode.scores.update();
 			Reg.gm.update(FlxG.elapsed);
 		}
 		

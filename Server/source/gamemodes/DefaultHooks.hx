@@ -10,6 +10,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
 import gevents.ReceiveEvent;
+import haxe.Serializer;
 import networkobj.NCounter;
 import networkobj.NLabel;
 import networkobj.NReg;
@@ -186,6 +187,8 @@ class DefaultHooks
 			DefaultHooks.respawn(victim);
 			DefaultHooks.announceSquish(killer, victim);
 		}
+		
+		player.respawnIn(Reg.gm.spawn_time);
 	}
 	
 	static public function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
@@ -265,6 +268,8 @@ class DefaultHooks
 		
 		var p:Player = Reg.server.playermap.get(e.ID);
 		
+		//BaseGamemode.scores.removePlayer(p);
+		
 		//Send disconnect to everyone
 		Msg.PlayerDisco.data.set("id", e.ID);
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, p.name + " has left.", 12, false,
@@ -287,33 +292,25 @@ class DefaultHooks
 		p.kill();
 	} 
 	
+	static public function setTeam(P:Player, T:Team):Void
+	{
+		P.setColor(T.color, T.graphicKey);
+		
+		Msg.SetAppearance.data.set("id", P.ID);
+		Msg.SetAppearance.data.set("color", P.header.color);
+		Msg.SetAppearance.data.set("graphic", P.graphicKey);
+		
+		for (ID in Reg.server.playermap.keys())
+		{
+			if (ID != P.ID)
+			{
+				Reg.server.sendMsg(ID, Msg.SetAppearance.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			}
+		}
+	}
+	
 	static public function initPlayer(P:Player):Void
 	{
-		//if (color == 0)
-		//{
-			//p.team = 0;
-			//p.setColor(0xff13BF00, "assets/images/playergreen.png");
-		//}
-		//if (color == 1)
-		//{
-			//p.team = 1;
-			//p.setColor(0xff0086BF, "assets/images/playerblue.png");
-		//}
-		//if (color == 2)
-		//{
-			//p.team = 2;
-			//p.setColor(0xffE0DD00, "assets/images/playeryellow.png");
-		//}
-		//if (color == 3)
-		//{
-			//p.team = 3;
-			//p.setColor(0xffD14900, "assets/images/playerred.png");
-		//}
-		
-		var s:Spawn = Spawn.findSpawn(P.team);
-		P.x = s.x;
-		P.y = s.y;
-		
 		Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
 		
 		Reg.server.sendMsg(P.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -332,6 +329,22 @@ class DefaultHooks
 		{
 			t.announce(P.ID);
 		}
+		
+		for (s in BaseGamemode.scores.scores.iterator())
+		{
+			s.announce(P.ID);
+		}
+		
+		var t_arr:Array<String> = [];
+		for (t in Reg.gm.teams)
+		{
+			t_arr.push(t.serialize());
+		}
+		Msg.Teams.data.set("serialized", Serializer.run(t_arr));
+		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		
+		P.health = 0;
+		P.respawnIn(Reg.gm.spawn_time);
 	}
 	
 	static public function onPeerConnect(e:JoinEvent):Void
@@ -374,9 +387,9 @@ class DefaultHooks
 			p.setColor(0xffD14900, "assets/images/playerred.png");
 		}
 		
-		var s:Spawn = Spawn.findSpawn(p.team);
-		p.x = s.x;
-		p.y = s.y;
+		//var s:Spawn = Spawn.findSpawn(p.team);
+		//p.x = s.x;
+		//p.y = s.y;
 		
 		Reg.server.peermap.set(p, p.ID);
 		Reg.server.playermap.set(p.ID, p);
@@ -426,7 +439,11 @@ class DefaultHooks
 			}
 		}
 		
-		initPlayer(p);
+		//initPlayer(p);
+		Reg.gm.initPlayer(p);
+		
+		//p.health = 0;
+		//p.respawnIn(Reg.gm.spawn_time);
 	}
 	
 	static public function update(elapsed:Float):Void

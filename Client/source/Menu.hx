@@ -11,10 +11,13 @@ import ui.Home;
  */
 class Menu extends FlxSubState
 {
-
+	static public var OPENED:Bool = false;
+	
 	override public function create():Void 
 	{
 		super.create();
+		
+		OPENED = true;
 		
 		var backBtn:FlxButton = new FlxButton(0, 0, "Exit server", exit);
 		backBtn.x = (FlxG.width - backBtn.width) / 2;
@@ -36,6 +39,13 @@ class Menu extends FlxSubState
 		{
 			close();
 		}
+	}
+	
+	override public function destroy():Void 
+	{
+		OPENED = false;
+		
+		super.destroy();
 	}
 	
 	public function exit():Void

@@ -1,4 +1,5 @@
 package ;
+import enet.ENet;
 import entities.Spawn;
 import flixel.FlxObject;
 import flixel.util.FlxSpriteUtil;
@@ -15,6 +16,12 @@ class Player extends PlayerBase
 	public var canChoose:Bool = true;
 	public var dashing:Bool = false;
 	public var dashing_down:Bool = false;
+	
+	public var canSpawn:Bool = false;
+	
+	public var score:Int = 0;
+	public var kills:Int = 0;
+	public var deaths:Int = 0;
 	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
@@ -74,12 +81,15 @@ class Player extends PlayerBase
 	public function respawnIn(Seconds:Float):Void
 	{
 		//FlxTimer.start(Seconds, respawnCall, 1);
+		canSpawn = false;
 		new FlxTimer(Seconds, respawnCall, 1);
+		Msg.DeathInfo.data.set("timer", Std.int(Seconds));
+		Reg.server.sendMsg(ID, Msg.DeathInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	public function respawnCall(T:FlxTimer):Void
 	{
-		respawn();
+		canSpawn = true;
 	}
 	
 	public function respawn():Void
@@ -92,13 +102,19 @@ class Player extends PlayerBase
 			
 			velocity.y = 0;
 			velocity.x = 0;
+			
+			if (!visible)
+				show();
+			health = 100;
+			alive = true;
+			allowCollisions = FlxObject.ANY;
+			
+			canSpawn = false;
 		}
 		
-		if (!visible)
-				show();
-		health = 100;
-		alive = true;
-		allowCollisions = FlxObject.ANY;
+		Msg.SpawnConfirm.data.set("color", header.color);
+		Msg.SpawnConfirm.data.set("graphic", graphicKey);
+		Reg.server.sendMsg(ID, Msg.SpawnConfirm.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	public function dash(ToTheRight:Bool):Void

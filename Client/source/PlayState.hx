@@ -17,11 +17,14 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
 import haxe.io.Bytes;
 import haxe.macro.Expr.Function;
 import mloader.Loader.LoaderErrorType;
 import networkobj.NReg;
+import networkobj.NScoreManager;
+import ui.Spawn;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -41,11 +44,15 @@ class PlayState extends FlxState
 	public var emitters:FlxGroup;
 	public var ent:FlxGroup;
 	public var hud:FlxGroup;
+	public var scores:NScoreManager;
 	
 	public var player:Player;
 	public var playermap:Map<Int, Player>;
 	
 	public var ping_text:FlxText;
+	public var teams:Array<Team>;
+	
+	public var player_just_died:Bool = true;
 	
 	public var m:Mutex;
 	
@@ -55,6 +62,9 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		SkullClient.initClient();
+		
+		persistentDraw = true;
+		persistentUpdate = true;
 		
 		// Set a background color
 		FlxG.cameras.bgColor = 0xffB8B8B8;
@@ -86,6 +96,7 @@ class PlayState extends FlxState
 		tocollide.add(ent);
 		hud = new FlxGroup();
 		add(hud);
+		scores = new NScoreManager();
 		
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
@@ -194,15 +205,25 @@ class PlayState extends FlxState
 	{
 		Reg.client.updateS();
 		
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE && !Menu.OPENED)
 		{
-			openSubState(new Menu());
+			if (subState == null)
+			{
+				openSubState(new Menu());
+			}
+			
+			else
+			{
+				subState.openSubState(new Menu());
+			}
 		}
 		
 		if (FlxG.keys.justPressed.I)
 		{
 			Reg.client.s.sendAll(Bytes.ofString("get_info"));
 		}
+		
+		scores.update();
 		
 		m.acquire();
 		
@@ -227,7 +248,22 @@ class PlayState extends FlxState
 	
 	private function updatePlayer():Void
 	{
-		if (!Reg.chatbox.opened)
+		if (player.health <= 0 && player_just_died)
+		{
+			//FlxG.camera.focusOn(new FlxPoint(player.x, player.y));
+			FlxG.camera.target = new FlxObject(player.x, player.y);
+			
+			player_just_died = false;
+		}
+		
+		if (player.health > 0)
+		{
+			FlxG.camera.target = player;
+			
+			player_just_died = true;
+		}
+		
+		if (!Reg.chatbox.opened && subState == null)
 		{
 			//Move right
 			if (FlxG.keys.pressed.D)
