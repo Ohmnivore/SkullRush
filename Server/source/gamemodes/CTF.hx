@@ -24,7 +24,6 @@ import networkobj.NTimer;
  */
 class CTF extends BaseGamemode
 {
-	static public var init:Bool = false;
 	public var flags:FlxGroup;
 	public var holders:FlxGroup;
 	public var greenCounter:NCounter;
@@ -36,6 +35,10 @@ class CTF extends BaseGamemode
 	public function new() 
 	{
 		super();
+		
+		teams.push(new Team("Blue", 0xff0086BF, "assets/images/playerblue.png"));
+		teams.push(new Team("Yellow", 0xffE0DD00, "assets/images/playeryellow.png"));
+		
 		name = "CTF";
 		DefaultHooks.hookEvents(this);
 		
@@ -53,6 +56,7 @@ class CTF extends BaseGamemode
 		blueCounter.setCount(Holder.captures[1]);
 		
 		timeLeft = new NTimer("Time left", 0xff000000, 250, 0, 0, true);
+		timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING, 0xff000000);
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -132,12 +136,6 @@ class CTF extends BaseGamemode
 		
 		maxtime = Std.parseInt(Assets.config.get("ctf_maxtime"));
 		maxcaps = Std.parseInt(Assets.config.get("ctf_maxcaps"));
-		
-		if (!init)
-		{
-			timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING, 0xff000000);
-			init = true;
-		}
 	}
 	
 	//override public function createScore():Void

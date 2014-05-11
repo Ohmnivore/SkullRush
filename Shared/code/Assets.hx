@@ -95,7 +95,7 @@ class Assets
 				if (key != null && Assets.config.get(key) != null)
 				{
 					if (key.length > 0)
-						ret += key + "=" + Assets.config.get(key) + "\n";
+						ret += key + "=" + Std.string(Assets.config.get(key)) + "\n";
 				}
 			}
 			

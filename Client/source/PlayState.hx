@@ -108,6 +108,13 @@ class PlayState extends FlxState
 		ping_text = new FlxText(0, 0, 70, "0");
 		ping_text.scrollFactor.set();
 		over_players.add(ping_text);
+		switch (Assets.config.get("showping"))
+		{
+			case "true":
+				ping_text.visible = true;
+			case "false":
+				ping_text.visible = false;
+		}
 		
 		Assets.initAssets();
 		Thread.create(thread);

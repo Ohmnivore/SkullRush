@@ -11,8 +11,10 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import enet.ENet;
 import enet.ENetEvent;
+import flixel.util.FlxTimer;
 import networkobj.NReg;
 import ui.Home;
+import ui.Settings;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -39,8 +41,7 @@ class MenuState extends FlxState
 		
 		//SkullClient.initClient();
 		
-		//FlxG.switchState(new PlayState());
-		FlxG.switchState(new Home());
+		FlxG.switchState(new Settings(true));
 	}
 	
 	/**

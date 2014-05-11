@@ -2,3 +2,5 @@ name=Ohmnivore
 team=0
 ip=
 masterserver=http://skullrush.elementfx.com/laravel/public/
+fullscreen=false
+showping=false

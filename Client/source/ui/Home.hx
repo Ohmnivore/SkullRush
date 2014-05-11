@@ -5,6 +5,7 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
+import flixel.system.scaleModes.FillScaleMode;
 
 /**
  * ...
@@ -20,7 +21,7 @@ class Home extends FlxUIState
 	
 	override public function create() 
 	{
-		//SkullClient.initClient();
+		FlxG.scaleMode = new FillScaleMode();
 		
 		Util.initXML(this);
 		super.create();
@@ -32,7 +33,7 @@ class Home extends FlxUIState
 		browse_p = new FlxUIButton(15, 10, "Browse public servers", browsePublic);
 		browse_l = new FlxUIButton(15, 50, "Browse local servers", browseLAN);
 		connect = new FlxUIButton(15, 90, "Connect to IP", directConnect);
-		settings = new FlxUIButton(15, 130, "Player settings", playerSettings);
+		settings = new FlxUIButton(15, 130, "Settings", playerSettings);
 		auto_launch = new FlxUIButton(15, 170, "Auto launch", autoLaunch);
 		
 		browse_p.loadGraphicSlice9(null, 120, 30, null);

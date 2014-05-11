@@ -1,5 +1,6 @@
 package ui;
 import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUISpriteButton;
@@ -17,6 +18,18 @@ class Settings extends FlxUIState
 {
 	public var name:FlxUIInputText;
 	public var color:FlxUIDropDownMenu;
+	
+	public var full:FlxUICheckBox;
+	public var ping:FlxUICheckBox;
+	
+	private var quick_apply:Bool;
+	
+	public function new(QuickApply:Bool = false)
+	{
+		super();
+		
+		quick_apply = QuickApply;
+	}
 	
 	override public function create() 
 	{
@@ -63,11 +76,59 @@ class Settings extends FlxUIState
 				color.selectedId = "r";
 		}
 		add(color);
+		
+		var settings:Map<String, Dynamic> = SharedSettings.returnGraphicOptions();
+		full = cast settings.get("full");
+		full.x = 10;
+		full.y = 100;
+		full.callback = handleFull;
+		switch (Assets.config.get("fullscreen"))
+		{
+			case "true":
+				full.checked = true;
+			case "false":
+				full.checked = false;
+		}
+		handleFull();
+		add(full);
+		
+		ping = cast settings.get("ping");
+		ping.x = 10;
+		ping.y = 120;
+		switch (Assets.config.get("showping"))
+		{
+			case "true":
+				ping.checked = true;
+			case "false":
+				ping.checked = false;
+		}
+		add(ping);
+		
+		if (quick_apply)
+		{
+			FlxG.switchState(new Home());
+		}
+	}
+	
+	public function handleFull():Void
+	{
+		if (full.checked)
+		{
+			SharedSettings.setFullScreen(true);
+		}
+		
+		else
+		{
+			SharedSettings.setFullScreen(false);
+		}
 	}
 	
 	public function saveSettings():Void
 	{
 		Assets.config.set("name", name.text);
+		
+		Assets.config.set("fullscreen", Std.string(full.checked));
+		Assets.config.set("showping", Std.string(ping.checked)); 
 		
 		switch (color.selectedId)
 		{

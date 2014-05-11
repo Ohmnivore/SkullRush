@@ -57,7 +57,7 @@ class BaseGamemode extends Sprite
 	
 	public function shutdown():Void
 	{
-		
+		BaseGamemode.scores.delete();
 	}
 	
 	public function onHurt(e:HurtEvent):Void

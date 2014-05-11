@@ -18,6 +18,15 @@ class NScoreManager
 		scores = new Array<NScoreboard>();
 	}
 	
+	public function delete():Void
+	{
+		for (s in scores)
+		{
+			var sc:NScoreboard = cast s;
+			sc.destroy();
+		}
+	}
+	
 	public function update():Void
 	{
 		if (FlxG.keys.justPressed.TAB)

@@ -17,6 +17,5 @@ test with new maps
 
 Bugs:
 Fix annoying LAN server discovery bug
-Scoreboard disappears after new map is loaded
 
 Replace place-holder art by actual art

@@ -187,9 +187,9 @@ class NScoreboard
 		
 		Msg.DeleteBoard.data.set("id", ID);
 		
-		Reg.state.hud.remove(group, true);
-		group.kill();
-		group.destroy();
+		//Reg.state.hud.remove(group, true);
+		//group.kill();
+		//group.destroy();
 		
 		for (p in Reg.server.playermap.keys())
 		{

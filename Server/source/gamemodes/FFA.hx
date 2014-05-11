@@ -114,7 +114,8 @@ class FFA extends BaseGamemode
 	
 	public function changeMap(T:FlxTimer):Void
 	{
-		FlxG.switchState(new PlayState());
+		//FlxG.switchState(new PlayState());
+		Admin.nextMap();
 	}
 	
 	public function setPlayerScoreboard(P:Player):Void

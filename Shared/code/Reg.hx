@@ -56,6 +56,11 @@ class Reg
 	
 	static public function reLaunch():Void
 	{
+		if (FlxG.debugger.visible)
+		{
+			FlxG.debugger.visible = false;
+		}
+		
 		NReg.resetReg();
 		new FlxTimer(1, reLaunchWithTimer);
 	}

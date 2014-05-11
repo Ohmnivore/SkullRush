@@ -145,6 +145,10 @@ class PlayState extends FlxState
 		if (Reg.gm != null)
 		{
 			Reg.gm.shutdown();
+			//spect.destroy();
+			//remove(spect, true);
+			//spect.kill();
+			//spect.destroy();
 		}
 		
 		current_map = Name;
@@ -246,6 +250,11 @@ class PlayState extends FlxState
 				Assets.loadConfig();
 				
 				Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+			}
+			
+			if (FlxG.keys.justPressed.R)
+			{
+				Admin.reloadMap();
 			}
 			
 			//Reg.gm.scores.checkToggle();
