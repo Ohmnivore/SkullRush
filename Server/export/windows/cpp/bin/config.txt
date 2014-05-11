@@ -17,7 +17,8 @@ spawntime=4
 ############################
 
 #ffa config
-maxkills=30
+ffa_maxtime=10
+ffa_maxkills=30
 
 #ctf config
 ctf_maxtime=10

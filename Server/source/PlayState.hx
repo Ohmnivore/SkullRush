@@ -73,6 +73,7 @@ class PlayState extends FlxState
 		super.create();
 		Reg.state = this;
 		spawns = [];
+		NReg.resetReg();
 		
 		maps = new FlxGroup();
 		add(maps);
@@ -141,8 +142,10 @@ class PlayState extends FlxState
 	
 	public function loadMap(Name:String):Void
 	{
-		//Reg.gm = new FFA();
-		//Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+		if (Reg.gm != null)
+		{
+			Reg.gm.shutdown();
+		}
 		
 		current_map = Name;
 		current_map_string = Lvls.loadLVL(current_map);

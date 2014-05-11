@@ -5,6 +5,8 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUISubState;
+import flixel.FlxG;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 
@@ -14,6 +16,8 @@ import flixel.util.FlxTimer;
  */
 class Spawn extends FlxUISubState
 {
+	public var group:FlxSpriteGroup;
+	
 	public var deathTimer:FlxTimer;
 	public var teams:Array<Team>;
 	
@@ -39,9 +43,13 @@ class Spawn extends FlxUISubState
 	{
 		super.create();
 		
+		group = new FlxSpriteGroup();
+		group.scrollFactor.set();
+		add(group);
+		
 		var chrome = new FlxUI9SliceSprite(X_BORDER / 2, Y_BORDER / 2, null, new Rectangle(0, 0, 140, 5));
 		chrome.scrollFactor.set();
-		add(chrome);
+		group.add(chrome);
 		
 		var index_arr:Array<String> = [];
 		var name_arr:Array<String> = [];
@@ -56,20 +64,23 @@ class Spawn extends FlxUISubState
 		
 		radio_g = new FlxUIRadioGroup(X_BORDER, Y_BORDER, index_arr, name_arr, radioCallback);
 		radio_g.scrollFactor.set();
-		add(radio_g);
+		group.add(radio_g);
 		radio_g.selectedId = LAST_SELECTED;
 		
 		spawnBtn = new FlxUIButton(X_BORDER, Y_BORDER + radio_g.height, "Spawn", spawn);
 		spawnBtn.scrollFactor.set();
-		add(spawnBtn);
+		group.add(spawnBtn);
 		
 		timerLabel = new FlxText(X_BORDER + radio_g.width, Y_BORDER, 100);
 		timerLabel.scrollFactor.set();
 		timerLabel.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000, 1, 0);
-		add(timerLabel);
+		group.add(timerLabel);
 		
 		chrome.resize(timerLabel.width + timerLabel.x,
 						spawnBtn.height + spawnBtn.y);
+		
+		group.x = (FlxG.width - chrome.width - X_BORDER) / 2;
+		group.y = (FlxG.height - chrome.height - Y_BORDER) / 2;
 	}
 	
 	override public function update():Void 

@@ -1,6 +1,8 @@
 package gamemodes;
 
 import enet.ENet;
+import flixel.FlxG;
+import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -8,10 +10,12 @@ import gevents.HurtInfo;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NScoreboard;
 import networkobj.NSprite;
 import networkobj.NTemplate;
+import networkobj.NTimer;
 
 /**
  * ...
@@ -23,11 +27,18 @@ class FFA extends BaseGamemode
 	public var tests:NSprite;
 	public var score:NScoreboard;
 	
+	public var time:NTimer;
+	public var finished:Bool = false;
+	
 	public var maxkills:Int = 25;
+	public var maxtime:Int = 10;
 	
 	public function new() 
 	{
 		super();
+		
+		time = new NTimer("Time left", 0xffffffff, 20, 20, 0, true);
+		time.setTimer(maxtime * 60, NTimer.UNTICKING);
 		
 		teams.push(new Team("Green", 0xff13BF00, "assets/images/playergreen.png"));
 		teams.push(new Team("Blue", 0xff0086BF, "assets/images/playerblue.png"));
@@ -52,17 +63,58 @@ class FFA extends BaseGamemode
 		
 		DefaultHooks.update(elapsed);
 		
-		//for each (var p:Player in Registry.playstate.players)
-		//{
-			//if (p.kills >= 25)
-			//{
-			//var announce:String = p.name.concat(" won the game!");
-			//var pmarkup:Markup = new Markup(0, p.name.length, 11, p.teamcolor);
-			//PlayState.announcer.add(new MarkupText(0, 0, 500, announce, true, true, [pmarkup]));
-			//
-			//new delayedFunctionCall(Registry.nextmap, 3000);
-			//}
-		//}
+		if (time.count == 0 && !finished)
+		{
+			timeElapsed();
+		}
+		
+		for (p in Reg.server.playermap.iterator())
+		{
+			var player:Player = p;
+			
+			if (player.kills >= maxkills && !finished)
+			{
+				var winner:NLabel = new NLabel(20, 40, 0xffffffff, 0, true);
+				winner.setLabel(player.name + " wins!", player.header.color);
+				
+				endMatch();
+			}
+		}
+	}
+	
+	public function timeElapsed():Void
+	{
+		var arr:Array<Player> = Lambda.array(Reg.server.playermap);
+		
+		arr.sort(function(a:Player,b:Player):Int {
+			if (a.kills == b.kills)
+				return 0;
+			if (a.kills > b.kills)
+				return 1;
+			else
+				return -1;
+		});
+		
+		if (arr.length > 0)
+		{
+			var player:Player = cast arr[0];
+			var winner:NLabel = new NLabel(20, 40, 0xffffffff, 0, true);
+			winner.setLabel(player.name + " wins!", player.header.color);
+			
+			endMatch();
+		}
+	}
+	
+	public function endMatch():Void
+	{
+		finished = true;
+		
+		new FlxTimer(10, changeMap);
+	}
+	
+	public function changeMap(T:FlxTimer):Void
+	{
+		FlxG.switchState(new PlayState());
 	}
 	
 	public function setPlayerScoreboard(P:Player):Void
@@ -135,7 +187,8 @@ class FFA extends BaseGamemode
 	{
 		super.onConfig(e);
 		
-		maxkills = Std.parseInt(Assets.config.get("maxkills"));
+		maxkills = Std.parseInt(Assets.config.get("ffa_maxkills"));
+		maxtime = Std.parseInt(Assets.config.get("ffa_maxtime"));
 	}
 	
 	//override public function createScore():Void

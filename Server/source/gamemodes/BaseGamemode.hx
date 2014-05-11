@@ -35,6 +35,9 @@ class BaseGamemode extends Sprite
 		teams = [];
 		
 		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig, false, 0);
+		
+		Assets.loadConfig();
+		
 		//for each (var plug:BasePlugin in ServerInfo.pl)
 		//{
 			//plug.init();

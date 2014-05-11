@@ -46,7 +46,7 @@ class NLabel extends NHUD
 		Msg.NewLabel.data.set("y", y);
 		
 		Msg.SetLabel.data.set("id", ID);
-		Msg.SetLabel.data.set("text", "");
+		Msg.SetLabel.data.set("text", " ");
 		Msg.SetLabel.data.set("color", color);
 		
 		if (player == 0)
