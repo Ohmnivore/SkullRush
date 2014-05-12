@@ -31,10 +31,10 @@ class Assets
 		images.set("assets/images/flag_b.png", "shared/images/flag_b.png");
 		images.set("assets/images/flag_y.png", "shared/images/flag_y.png");
 		images.set("assets/images/flag_r.png", "shared/images/flag_r.png");
-		images.set("assets/images/flag_stand_g.png", "shared/images/flag_stand_g.png");
-		images.set("assets/images/flag_stand_b.png", "shared/images/flag_stand_b.png");
-		images.set("assets/images/flag_stand_y.png", "shared/images/flag_stand_y.png");
-		images.set("assets/images/flag_stand_r.png", "shared/images/flag_stand_r.png");
+		images.set("assets/images/flag_gh.png", "shared/images/flag_gh.png");
+		images.set("assets/images/flag_bh.png", "shared/images/flag_bh.png");
+		images.set("assets/images/flag_yh.png", "shared/images/flag_yh.png");
+		images.set("assets/images/flag_rh.png", "shared/images/flag_rh.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

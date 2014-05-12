@@ -19,7 +19,7 @@ class Announcer extends FlxGroup
 	public function parseMsg(Text:String, MarkupString:String):Void
 	{
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, Text, 12, false);
-		t.color = 0xff000000;
+		t.color = 0xffffffff;
 		t.ImportMarkups(MarkupString);
 		
 		addText(t);
@@ -28,7 +28,7 @@ class Announcer extends FlxGroup
 	public function addMsg(Text:String, MarkupArr:Array<FlxMarkup>):Void
 	{
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, Text, 12, false, MarkupArr);
-		t.color = 0xff000000;
+		t.color = 0xffffffff;
 		for (m in MarkupArr.iterator())
 		{
 			t.markItUp(m);
@@ -39,6 +39,7 @@ class Announcer extends FlxGroup
 	
 	public function addText(Text:FlxText):Void
 	{
+		Text.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 		Text.scrollFactor.set();
 		Text.x = FlxG.width - Text.width;
 		

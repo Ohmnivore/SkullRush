@@ -30,6 +30,7 @@ class NLabel extends NHUD
 		{
 			t = new FlxText(x, y, FlxG.width, "", 12);
 			t.color = Color;
+			t.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
 		}

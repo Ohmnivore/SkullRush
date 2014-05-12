@@ -14,14 +14,8 @@ import networkobj.NTemplate;
  */
 class Holder extends NSprite
 {
-	static public var T_HOLDER_G:NTemplate;
-	static public var T_HOLDER_B:NTemplate;
-	static public var T_HOLDER_Y:NTemplate;
-	static public var T_HOLDER_R:NTemplate;
-	
 	static public var captures:Array<Int>;
 	
-	static var did_init:Bool = false;
 	public var data:Fast;
 	
 	public var flag:Flag;
@@ -29,39 +23,31 @@ class Holder extends NSprite
 	
 	public function new(Data:Fast, Fl:Flag) 
 	{
-		if (!did_init)
-		{
-			init();
-			did_init = true;
-		}
-		
 		data = Data;
 		flag = Fl;
 		
 		team = Std.parseInt(data.att.team);
 		
-		switch(team)
-		{
-			case 0:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_HOLDER_G);
-			case 1:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_HOLDER_B);
-			case 2:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_HOLDER_Y);
-			case 3:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_HOLDER_R);
-		}
+		var g:String = Std.string(data.att.graphic);
+		g = g.substr(0, g.length - 4);
+		g += "h.png";
+		var templ:NTemplate = new NTemplate(g, 0);
+		NReg.registerTemplate(templ);
+		
+		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ);
 		
 		var gm:CTF = cast(Reg.gm, CTF);
 		gm.holders.add(s);
+		
+		s.y += 33 - s.height;
 		
 		s.immovable = true;
 	}
 	
 	static public function captureFlag(P:Player, F:Flag):Void
 	{
-		F.s.x = F.holder.s.x;
-		F.s.y = F.holder.s.y;
+		F.s.x = F.holder.s.x + 4;
+		F.s.y = F.holder.s.y - (33 - F.holder.s.height);
 		
 		F.taken = false;
 		if (F.owner != null)
@@ -70,12 +56,16 @@ class Holder extends NSprite
 			F.owner = null;
 		}
 		
-		captures[F.team]++;
+		captures[P.team]++;
 		
 		if (P != null)
 		{
 			var s:String = P.name + " captured the flag!";
 			Reg.server.announce(s, [new FlxMarkup(0, P.name.length, false, P.header.color)]);
+			
+			P.score += 400;
+			var gm:CTF = cast Reg.gm;
+			gm.setPlayerScoreboard(P);
 		}
 	}
 	
@@ -99,18 +89,5 @@ class Holder extends NSprite
 	static public function init():Void
 	{
 		captures = [0, 0, 0, 0];
-		
-		T_HOLDER_G = new NTemplate("assets/images/flag_stand_g.png");
-		T_HOLDER_B = new NTemplate("assets/images/flag_stand_b.png");
-		T_HOLDER_Y = new NTemplate("assets/images/flag_stand_y.png");
-		T_HOLDER_R = new NTemplate("assets/images/flag_stand_r.png");
-		T_HOLDER_G.gravity_force = 0;
-		T_HOLDER_B.gravity_force = 0;
-		T_HOLDER_Y.gravity_force = 0;
-		T_HOLDER_R.gravity_force = 0;
-		NReg.registerTemplate(T_HOLDER_G);
-		NReg.registerTemplate(T_HOLDER_B);
-		NReg.registerTemplate(T_HOLDER_Y);
-		NReg.registerTemplate(T_HOLDER_R);
 	}
 }

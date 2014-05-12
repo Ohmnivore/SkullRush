@@ -239,6 +239,7 @@ class SkullClient extends Client
 												"",
 												12);
 			t.scrollFactor.set();
+			t.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 			NReg.HUDS.set(Msg.NewLabel.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
@@ -260,9 +261,11 @@ class SkullClient extends Client
 												Msg.NewCounter.data.get("base") + ": 0",
 												12);
 			t.scrollFactor.set();
+			t.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 			NReg.HUDS.set(Msg.NewCounter.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
+			//trace("new counter: ", t.text);
 		}
 		
 		if (MsgID == Msg.SetCounter.ID)
@@ -271,6 +274,8 @@ class SkullClient extends Client
 			
 			t.color = Msg.SetCounter.data.get("color");
 			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
+			
+			//trace("set counter: ", t.text);
 		}
 		
 		if (MsgID == Msg.NewTimer.ID)
@@ -282,6 +287,8 @@ class SkullClient extends Client
 			NReg.HUDS.set(Msg.NewTimer.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
+			
+			//trace("delete counter: ", t.text);
 		}
 		
 		if (MsgID == Msg.SetTimer.ID)
@@ -423,7 +430,6 @@ class SkullClient extends Client
 		if (MsgID == Msg.SetAppearance.ID)
 		{
 			var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
-			
 			p.setColor(Msg.SetAppearance.data.get("color"), Msg.SetAppearance.data.get("graphic"));
 		}
 	}

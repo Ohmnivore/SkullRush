@@ -35,20 +35,14 @@ class BaseGamemode extends Sprite
 		teams = [];
 		
 		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig, false, 0);
-		
 		Assets.loadConfig();
+		dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		
 		//for each (var plug:BasePlugin in ServerInfo.pl)
 		//{
 			//plug.init();
 		//}
 	}
-	
-	//public function mapProperties(data:Object):void
-	//{
-		//ServerInfo.map = data["name"];
-		//ServerInfo.gamemode = data["gamemode"];
-	//}
 	
 	public function update(elapsed:Float):Void
 	{
@@ -105,9 +99,4 @@ class BaseGamemode extends Sprite
 		
 		Reg.maps = Reg.parseMaps();
 	}
-	
-	//public function createScore():Void
-	//{
-		//
-	//}
 }

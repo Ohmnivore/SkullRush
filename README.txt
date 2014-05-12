@@ -1,5 +1,4 @@
 TODO (engine):
-Seamless map transitions
 Order scoreboard by score
 Networked particle system
 Plugins

@@ -48,10 +48,10 @@ class FFA extends BaseGamemode
 		name = "FFA";
 		DefaultHooks.hookEvents(this);
 		
-		testt = new NTemplate("assets/images/gun.png");
-		NReg.registerTemplate(testt);
+		//testt = new NTemplate("assets/images/gun.png");
+		//NReg.registerTemplate(testt);
 		
-		tests = new NSprite(10, 50, testt);
+		//tests = new NSprite(10, 50, testt);
 		
 		score = new NScoreboard("Scores", ["Score", "Kills", "Deaths"], ["0", "0", "0"], 0xffffffff);
 		Reg.state.hud.add(score.group);
@@ -100,9 +100,9 @@ class FFA extends BaseGamemode
 			var player:Player = cast arr[0];
 			var winner:NLabel = new NLabel(20, 40, 0xffffffff, 0, true);
 			winner.setLabel(player.name + " wins!", player.header.color);
-			
-			endMatch();
 		}
+		
+		endMatch();
 	}
 	
 	public function endMatch():Void
@@ -127,7 +127,7 @@ class FFA extends BaseGamemode
 	{
 		DefaultHooks.handleDamage(e.hurtinfo);
 		
-		if (e.hurtinfo.type == BaseGamemode.BULLET)
+		if (e.hurtinfo.attacker > 0)
 		{
 			var p:Player = Reg.server.playermap.get(e.hurtinfo.attacker);
 			p.score += e.hurtinfo.dmg;

@@ -108,6 +108,7 @@
       </ImageDefinition>
       <ValueDefinitions>
         <ValueDefinition xsi:type="IntValueDefinition" Name="team" Default="0" Min="0" Max="3" ShowSlider="true" />
+        <ValueDefinition xsi:type="StringValueDefinition" Name="graphic" Default="assets/images/flag_g.png" MaxChars="-1" MultiLine="false" />
       </ValueDefinitions>
       <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
     </EntityDefinition>

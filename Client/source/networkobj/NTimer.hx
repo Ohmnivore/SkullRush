@@ -22,6 +22,8 @@ class NTimer extends FlxText
 		status = STOPPED;
 		
 		super(X, Y, FlxG.width, '$base:  0:00', 12);
+		
+		setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 	}
 	
 	override public function update():Void 

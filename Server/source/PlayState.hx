@@ -170,15 +170,20 @@ class PlayState extends FlxState
 		
 		spect = new Spectator();
 		add(spect);
-		
+		//trace("pl");
 		for (i in Reg.server.playermap.keys())
 		{
 			var p:Player = Reg.server.playermap.get(i);
 			
-			var s:Spawn = Spawn.findSpawn(p.team);
-			var p_new:Player = new Player(p.ID, p.name, s.x, s.y);
-			p_new.team = p.team;
-			p_new.setColor(p.header.color, p.graphicKey);
+			//var s:Spawn = Spawn.findSpawn(p.team);
+			var p_new:Player;
+			//if (s != null)
+				//p_new = new Player(p.ID, p.name, s.x, s.y);
+			//else
+				p_new = new Player(p.ID, p.name, 50, 50);
+			//p_new.team = 0;
+			Reg.gm.setTeam(p_new, Reg.gm.teams[0]);
+			//p_new.setColor(p.header.color, p.graphicKey);
 			
 			Reg.server.playermap.set(i, p_new);
 			

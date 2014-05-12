@@ -15,11 +15,6 @@ import networkobj.NTemplate;
 class Flag extends NSprite
 {
 	public var data:Fast;
-	static public var T_FLAG_G:NTemplate;
-	static public var T_FLAG_B:NTemplate;
-	static public var T_FLAG_Y:NTemplate;
-	static public var T_FLAG_R:NTemplate;
-	static var did_init:Bool = false;
 	static public var taken_flags:Map<Player, Flag>;
 	
 	public var holder:Holder;
@@ -30,33 +25,22 @@ class Flag extends NSprite
 	
 	public function new(Data:Fast) 
 	{
-		if (!did_init)
-		{
-			init();
-			did_init = true;
-		}
-		
 		data = Data;
 		
 		team = Std.parseInt(data.att.team);
 		taken = false;
 		
-		switch(team)
-		{
-			case 0:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_FLAG_G);
-			case 1:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_FLAG_B);
-			case 2:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_FLAG_Y);
-			case 3:
-				super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), T_FLAG_R);
-		}
+		var templ:NTemplate = new NTemplate(data.att.graphic, 0);
+		NReg.registerTemplate(templ);
+		
+		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ);
 		
 		holder = new Holder(data, this);
 		
 		var gm:CTF = cast(Reg.gm, CTF);
 		gm.flags.add(s);
+		
+		s.x += 4;
 		
 		s.immovable = true;
 	}
@@ -92,12 +76,16 @@ class Flag extends NSprite
 		
 		var s:String = P.name + " took the flag!";
 		Reg.server.announce(s, [new FlxMarkup(0, P.name.length, false, P.header.color)]);
+		
+		P.score += 100;
+		var gm:CTF = cast Reg.gm;
+		gm.setPlayerScoreboard(P);
 	}
 	
 	static public function returnFlag(P:Player = null, F:Flag):Void
 	{
-		F.s.x = F.holder.s.x;
-		F.s.y = F.holder.s.y;
+		F.s.x = F.holder.s.x + 4;
+		F.s.y = F.holder.s.y - (33 - F.holder.s.height);
 		
 		F.taken = false;
 		if (F.owner != null)
@@ -110,6 +98,10 @@ class Flag extends NSprite
 		{
 			var s:String = P.name + " returned the flag!";
 			Reg.server.announce(s, [new FlxMarkup(0, P.name.length, false, P.header.color)]);
+			
+			P.score += 100;
+			var gm:CTF = cast Reg.gm;
+			gm.setPlayerScoreboard(P);
 		}
 	}
 	
@@ -139,19 +131,6 @@ class Flag extends NSprite
 	
 	static public function init():Void
 	{
-		T_FLAG_G = new NTemplate("assets/images/flag_g.png");
-		T_FLAG_B = new NTemplate("assets/images/flag_b.png");
-		T_FLAG_Y = new NTemplate("assets/images/flag_y.png");
-		T_FLAG_R = new NTemplate("assets/images/flag_r.png");
-		T_FLAG_G.gravity_force = 0;
-		T_FLAG_B.gravity_force = 0;
-		T_FLAG_Y.gravity_force = 0;
-		T_FLAG_R.gravity_force = 0;
-		NReg.registerTemplate(T_FLAG_G);
-		NReg.registerTemplate(T_FLAG_B);
-		NReg.registerTemplate(T_FLAG_Y);
-		NReg.registerTemplate(T_FLAG_R);
-		
 		taken_flags = new Map<Player, Flag>();
 	}
 }

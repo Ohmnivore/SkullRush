@@ -35,7 +35,7 @@ class PlayerBase extends FlxSprite
 	public var dash_down:Bool;
 	
 	private var _arr:Array<Dynamic>;
-	private var cannon:FlxWeaponExt;
+	public var cannon:FlxWeaponExt;
 	private var trail:FlxTrailExt;
 	
 	private var gun:FlxSprite;

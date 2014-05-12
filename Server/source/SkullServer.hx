@@ -137,6 +137,25 @@ class SkullServer extends Server
 		}
 	}
 	
+	//static public function spawnTeam(p:Player, t:Int):Void
+	//{
+		//if (p.canSpawn)
+		//{
+			//if (Reg.gm.teams.length >= t)
+			//{
+				//var team:Team = Reg.gm.teams[t];
+				//
+				//if (p.graphicKey != team.graphicKey || p.team != t)
+				//{
+					//p.team = t;
+					//Reg.gm.setTeam(p, Reg.gm.teams[t]);
+				//}
+			//}
+			//
+			//p.respawn();
+		//}
+	//}
+	
 	override public function onReceive(MsgID:Int, E:ENetEvent):Void 
 	{
 		if (MsgID == Msg.PlayerInfo.ID)
@@ -198,9 +217,11 @@ class SkullServer extends Server
 			
 			if (p.canSpawn)
 			{
-				if (p.team != t)
+				if (Reg.gm.teams.length >= t)
 				{
-					if (Reg.gm.teams.length >= t)
+					var team:Team = Reg.gm.teams[t];
+					
+					if (p.graphicKey != team.graphicKey || p.team != t)
 					{
 						p.team = t;
 						Reg.gm.setTeam(p, Reg.gm.teams[t]);

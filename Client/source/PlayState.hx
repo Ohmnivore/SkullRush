@@ -174,8 +174,34 @@ class PlayState extends FlxState
 			m.destroy();
 		}
 		
+		if (collidemap != null)
+		{
+			collidemap.kill();
+			collidemap.destroy();
+		}
+		
+		if (NReg.HUDS != null)
+		{
+			for (h in NReg.HUDS)
+			{
+				h.destroy();
+			}
+			for (h in NReg.sprites)
+			{
+				h.destroy();
+			}
+		}
+		NReg.init();
+		
 		current_map = MapName;
 		OgmoLoader.loadXML(MapString, this);
+		
+		for (p in playermap.iterator())
+		{
+			var pl:Player = p;
+			
+			pl.cannon.bounds = collidemap.getBounds();
+		}
 	}
 	
 	public function downloadError(e:LoaderErrorType):Void

@@ -1,5 +1,5 @@
 name=Ohmnivore
-team=0
+team=1
 ip=
 masterserver=http://skullrush.elementfx.com/laravel/public/
 fullscreen=false

@@ -147,8 +147,19 @@ class DefaultHooks
 		}
 	}
 	
-	public static function handleDamage(info:HurtInfo):Void
+	public static function handleDamage(info:HurtInfo, useTeams:Bool = false):Void
 	{
+		if (useTeams && info.attacker > 0)
+		{
+			var v:Player = Reg.server.playermap.get(info.victim);
+			var a:Player = Reg.server.playermap.get(info.attacker);
+			
+			if (a.team == v.team)
+			{
+				return;
+			}
+		}
+		
 		var p:Player = Reg.server.playermap.get(info.victim);
 		if (info.victim != info.attacker) p.health -= info.dmg;
 		
@@ -366,26 +377,6 @@ class DefaultHooks
 		var p:Player = new Player(E.ID, name, 50, 50);
 		
 		var color:Int = Msg.PlayerInfo.data.get("team");
-		if (color == 0)
-		{
-			p.team = 0;
-			p.setColor(0xff13BF00, "assets/images/playergreen.png");
-		}
-		if (color == 1)
-		{
-			p.team = 1;
-			p.setColor(0xff0086BF, "assets/images/playerblue.png");
-		}
-		if (color == 2)
-		{
-			p.team = 2;
-			p.setColor(0xffE0DD00, "assets/images/playeryellow.png");
-		}
-		if (color == 3)
-		{
-			p.team = 3;
-			p.setColor(0xffD14900, "assets/images/playerred.png");
-		}
 		
 		//var s:Spawn = Spawn.findSpawn(p.team);
 		//p.x = s.x;
@@ -411,7 +402,7 @@ class DefaultHooks
 		Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, name + " has joined!", 12, false,
 			[new FlxMarkup(0, name.length, false, p.header.color)]);
-		Reg.announcer.addMsg(name + " has joined!", [new FlxMarkup(0, name.length, false, p.header.color)]);
+		Reg.announcer.addMsg(name + " has joined!", []);
 		Msg.Announce.data.set("message", name + " has joined!");
 		Msg.Announce.data.set("markup", t.ExportMarkups());
 		for (pl in Reg.server.playermap.iterator())

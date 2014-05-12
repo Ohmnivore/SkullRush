@@ -14,6 +14,7 @@ import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
 import networkobj.NCounter;
 import networkobj.NReg;
+import networkobj.NScoreboard;
 import networkobj.NSprite;
 import networkobj.NTemplate;
 import networkobj.NTimer;
@@ -31,6 +32,8 @@ class CTF extends BaseGamemode
 	public var timeLeft:NTimer;
 	public var maxtime:Int;
 	public var maxcaps:Int;
+	public var score:NScoreboard;
+	public var captures:Map<Int, Int>;
 	
 	public function new() 
 	{
@@ -50,13 +53,24 @@ class CTF extends BaseGamemode
 		Flag.init();
 		Holder.init();
 		
-		greenCounter = new NCounter("Green captures", 0xff00ff00, 5, 5, 0, true);
+		greenCounter = new NCounter("Blue captures", 0xff0086BF, 5, 5, 0, true);
 		greenCounter.setCount(Holder.captures[0]);
-		blueCounter = new NCounter("Blue captures", 0xff0000ff, 5, 25, 0, true);
+		blueCounter = new NCounter("Yellow captures", 0xffE0DD00, 5, 25, 0, true);
 		blueCounter.setCount(Holder.captures[1]);
 		
-		timeLeft = new NTimer("Time left", 0xff000000, 250, 0, 0, true);
-		timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING, 0xff000000);
+		timeLeft = new NTimer("Time left", 0xffffffff, 5, 45, 0, true);
+		timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING);
+		
+		score = new NScoreboard("Scores", ["Score", "Kills", "Deaths", "Captures"],
+											["0", "0", "0", "0"], 0xffffffff);
+		Reg.state.hud.add(score.group);
+		captures = new Map<Int, Int>();
+	}
+	
+	public function setPlayerScoreboard(P:Player):Void
+	{
+		score.setPlayer(P, [Std.string(P.score), Std.string(P.kills),
+						Std.string(P.deaths), Std.string(captures.get(P.ID))]);
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -80,27 +94,43 @@ class CTF extends BaseGamemode
 			}
 		}
 		
-		//for each (var p:Player in Registry.playstate.players)
-		//{
-			//if (p.kills >= 25)
-			//{
-			//var announce:String = p.name.concat(" won the game!");
-			//var pmarkup:Markup = new Markup(0, p.name.length, 11, p.teamcolor);
-			//PlayState.announcer.add(new MarkupText(0, 0, 500, announce, true, true, [pmarkup]));
-			//
-			//new delayedFunctionCall(Registry.nextmap, 3000);
-			//}
-		//}
+		if (Holder.captures[0] != greenCounter.count)
+		{
+			greenCounter.setCount(Holder.captures[0]);
+		}
+		
+		if (Holder.captures[1] != blueCounter.count)
+		{
+			blueCounter.setCount(Holder.captures[1]);
+		}
 	}
 	
 	override public function onHurt(e:HurtEvent):Void
 	{
-		DefaultHooks.handleDamage(e.hurtinfo);
+		DefaultHooks.handleDamage(e.hurtinfo, true);
+		
+		if (e.hurtinfo.attacker > 0)
+		{
+			var p:Player = Reg.server.playermap.get(e.hurtinfo.attacker);
+			p.score += e.hurtinfo.dmg;
+			setPlayerScoreboard(p);
+		}
 	}
 	
 	override public function onDeath(e:DeathEvent):Void
 	{
 		DefaultHooks.handleDeath(e.deathinfo);
+		
+		var loser:Player = Reg.server.playermap.get(e.deathinfo.victim);
+		loser.deaths++;
+		setPlayerScoreboard(loser);
+		
+		if (e.deathinfo.attacker > 0)
+		{
+			var winner:Player = Reg.server.playermap.get(e.deathinfo.attacker);
+			winner.kills++;
+			setPlayerScoreboard(winner);
+		}
 		
 		for (p in Flag.taken_flags.keys())
 		{
@@ -120,8 +150,28 @@ class CTF extends BaseGamemode
 		DefaultHooks.onPeerConnect(e);
 	}
 	
+	override public function initPlayer(P:Player):Void 
+	{
+		super.initPlayer(P);
+		
+		DefaultHooks.initPlayer(P);
+		
+		score.addPlayer(Reg.server.playermap.get(P.ID));
+		captures.set(P.ID, 0);
+	}
+	
+	override public function setTeam(P:Player, T:Team):Void 
+	{
+		super.setTeam(P, T);
+		
+		DefaultHooks.setTeam(P, T);
+	}
+	
 	override public function onLeave(e:LeaveEvent):Void
 	{
+		score.removePlayer(Reg.server.playermap.get(e.leaveinfo.ID));
+		captures.remove(e.leaveinfo.ID);
+		
 		DefaultHooks.onPeerDisconnect(e);
 	}
 	
@@ -137,9 +187,4 @@ class CTF extends BaseGamemode
 		maxtime = Std.parseInt(Assets.config.get("ctf_maxtime"));
 		maxcaps = Std.parseInt(Assets.config.get("ctf_maxcaps"));
 	}
-	
-	//override public function createScore():Void
-	//{
-		//DefaultHooks.createScore();
-	//}
 }

@@ -132,5 +132,6 @@ class Msg
 		H.addMessage(SpawnRequest);
 		H.addMessage(DeathInfo);
 		H.addMessage(SpawnConfirm);
+		H.addMessage(SetAppearance);
 	}
 }
