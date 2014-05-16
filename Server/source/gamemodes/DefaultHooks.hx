@@ -12,6 +12,7 @@ import flixel.util.FlxVector;
 import gevents.ReceiveEvent;
 import haxe.Serializer;
 import networkobj.NCounter;
+import networkobj.NEmitter;
 import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NTimer;
@@ -345,6 +346,8 @@ class DefaultHooks
 		{
 			s.announce(P.ID);
 		}
+		
+		NEmitter.announceEmitters(P.ID);
 		
 		var t_arr:Array<String> = [];
 		for (t in Reg.gm.teams)

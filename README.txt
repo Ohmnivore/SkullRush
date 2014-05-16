@@ -1,6 +1,8 @@
 TODO (engine):
+Weapons
+Powerups
+KOTH
 Order scoreboard by score
-Networked particle system
 Plugins
 Spectate
 Interactive events:
@@ -18,3 +20,8 @@ Bugs:
 Fix annoying LAN server discovery bug
 
 Replace place-holder art by actual art
+
+Masterserver:
+route through HTTPS
+use params instead of url variables
+CSS styling and background

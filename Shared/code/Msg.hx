@@ -51,6 +51,10 @@ class Msg
 	static public var SpawnConfirm:Message;
 	static public var SetAppearance:Message;
 	
+	static public var EmitterAnnounce:Message;
+	static public var EmitterNew:Message;
+	static public var EmitterDelete:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -91,6 +95,11 @@ class Msg
 		DeathInfo = new Message(33, ["timer"], true);
 		SpawnConfirm = new Message(34, ["color", "graphic"], true);
 		SetAppearance = new Message(35, ["id", "color", "graphic"], true);
+		
+		EmitterAnnounce = new Message(36, ["serialized"], true);
+		EmitterNew = new Message(37, ["id", "id2", "x", "y", "graphic", "collide", "rotationFrames",
+			"explode", "quantity"], true);
+		EmitterDelete = new Message(38, ["id"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -133,5 +142,9 @@ class Msg
 		H.addMessage(DeathInfo);
 		H.addMessage(SpawnConfirm);
 		H.addMessage(SetAppearance);
+		
+		H.addMessage(EmitterAnnounce);
+		H.addMessage(EmitterNew);
+		H.addMessage(EmitterDelete);
 	}
 }

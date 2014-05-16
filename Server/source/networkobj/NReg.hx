@@ -1,5 +1,6 @@
 package networkobj;
 import haxe.Serializer;
+import networkobj.NEmitter;
 
 /**
  * ...

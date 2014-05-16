@@ -1,6 +1,7 @@
 package gamemodes;
 
 import enet.ENet;
+import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
@@ -10,6 +11,7 @@ import gevents.HurtInfo;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import networkobj.NEmitter;
 import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NScoreboard;
@@ -33,9 +35,20 @@ class FFA extends BaseGamemode
 	public var maxkills:Int = 25;
 	public var maxtime:Int = 10;
 	
+	public var LOL:Int;
+	public var emit:Int;
+	
 	public function new() 
 	{
 		super();
+		
+		NEmitter.init();
+		var e:FlxEmitter = new FlxEmitter(0, 0);
+		LOL = NEmitter.registerEmitter(e);
+		//NEmitter.announceEmitters();
+		
+		emit = NEmitter.playEmitter(LOL, true, 50, 50, "assets/images/trail.png",
+								1, 0, true, 50);
 		
 		time = new NTimer("Time left", 0xffffffff, 20, 20, 0, true);
 		time.setTimer(maxtime * 60, NTimer.UNTICKING);
@@ -60,6 +73,11 @@ class FFA extends BaseGamemode
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		//if (FlxG.keys.justPressed.H)
+		//{
+			//NEmitter.stopEmitter(emit);
+		//}
 		
 		DefaultHooks.update(elapsed);
 		
@@ -159,10 +177,13 @@ class FFA extends BaseGamemode
 	override public function initPlayer(P:Player):Void 
 	{
 		super.initPlayer(P);
-		
+		//NEmitter.removeEmitter(emit);
 		DefaultHooks.initPlayer(P);
 		
 		score.addPlayer(Reg.server.playermap.get(P.ID));
+		
+		emit = NEmitter.playEmitter(LOL, true, 50, 50, "assets/images/trail.png",
+								1, 0, true, 50);
 	}
 	
 	override public function setTeam(P:Player, T:Team):Void 

@@ -61,7 +61,6 @@ class Masterserver
 		request = new URLRequest();
 		request.method = URLRequestMethod.POST;
 		request.url = url + '/s/pulse/$oldkey/$key';
-		
 		_fireRequest();
 	}
 	

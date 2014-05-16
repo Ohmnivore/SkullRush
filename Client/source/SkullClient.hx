@@ -3,10 +3,12 @@ import enet.Client;
 import enet.ENet;
 import enet.ENetEvent;
 import flixel.addons.display.FlxZoomCamera;
+import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.scaleModes.FillScaleMode;
 import flixel.text.FlxText;
+import flixel.util.FlxPoint;
 import haxe.io.BytesInput;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -431,6 +433,137 @@ class SkullClient extends Client
 		{
 			var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
 			p.setColor(Msg.SetAppearance.data.get("color"), Msg.SetAppearance.data.get("graphic"));
+		}
+		
+		if (MsgID == Msg.EmitterAnnounce.ID)
+		{
+			var array:Array<Dynamic> = cast Unserializer.run(Msg.EmitterAnnounce.data.get("serialized"));
+			
+			for (e in array)
+			{
+				var arr:Array<Dynamic> = cast e;
+				var em:FlxEmitter = new FlxEmitter();
+				NReg.emitters.set(cast arr[0], em);
+				
+				//em.acceleration = cast arr[2];
+				//var acc:FlxPoint = cast arr[2];
+				//em.acceleration.x = acc.x;
+				//em.acceleration.y = acc.y;
+				em.blend = cast arr[3];
+				em.bounce = cast arr[4];
+				//em.collisionType = cast arr[5];
+				em.endAlpha = cast arr[6];
+				em.endBlue = cast arr[7];
+				em.endGreen = cast arr[8];
+				em.endRed = cast arr[9];
+				em.endScale = cast arr[11];
+				em.frequency = cast arr[12];
+				em.gravity = cast arr[13];
+				em.height = cast arr[14];
+				//em.life = cast arr[15];
+				em.lifespan = cast arr[16];
+				em.maxSize = cast arr[17];
+				em.minRotation = cast arr[18];
+				//em.particleDrag = cast arr[19];
+				//var drag:FlxPoint = cast arr[19];
+				//em.particleDrag.x = drag.x;
+				//em.particleDrag.y = drag.y;
+				em.rotation = cast arr[20];
+				em.startAlpha = cast arr[21];
+				em.startBlue = cast arr[22];
+				em.startGreen = cast arr[23];
+				em.startRed = cast arr[24];
+				em.startScale = cast arr[25];
+				em.width = cast arr[26];
+				em.xVelocity = cast arr[27];
+				em.yVelocity = cast arr[28];
+				
+				//trace(em);
+			}
+		}
+		
+		if (MsgID == Msg.EmitterNew.ID)
+		{
+			var e:FlxEmitter = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")));
+			e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
+				Msg.EmitterNew.data.get("quantity"), Msg.EmitterNew.data.get("rotationFrames"),
+				Msg.EmitterNew.data.get("collide"));
+			e.start(Msg.EmitterNew.data.get("explode"), e.lifespan, e.frequency,
+				Msg.EmitterNew.data.get("quantity"), e.life.max);
+			Reg.state.emitters.add(e);
+			e.setPosition(Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
+			
+			NReg.live_emitters.set(Msg.EmitterNew.data.get("id2"), e);
+		}
+	}
+	
+	static public function cloneFromEmitter(R:FlxEmitter):FlxEmitter
+	{
+		var e:FlxEmitter = new FlxEmitter();
+		
+		setProp(e, R, "blend");
+		setProp(e, R, "bounce");
+		setProp(e, R, "endAlpha");
+		setProp(e, R, "endBlue");
+		setProp(e, R, "endGreen");
+		setProp(e, R, "endRed");
+		setProp(e, R, "endScale");
+		setProp(e, R, "frequency");
+		setProp(e, R, "gravity");
+		setProp(e, R, "height");
+		setProp(e, R, "life");
+		setProp(e, R, "lifespan");
+		setProp(e, R, "maxRotation");
+		setProp(e, R, "maxSize");
+		setProp(e, R, "minRotation");
+		setProp(e, R, "rotation");
+		setProp(e, R, "startAlpha");
+		setProp(e, R, "startBlue");
+		setProp(e, R, "startGreen");
+		setProp(e, R, "startRed");
+		setProp(e, R, "startScale");
+		setProp(e, R, "width");
+		setProp(e, R, "xVelocity");
+		setProp(e, R, "yVelocity");
+		
+		//e.acceleration.copyFrom(E.acceleration);
+		//e.blend = E.blend;
+		//e.bounce = E.bounce;
+		//e.collisionType = E.collisionType;
+		//e.endAlpha = E.endAlpha;
+		//e.endBlue = E.endBlue;
+		//e.endGreen = E.endGreen;
+		//e.endRed = E.endRed;
+		//e.endScale = E.endScale;
+		//e.frequency = E.frequency;
+		//e.gravity = E.gravity;
+		//e.height = E.height;
+		//e.life = E.life;
+		//e.lifespan = E.lifespan;
+		//e.maxRotation = E.maxRotation;
+		//e.maxSize = E.maxSize;
+		//e.minRotation = E.minRotation;
+		//e.particleDrag.copyFrom(E.particleDrag);
+		//e.rotation = E.rotation;
+		//e.startAlpha = E.startAlpha;
+		//e.startBlue = E.startBlue;
+		//e.startGreen = E.startGreen;
+		//e.startRed = E.startRed;
+		//e.startScale = E.startScale;
+		//e.width = E.width;
+		//e.xVelocity = E.xVelocity;
+		//e.yVelocity = E.yVelocity;
+		
+		return e;
+	}
+	
+	static public function setProp(Dest:FlxEmitter, Source:FlxEmitter, Prop:String):Void
+	{
+		var val:Dynamic = Reflect.field(Source, Prop);
+		
+		if (val != null)
+		{
+			Reflect.setField(Dest, Prop, val);
 		}
 	}
 	
