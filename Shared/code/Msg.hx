@@ -55,6 +55,8 @@ class Msg
 	static public var EmitterNew:Message;
 	static public var EmitterDelete:Message;
 	
+	static public var AnnounceGuns:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -100,6 +102,8 @@ class Msg
 		EmitterNew = new Message(37, ["id", "id2", "x", "y", "graphic", "collide", "rotationFrames",
 			"explode", "quantity"], true);
 		EmitterDelete = new Message(38, ["id"], true);
+		
+		AnnounceGuns = new Message(39, ["serialized"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -146,5 +150,7 @@ class Msg
 		H.addMessage(EmitterAnnounce);
 		H.addMessage(EmitterNew);
 		H.addMessage(EmitterDelete);
+		
+		H.addMessage(AnnounceGuns);
 	}
 }

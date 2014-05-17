@@ -16,6 +16,7 @@ import networkobj.NEmitter;
 import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NTimer;
+import networkobj.NWeapon;
 
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -205,71 +206,10 @@ class DefaultHooks
 	
 	static public function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
 	{
-		var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
-													Bullet.y + Bullet.height / 2);
+		var parent:Player = cast Bullet._weapon.parent;
+		parent.cannon.template.collide(Bullet, Other);
 		
-		Reg.state.emitters.add(emitter);
-		
-		emitter.setRotation(0, 0);
-		emitter.setMotion(0, 17, 1, 360, 25, 1);
-		emitter.setAlpha(1, 1, 0, 0);
-		emitter.setColor(0xffE69137, 0xffFFFB17);
-		emitter.setXSpeed(150, 150);
-		emitter.setYSpeed(150, 150);
-		emitter.makeParticles(Assets.getImg("assets/images/explosionparticle.png"), 35);
-		
-		emitter.start(true, 0.9, 0, 35);
-		
-		for (p in Reg.state.players.members)
-		{
-			var pl:Player = cast (p, Player);
-			
-			var v:FlxVector = new FlxVector(1, 0);
-			
-			v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
-			
-			//trace(Reg.state.collidemap.ray(Bullet.getMidpoint(), pl.getMidpoint(), new FlxPoint(), 2));
-			//var d:FlxPoint = FlxPoint.get(v.x, v.y);
-			//var res:FlxPoint = FlxPoint.get();
-			//Reg.state.collidemap.rayCast(Bullet.getMidpoint(), d, res);
-			//d.put();
-			//res.put();
-			
-			//if (FlxMath.distanceToPoint(Bullet, res) >= FlxMath.distanceBetween(Bullet, pl) - 2)
-			//{
-				var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-				if (dist_coeff < 0) dist_coeff = 0;
-				//if (dist_coeff > 0.5) dist_coeff = 0.5;
-				
-				pl.velocity.x += v.x * 300 * dist_coeff;
-				pl.velocity.y += v.y * 300 * dist_coeff;
-				
-				//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
-				if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
-				{
-					var dmg:Float = dist_coeff * 75;
-					//if (pl.health - dmg <= 0)
-						//announceGun(cast (Bullet._weapon.parent, Player), pl);
-					//pl.health -= dist_coeff * 75;
-					
-					var info:HurtInfo = new HurtInfo();
-					info.attacker = Reflect.field(Bullet._weapon.parent, "ID");
-					info.victim = pl.ID;
-					info.dmg = Std.int(dmg);
-					info.dmgsource = Bullet.getMidpoint();
-					info.type = BaseGamemode.BULLET;
-					
-					Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
-				}
-				
-				else
-				{
-					pl.canChoose = true;
-				}
-			//}
-		}
-		
-		Bullet.kill();
+		return;
 	}
 	
 	static public function onPeerDisconnect(E:LeaveEvent):Void
@@ -347,6 +287,7 @@ class DefaultHooks
 			s.announce(P.ID);
 		}
 		
+		NWeapon.announceWeapons(P.ID);
 		NEmitter.announceEmitters(P.ID);
 		
 		var t_arr:Array<String> = [];
@@ -447,6 +388,7 @@ class DefaultHooks
 		FlxG.collide(Reg.state.bullets, Reg.state.players, DefaultHooks.bulletCollide);
 		FlxG.collide(Reg.state.players, DefaultHooks.playerCollide);
 		FlxG.collide(Reg.state.players);
+		FlxG.collide(Reg.state.emitters, Reg.state.collidemap);
 		
 		DefaultHooks.checkIfFall();
 	}

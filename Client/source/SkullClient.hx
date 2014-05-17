@@ -4,6 +4,7 @@ import enet.ENet;
 import enet.ENetEvent;
 import flixel.addons.display.FlxZoomCamera;
 import flixel.effects.particles.FlxEmitter;
+import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.scaleModes.FillScaleMode;
@@ -442,13 +443,11 @@ class SkullClient extends Client
 			for (e in array)
 			{
 				var arr:Array<Dynamic> = cast e;
-				var em:FlxEmitter = new FlxEmitter();
+				var em:FlxEmitterExt = new FlxEmitterExt();
 				NReg.emitters.set(cast arr[0], em);
-				
-				//em.acceleration = cast arr[2];
-				//var acc:FlxPoint = cast arr[2];
-				//em.acceleration.x = acc.x;
-				//em.acceleration.y = acc.y;
+				var acc:FlxPoint = cast arr[2];
+				em.acceleration.x = acc.x;
+				em.acceleration.y = acc.y;
 				em.blend = cast arr[3];
 				em.bounce = cast arr[4];
 				//em.collisionType = cast arr[5];
@@ -456,18 +455,18 @@ class SkullClient extends Client
 				em.endBlue = cast arr[7];
 				em.endGreen = cast arr[8];
 				em.endRed = cast arr[9];
-				em.endScale = cast arr[11];
-				em.frequency = cast arr[12];
-				em.gravity = cast arr[13];
-				em.height = cast arr[14];
-				//em.life = cast arr[15];
-				em.lifespan = cast arr[16];
+				em.endScale = cast arr[10];
+				em.frequency = cast arr[11];
+				em.gravity = cast arr[12];
+				em.height = cast arr[13];
+				em.life = cast arr[14];
+				em.lifespan = cast arr[15];
+				em.maxRotation = cast arr[16];
 				em.maxSize = cast arr[17];
 				em.minRotation = cast arr[18];
-				//em.particleDrag = cast arr[19];
-				//var drag:FlxPoint = cast arr[19];
-				//em.particleDrag.x = drag.x;
-				//em.particleDrag.y = drag.y;
+				var drag:FlxPoint = cast arr[19];
+				em.particleDrag.x = drag.x;
+				em.particleDrag.y = drag.y;
 				em.rotation = cast arr[20];
 				em.startAlpha = cast arr[21];
 				em.startBlue = cast arr[22];
@@ -478,81 +477,72 @@ class SkullClient extends Client
 				em.xVelocity = cast arr[27];
 				em.yVelocity = cast arr[28];
 				
-				//trace(em);
+				em.angle = cast arr[29];
+				em.angleRange = cast arr[30];
+				em.distance = cast arr[31];
+				em.distanceRange = cast arr[32];
 			}
 		}
 		
 		if (MsgID == Msg.EmitterNew.ID)
 		{
-			var e:FlxEmitter = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")));
+			var e:FlxEmitterExt = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")),
+				Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
 			e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
 				Msg.EmitterNew.data.get("quantity"), Msg.EmitterNew.data.get("rotationFrames"),
 				Msg.EmitterNew.data.get("collide"));
-			e.start(Msg.EmitterNew.data.get("explode"), e.lifespan, e.frequency,
-				Msg.EmitterNew.data.get("quantity"), e.life.max);
+			e.start(Msg.EmitterNew.data.get("explode"), e.life.min, e.frequency,
+				Msg.EmitterNew.data.get("quantity"), e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
-			e.setPosition(Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
+			//e.setPosition(Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
 			
 			NReg.live_emitters.set(Msg.EmitterNew.data.get("id2"), e);
 		}
+		
+		if (MsgID == Msg.EmitterDelete.ID)
+		{
+			var ID:Int = Msg.EmitterDelete.data.get("id");
+			
+			var e:FlxEmitterExt = NReg.live_emitters.get(ID);
+			
+			Reg.state.emitters.remove(e, true);
+			NReg.live_emitters.remove(ID);
+			e.kill();
+			e.destroy();
+		}
+		
+		if (MsgID == Msg.AnnounceGuns.ID)
+		{
+			var array:Array<Dynamic> = cast Unserializer.run(Msg.AnnounceGuns.data.get("serialized"));
+			trace(array);
+		}
 	}
 	
-	static public function cloneFromEmitter(R:FlxEmitter):FlxEmitter
+	static public function cloneFromEmitter(E:FlxEmitterExt, X:Int, Y:Int):FlxEmitterExt
 	{
-		var e:FlxEmitter = new FlxEmitter();
+		var e:FlxEmitterExt = new FlxEmitterExt(X, Y);
 		
-		setProp(e, R, "blend");
-		setProp(e, R, "bounce");
-		setProp(e, R, "endAlpha");
-		setProp(e, R, "endBlue");
-		setProp(e, R, "endGreen");
-		setProp(e, R, "endRed");
-		setProp(e, R, "endScale");
-		setProp(e, R, "frequency");
-		setProp(e, R, "gravity");
-		setProp(e, R, "height");
-		setProp(e, R, "life");
-		setProp(e, R, "lifespan");
-		setProp(e, R, "maxRotation");
-		setProp(e, R, "maxSize");
-		setProp(e, R, "minRotation");
-		setProp(e, R, "rotation");
-		setProp(e, R, "startAlpha");
-		setProp(e, R, "startBlue");
-		setProp(e, R, "startGreen");
-		setProp(e, R, "startRed");
-		setProp(e, R, "startScale");
-		setProp(e, R, "width");
-		setProp(e, R, "xVelocity");
-		setProp(e, R, "yVelocity");
+		e.bounce = E.bounce;
+		e.frequency = E.frequency;
+		e.gravity = E.gravity;
+		e.particleDrag.copyFrom(E.particleDrag);
+		e.acceleration.copyFrom(E.acceleration);
+		e.endBlue = E.endBlue;
+		e.endGreen = E.endGreen;
+		e.endRed = E.endRed;
+		e.lifespan = E.lifespan;
+		e.startBlue = E.startBlue;
+		e.startGreen = E.startGreen;
+		e.startRed = E.startRed;
 		
-		//e.acceleration.copyFrom(E.acceleration);
-		//e.blend = E.blend;
-		//e.bounce = E.bounce;
-		//e.collisionType = E.collisionType;
-		//e.endAlpha = E.endAlpha;
-		//e.endBlue = E.endBlue;
-		//e.endGreen = E.endGreen;
-		//e.endRed = E.endRed;
-		//e.endScale = E.endScale;
-		//e.frequency = E.frequency;
-		//e.gravity = E.gravity;
-		//e.height = E.height;
-		//e.life = E.life;
-		//e.lifespan = E.lifespan;
-		//e.maxRotation = E.maxRotation;
-		//e.maxSize = E.maxSize;
-		//e.minRotation = E.minRotation;
-		//e.particleDrag.copyFrom(E.particleDrag);
-		//e.rotation = E.rotation;
-		//e.startAlpha = E.startAlpha;
-		//e.startBlue = E.startBlue;
-		//e.startGreen = E.startGreen;
-		//e.startRed = E.startRed;
-		//e.startScale = E.startScale;
-		//e.width = E.width;
-		//e.xVelocity = E.xVelocity;
-		//e.yVelocity = E.yVelocity;
+		e.setRotation(E.rotation.min, E.rotation.max);
+		e.setScale(E.startScale.min, E.startScale.max, E.endScale.min, E.endScale.max);
+		e.setSize(Std.int(E.width), Std.int(E.height));
+		e.setXSpeed(E.xVelocity.min, E.xVelocity.max);
+		e.setYSpeed(E.yVelocity.min, E.yVelocity.max);
+		e.setAlpha(E.startAlpha.min, E.startAlpha.max, E.endAlpha.min, E.endAlpha.max);
+		e.setMotion(E.angle / 0.017453293, E.distance, E.life.min,
+			E.angleRange/0.017453293, E.distanceRange, E.life.max - E.life.min);
 		
 		return e;
 	}

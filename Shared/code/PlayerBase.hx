@@ -5,6 +5,7 @@ import flixel.addons.weapon.FlxWeapon;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxAngle;
@@ -12,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxRect;
 import haxe.Serializer;
 import haxe.Unserializer;
+import networkobj.NWeapon;
 
 /**
  * ...
@@ -33,13 +35,15 @@ class PlayerBase extends FlxSprite
 	public var dash_left:Bool;
 	public var dash_right:Bool;
 	public var dash_down:Bool;
+	public var current_weap:Int;
 	
 	private var _arr:Array<Dynamic>;
 	public var cannon:FlxWeaponExt;
 	private var trail:FlxTrailExt;
 	
 	private var gun:FlxSprite;
-	private var gun2:FlxSprite;
+	public var guns:FlxGroup;
+	public var guns_arr:Array<FlxWeaponExt>;
 	
 	private var healthBar:FlxBar;
 	public var header:FlxTextExt;
@@ -55,19 +59,24 @@ class PlayerBase extends FlxSprite
 		move_jump = false;
 		shoot = false;
 		ceilingwalk = false;
+		current_weap = -1;
 		_arr = [];
 		
 		graphicKey = "assets/images/playerblue.png";
 		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, 24, 24);
 		loadAnims();
 		
+		#if CLIENT
 		gun = new FlxSprite(0, 0, Assets.getImg("assets/images/gun.png"));
 		gun.loadRotatedGraphic(Assets.getImg("assets/images/gun.png"), 180, -1, false, false);
 		Reg.state.over_players.add(gun);
+		#else
+		guns_arr = [];
+		guns = new FlxGroup();
+		Reg.state.over_players.add(guns);
 		
-		gun2 = new FlxSprite(0, 0, Assets.getImg("assets/images/gun2.png"));
-		gun2.loadRotatedGraphic(Assets.getImg("assets/images/gun2.png"), 180, -1, false, false);
-		Reg.state.over_players.add(gun2);
+		NWeapon.setUpWeapons(this);
+		#end
 		
 		health = 100;
 		healthBar = new FlxBar(8, 26, FlxBar.FILL_LEFT_TO_RIGHT, 38, 6, this, "health", 0, 100, true);
@@ -137,11 +146,9 @@ class PlayerBase extends FlxSprite
 		Reg.state.players.remove(this, true);
 		Reg.state.over_players.remove(header, true);
 		Reg.state.over_players.remove(healthBar, true);
-		Reg.state.over_players.remove(gun2, true);
 		Reg.state.over_players.remove(gun, true);
 		
 		gun.kill();
-		gun2.kill();
 		header.kill();
 		healthBar.kill();
 		cannon = null;
@@ -155,11 +162,9 @@ class PlayerBase extends FlxSprite
 		//Reg.state.players.remove(this, true);
 		//Reg.state.over_players.remove(header, true);
 		//Reg.state.over_players.remove(healthBar, true);
-		//Reg.state.over_players.remove(gun2, true);
 		//Reg.state.over_players.remove(gun, true);
 		//
 		//gun.kill();
-		//gun2.kill();
 		//header.kill();
 		//healthBar.kill();
 		//cannon = null;
@@ -175,7 +180,6 @@ class PlayerBase extends FlxSprite
 		//Reg.state.players.add(this);
 		//Reg.state.over_players.add(header);
 		//Reg.state.over_players.add(healthBar);
-		//Reg.state.over_players.add(gun2);
 		//Reg.state.over_players.add(gun);
 	//}
 	
@@ -185,7 +189,6 @@ class PlayerBase extends FlxSprite
 		header.visible = false;
 		healthBar.visible = false;
 		gun.visible = false;
-		gun2.visible = false;
 		trail.visible = false;
 	}
 	
@@ -195,7 +198,6 @@ class PlayerBase extends FlxSprite
 		header.visible = true;
 		healthBar.visible = true;
 		gun.visible = true;
-		gun2.visible = true;
 		trail.visible = true;
 	}
 	
@@ -235,18 +237,16 @@ class PlayerBase extends FlxSprite
 		{
 			if (isRight)
 			{
-				gun2.visible = false;
-				gun.visible = true;
 				gun.angle = a;
 				gun.facing = FlxObject.RIGHT;
+				gun.flipY = false;
 				facing = FlxObject.RIGHT;
 			}
 			else
 			{
-				gun.visible = false;
-				gun2.visible = true;
-				gun2.angle = a;
-				gun2.facing = FlxObject.LEFT;
+				gun.angle = 360 - a;
+				gun.facing = FlxObject.LEFT;
+				gun.flipY = true;
 				facing = FlxObject.LEFT;
 			}
 		}
@@ -309,9 +309,6 @@ class PlayerBase extends FlxSprite
 		
 		gun.x = x;
 		gun.y = y + 2;
-		
-		gun2.x = x;
-		gun2.y = y + 2;
 	}
 	
 	public function s_serialize():String
@@ -331,6 +328,7 @@ class PlayerBase extends FlxSprite
 		
 		_arr.push(dash_left);
 		_arr.push(dash_right);
+		_arr.push(current_weap);
 		
 		return Serializer.run(_arr);
 	}
@@ -339,7 +337,7 @@ class PlayerBase extends FlxSprite
 	{
 		_arr = Arr;
 		
-		if (_arr.length == 11) //used to be 7
+		if (_arr.length == 12) //used to be 7
 		{
 			x = _arr[1];
 			y = _arr[2];
@@ -355,6 +353,7 @@ class PlayerBase extends FlxSprite
 			health = _arr[6];
 			dash_left = _arr[7];
 			dash_right = _arr[8];
+			current_weap = _arr[9];
 			
 			if (shoot)
 			{
@@ -376,6 +375,7 @@ class PlayerBase extends FlxSprite
 		_arr.push(dash_left);
 		_arr.push(dash_right);
 		_arr.push(dash_down);
+		_arr.push(current_weap);
 		
 		return Serializer.run(_arr);
 	}
@@ -386,7 +386,7 @@ class PlayerBase extends FlxSprite
 		
 		_arr = Unserializer.run(S);
 		
-		if (_arr.length == 9)
+		if (_arr.length == 10)
 		{
 			move_right = _arr[0];
 			move_left = _arr[1];
@@ -397,6 +397,7 @@ class PlayerBase extends FlxSprite
 			dash_left = _arr[6];
 			dash_right = _arr[7];
 			dash_down = _arr[8];
+			current_weap = _arr[9];
 			
 			if (move_right) //move right
 			{

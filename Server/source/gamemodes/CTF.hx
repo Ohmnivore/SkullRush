@@ -5,6 +5,7 @@ import entities.Flag;
 import entities.Holder;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -18,6 +19,7 @@ import networkobj.NScoreboard;
 import networkobj.NSprite;
 import networkobj.NTemplate;
 import networkobj.NTimer;
+import networkobj.NWeapon;
 
 /**
  * ...

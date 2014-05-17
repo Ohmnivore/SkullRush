@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.FlxG;
 import flixel.util.FlxVelocity;
+import networkobj.NWeapon;
 
 /**
  * ...
@@ -12,6 +13,10 @@ import flixel.util.FlxVelocity;
  */
 class FlxWeaponExt extends FlxWeapon
 {
+	public var gun:FlxSprite;
+	public var icon:FlxSprite;
+	public var template:NWeapon;
+	
 	private var _inheritance:FlxPoint;
 	
 	public function new(Name:String, ?ParentRef:FlxSprite, ?BulletType:Class<FlxBullet>, ?BulletID:Int = 0) 

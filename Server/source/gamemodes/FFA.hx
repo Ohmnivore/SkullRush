@@ -2,7 +2,9 @@ package gamemodes;
 
 import enet.ENet;
 import flixel.effects.particles.FlxEmitter;
+import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
+import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
@@ -18,6 +20,8 @@ import networkobj.NScoreboard;
 import networkobj.NSprite;
 import networkobj.NTemplate;
 import networkobj.NTimer;
+import networkobj.NWeapon;
+import weapons.Launcher;
 
 /**
  * ...
@@ -43,7 +47,11 @@ class FFA extends BaseGamemode
 		super();
 		
 		NEmitter.init();
-		var e:FlxEmitter = new FlxEmitter(0, 0);
+		NWeapon.init();
+		
+		new Launcher();
+		
+		var e:FlxEmitterExt = new FlxEmitterExt(0, 0);
 		LOL = NEmitter.registerEmitter(e);
 		//NEmitter.announceEmitters();
 		

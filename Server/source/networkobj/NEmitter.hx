@@ -1,7 +1,8 @@
 package networkobj;
 
 import enet.ENet;
-import flixel.effects.particles.FlxEmitter;
+import flixel.effects.particles.FlxEmitterExt;
+import flixel.effects.particles.FlxEmitterExt;
 import haxe.Serializer;
 
 /**
@@ -10,13 +11,13 @@ import haxe.Serializer;
  */
 class NEmitter
 {
-	static private var emitters:Map<Int, FlxEmitter>;
-	static private var live_emitters:Map<Int, FlxEmitter>;
+	static private var emitters:Map<Int, FlxEmitterExt>;
+	static private var live_emitters:Map<Int, FlxEmitterExt>;
 	
 	static public function init():Void
 	{
-		emitters = new Map<Int, FlxEmitter>();
-		live_emitters = new Map<Int, FlxEmitter>();
+		emitters = new Map<Int, FlxEmitterExt>();
+		live_emitters = new Map<Int, FlxEmitterExt>();
 	}
 	
 	static public function announceEmitters(player:Int = 0):Void
@@ -26,7 +27,7 @@ class NEmitter
 		for (id in emitters.keys())
 		{
 			var arr:Array<Dynamic> = [];
-			var e:FlxEmitter = emitters.get(id);
+			var e:FlxEmitterExt = emitters.get(id);
 			
 			arr.push(id);
 			arr.push("placeholder");
@@ -58,6 +59,11 @@ class NEmitter
 			arr.push(e.xVelocity);
 			arr.push(e.yVelocity);
 			
+			arr.push(e.angle);
+			arr.push(e.angleRange);
+			arr.push(e.distance);
+			arr.push(e.distanceRange);
+			
 			array.push(arr);
 		}
 		
@@ -84,11 +90,12 @@ class NEmitter
 		
 		if (Local)
 		{
-			var e:FlxEmitter = cloneFromEmitter(emitters.get(ID));
+			var e:FlxEmitterExt = cloneFromEmitter(emitters.get(ID), X, Y);
 			e.makeParticles(Assets.images.get(Graphic), Quantity, rotationFrames, Collide);
-			e.start(Explode, e.lifespan, e.frequency, Quantity, e.life.max);
+			trace(e.life.max, e.life.min);
+			e.start(Explode, e.life.min, e.frequency, Quantity, e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
-			e.setPosition(X, Y);
+			//e.setPosition(X, Y);
 			
 			live_emitters.set(ID_R, e);
 		}
@@ -111,44 +118,38 @@ class NEmitter
 		return ID_R;
 	}
 	
-	static public function cloneFromEmitter(E:FlxEmitter):FlxEmitter
+	static public function cloneFromEmitter(E:FlxEmitterExt, X:Int, Y:Int):FlxEmitterExt
 	{
-		var e:FlxEmitter = new FlxEmitter();
+		var e:FlxEmitterExt = new FlxEmitterExt(X, Y);
 		
-		e.acceleration.copyFrom(E.acceleration);
-		e.blend = E.blend;
 		e.bounce = E.bounce;
-		//e.collisionType = E.collisionType;
-		e.endAlpha = E.endAlpha;
+		e.frequency = E.frequency;
+		e.gravity = E.gravity;
+		e.particleDrag.copyFrom(E.particleDrag);
+		e.acceleration.copyFrom(E.acceleration);
 		e.endBlue = E.endBlue;
 		e.endGreen = E.endGreen;
 		e.endRed = E.endRed;
-		e.endScale = E.endScale;
-		e.frequency = E.frequency;
-		e.gravity = E.gravity;
-		e.height = E.height;
-		e.life = E.life;
 		e.lifespan = E.lifespan;
-		e.maxRotation = E.maxRotation;
-		e.maxSize = E.maxSize;
-		e.minRotation = E.minRotation;
-		e.particleDrag.copyFrom(E.particleDrag);
-		e.rotation = E.rotation;
-		e.startAlpha = E.startAlpha;
 		e.startBlue = E.startBlue;
 		e.startGreen = E.startGreen;
 		e.startRed = E.startRed;
-		e.startScale = E.startScale;
-		e.width = E.width;
-		e.xVelocity = E.xVelocity;
-		e.yVelocity = E.yVelocity;
+		
+		e.setRotation(E.rotation.min, E.rotation.max);
+		e.setScale(E.startScale.min, E.startScale.max, E.endScale.min, E.endScale.max);
+		e.setSize(Std.int(E.width), Std.int(E.height));
+		e.setXSpeed(E.xVelocity.min, E.xVelocity.max);
+		e.setYSpeed(E.yVelocity.min, E.yVelocity.max);
+		e.setAlpha(E.startAlpha.min, E.startAlpha.max, E.endAlpha.min, E.endAlpha.max);
+		e.setMotion(E.angle / 0.017453293, E.distance, E.life.min,
+			E.angleRange/0.017453293, E.distanceRange, E.life.max - E.life.min);
 		
 		return e;
 	}
 	
 	static public function stopEmitter(Handle:Int):Void
 	{
-		var e:FlxEmitter = live_emitters.get(Handle);
+		var e:FlxEmitterExt = live_emitters.get(Handle);
 		//trace(e);
 		if (e != null)
 		{
@@ -165,7 +166,7 @@ class NEmitter
 		}
 	}
 	
-	static public function registerEmitter(E:FlxEmitter):Int
+	static public function registerEmitter(E:FlxEmitterExt):Int
 	{
 		var ID:Int = NReg.getID();
 		

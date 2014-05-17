@@ -267,6 +267,7 @@ class PlayState extends FlxState
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
 		FlxG.collide(bullets, players, bulletCollidePl);
+		FlxG.collide(emitters, collidemap);
 		
 		if (player != null)
 			updatePlayer();
@@ -281,6 +282,31 @@ class PlayState extends FlxState
 	
 	private function updatePlayer():Void
 	{
+		if (FlxG.keys.justPressed.ONE)
+		{
+			player.current_weap = 1;
+		}
+		
+		if (FlxG.keys.justPressed.TWO)
+		{
+			player.current_weap = 2;
+		}
+		
+		if (FlxG.keys.justPressed.THREE)
+		{
+			player.current_weap = 3;
+		}
+		
+		if (FlxG.keys.justPressed.FOUR)
+		{
+			player.current_weap = 4;
+		}
+		
+		if (FlxG.keys.justPressed.FIVE)
+		{
+			player.current_weap = 5;
+		}
+		
 		if (player.health <= 0 && player_just_died)
 		{
 			//FlxG.camera.focusOn(new FlxPoint(player.x, player.y));
@@ -397,21 +423,6 @@ class PlayState extends FlxState
 	
 	private function bulletCollide(Bullet:FlxBullet, Tilemap:Dynamic):Void
 	{
-		var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
-													Bullet.y + Bullet.height / 2);
-		
-		emitters.add(emitter);
-		
-		emitter.setRotation(0, 0);
-		emitter.setMotion(0, 17, 1, 360, 25, 1);
-		emitter.setAlpha(1, 1, 0, 0);
-		emitter.setColor(0xffE69137, 0xffFFFB17);
-		emitter.setXSpeed(150, 150);
-		emitter.setYSpeed(150, 150);
-		emitter.makeParticles(Assets.getImg("assets/images/explosionparticle.png"), 35);
-		
-		emitter.start(true, 0.9, 0, 35);
-		
 		Bullet.kill();
 	}
 	
@@ -419,21 +430,6 @@ class PlayState extends FlxState
 	{
 		if (Pl.ID != Bullet._weapon.parent.ID)
 		{
-			var emitter:FlxEmitterExt = new FlxEmitterExt(Bullet.x + Bullet.width / 2,
-														Bullet.y + Bullet.height / 2);
-			
-			emitters.add(emitter);
-			
-			emitter.setRotation(0, 0);
-			emitter.setMotion(0, 17, 1, 360, 25, 1);
-			emitter.setAlpha(1, 1, 0, 0);
-			emitter.setColor(0xffE69137, 0xffFFFB17);
-			emitter.setXSpeed(150, 150);
-			emitter.setYSpeed(150, 150);
-			emitter.makeParticles(Assets.getImg("assets/images/explosionparticle.png"), 35);
-			
-			emitter.start(true, 0.9, 0, 35);
-			
 			Bullet.kill();
 		}
 	}

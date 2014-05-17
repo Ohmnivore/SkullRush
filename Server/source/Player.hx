@@ -26,6 +26,7 @@ class Player extends PlayerBase
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
+		setGun(1);
 	}
 	
 	override public function draw():Void
@@ -158,13 +159,29 @@ class Player extends PlayerBase
 		}
 	}
 	
+	public function setGun(ID:Int):Void
+	{
+		if (Std.is(ID, Int))
+		{
+			var g:FlxWeaponExt = guns_arr[ID - 1];
+			if (g != null)
+			{
+				if (gun != null)
+					gun.visible = false;
+				g.gun.visible = true;
+				gun = g.gun;
+				cannon = g;
+			}
+		}
+	}
+	
 	override public function s_unserialize(S:String):Void 
 	{
 		_arr.splice(0, _arr.length);
 		
 		_arr = Unserializer.run(S);
 		
-		if (_arr.length == 9)
+		if (_arr.length == 10)
 		{
 			move_right = _arr[0];
 			move_left = _arr[1];
@@ -175,6 +192,11 @@ class Player extends PlayerBase
 			dash_left = _arr[6];
 			dash_right = _arr[7];
 			dash_down = _arr[8];
+			if (current_weap != _arr[9])
+			{
+				setGun(_arr[9]);
+			}
+			current_weap = _arr[9];
 			
 			if (!dashing)
 			{
