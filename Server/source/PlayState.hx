@@ -28,8 +28,10 @@ import gamemodes.CTF;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
+import networkobj.NEmitter;
 import networkobj.NReg;
 import networkobj.NTimer;
+import networkobj.NWeapon;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -74,6 +76,8 @@ class PlayState extends FlxState
 		Reg.state = this;
 		spawns = [];
 		NReg.resetReg();
+		NEmitter.init();
+		NWeapon.init();
 		
 		maps = new FlxGroup();
 		add(maps);

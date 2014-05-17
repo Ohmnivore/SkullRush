@@ -100,6 +100,7 @@ class FlxWeaponExt extends FlxWeapon
 		else if (Method == FlxWeapon.FIRE_FROM_ANGLE)
 		{
 			currentBullet.fireFromAngle(launchX, launchY, Angle, bulletSpeed);
+			currentBullet.angle = Angle;
 		}
 		else if (Method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
 		{

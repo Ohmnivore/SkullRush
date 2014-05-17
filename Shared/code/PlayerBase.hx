@@ -1,4 +1,5 @@
 package ;
+import flash.utils.Timer;
 import flixel.addons.effects.FlxTrail;
 import flixel.addons.weapon.FlxBullet;
 import flixel.addons.weapon.FlxWeapon;
@@ -11,6 +12,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRect;
+import flixel.util.FlxTimer;
 import haxe.Serializer;
 import haxe.Unserializer;
 import networkobj.NWeapon;
@@ -37,6 +39,9 @@ class PlayerBase extends FlxSprite
 	public var dash_down:Bool;
 	public var current_weap:Int;
 	
+	private var weap_change_timer:FlxTimer;
+	private var canChange:Bool = true;
+	
 	private var _arr:Array<Dynamic>;
 	public var cannon:FlxWeaponExt;
 	private var trail:FlxTrailExt;
@@ -62,6 +67,9 @@ class PlayerBase extends FlxSprite
 		current_weap = -1;
 		_arr = [];
 		
+		weap_change_timer = new FlxTimer(0.3, setChange);
+		//weap_change_timer
+		
 		graphicKey = "assets/images/playerblue.png";
 		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, 24, 24);
 		loadAnims();
@@ -70,11 +78,14 @@ class PlayerBase extends FlxSprite
 		gun = new FlxSprite(0, 0, Assets.getImg("assets/images/gun.png"));
 		gun.loadRotatedGraphic(Assets.getImg("assets/images/gun.png"), 180, -1, false, false);
 		Reg.state.over_players.add(gun);
+		guns_arr = [];
+		guns = new FlxGroup();
+		Reg.state.over_players.add(guns);
+		NWeapon.setUpWeapons(this);
 		#else
 		guns_arr = [];
 		guns = new FlxGroup();
 		Reg.state.over_players.add(guns);
-		
 		NWeapon.setUpWeapons(this);
 		#end
 		
@@ -118,6 +129,12 @@ class PlayerBase extends FlxSprite
 		Reg.state.players.add(this);
 	}
 	
+	private function setChange(T:FlxTimer):Void
+	{
+		canChange = true;
+		//T.reset(0.3);
+	}
+	
 	override public function draw():Void
 	{
 		setFollow();
@@ -147,8 +164,10 @@ class PlayerBase extends FlxSprite
 		Reg.state.over_players.remove(header, true);
 		Reg.state.over_players.remove(healthBar, true);
 		Reg.state.over_players.remove(gun, true);
+		Reg.state.over_players.remove(guns, true);
 		
 		gun.kill();
+		guns.kill();
 		header.kill();
 		healthBar.kill();
 		cannon = null;
@@ -189,6 +208,7 @@ class PlayerBase extends FlxSprite
 		header.visible = false;
 		healthBar.visible = false;
 		gun.visible = false;
+		guns.visible = false;
 		trail.visible = false;
 	}
 	
@@ -198,6 +218,7 @@ class PlayerBase extends FlxSprite
 		header.visible = true;
 		healthBar.visible = true;
 		gun.visible = true;
+		guns.visible = true;
 		trail.visible = true;
 	}
 	
@@ -311,6 +332,34 @@ class PlayerBase extends FlxSprite
 		gun.y = y + 2;
 	}
 	
+	public function setGun(GunID:Int, Force:Bool = false):Void
+	{
+		if (Std.is(GunID, Int))
+		{
+			var g:FlxWeaponExt = guns_arr[GunID - 1];
+			if (g != null)
+			{
+				if (Force || canChange)
+				{
+					if (gun != null)
+						gun.visible = false;
+					g.gun.visible = true;
+					gun = g.gun;
+					cannon = g;
+					
+					current_weap = GunID;
+					
+					//weap_change_timer.reset(0.3);
+					//weap_change_timer = new FlxTimer(0.3);
+					canChange = false;
+					weap_change_timer.reset(0.3);
+					
+					//trace(current_weap);
+				}
+			}
+		}
+	}
+	
 	public function s_serialize():String
 	{
 		_arr.splice(0, _arr.length);
@@ -329,6 +378,7 @@ class PlayerBase extends FlxSprite
 		_arr.push(dash_left);
 		_arr.push(dash_right);
 		_arr.push(current_weap);
+		//trace(current_weap);
 		
 		return Serializer.run(_arr);
 	}
@@ -351,9 +401,12 @@ class PlayerBase extends FlxSprite
 			isRight = _arr[4];
 			shoot = _arr[5];
 			health = _arr[6];
-			dash_left = _arr[7];
-			dash_right = _arr[8];
-			current_weap = _arr[9];
+			dash_left = _arr[9];
+			dash_right = _arr[10];
+			//if (current_weap != _arr[11])
+			//{
+				setGun(_arr[11]);
+			//}
 			
 			if (shoot)
 			{

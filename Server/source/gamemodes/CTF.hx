@@ -69,6 +69,13 @@ class CTF extends BaseGamemode
 		captures = new Map<Int, Int>();
 	}
 	
+	override public function makeWeapons():Void 
+	{
+		super.makeWeapons();
+		
+		DefaultHooks.makeWeapons();
+	}
+	
 	public function setPlayerScoreboard(P:Player):Void
 	{
 		score.setPlayer(P, [Std.string(P.score), Std.string(P.kills),

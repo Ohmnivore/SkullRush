@@ -19,6 +19,7 @@ import networkobj.NScoreboard;
 import networkobj.NTemplate;
 import networkobj.NTimer;
 import haxe.io.Bytes;
+import networkobj.NWeapon;
 import ui.DirectConnect;
 import ui.Spawn;
 
@@ -58,6 +59,7 @@ class SkullClient extends Client
 			
 			ENet.init();
 			NReg.init();
+			NWeapon.init();
 			Msg.initMsg();
 			//trace(Assets.config.get("ip"));
 			Reg.client = new SkullClient(Assets.config.get("ip"), 6666);
@@ -514,7 +516,11 @@ class SkullClient extends Client
 		if (MsgID == Msg.AnnounceGuns.ID)
 		{
 			var array:Array<Dynamic> = cast Unserializer.run(Msg.AnnounceGuns.data.get("serialized"));
-			trace(array);
+			
+			for (w in array)
+			{
+				new NWeapon(w);
+			}
 		}
 	}
 	

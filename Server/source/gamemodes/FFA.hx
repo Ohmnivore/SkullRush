@@ -46,14 +46,8 @@ class FFA extends BaseGamemode
 	{
 		super();
 		
-		NEmitter.init();
-		NWeapon.init();
-		
-		new Launcher();
-		
 		var e:FlxEmitterExt = new FlxEmitterExt(0, 0);
 		LOL = NEmitter.registerEmitter(e);
-		//NEmitter.announceEmitters();
 		
 		emit = NEmitter.playEmitter(LOL, true, 50, 50, "assets/images/trail.png",
 								1, 0, true, 50);
@@ -76,6 +70,13 @@ class FFA extends BaseGamemode
 		
 		score = new NScoreboard("Scores", ["Score", "Kills", "Deaths"], ["0", "0", "0"], 0xffffffff);
 		Reg.state.hud.add(score.group);
+	}
+	
+	override public function makeWeapons():Void 
+	{
+		super.makeWeapons();
+		
+		DefaultHooks.makeWeapons();
 	}
 	
 	override public function update(elapsed:Float):Void

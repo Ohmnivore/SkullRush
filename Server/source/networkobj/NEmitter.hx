@@ -92,7 +92,6 @@ class NEmitter
 		{
 			var e:FlxEmitterExt = cloneFromEmitter(emitters.get(ID), X, Y);
 			e.makeParticles(Assets.images.get(Graphic), Quantity, rotationFrames, Collide);
-			trace(e.life.max, e.life.min);
 			e.start(Explode, e.life.min, e.frequency, Quantity, e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
 			//e.setPosition(X, Y);

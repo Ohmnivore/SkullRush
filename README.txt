@@ -1,5 +1,4 @@
 TODO (engine):
-Weapons
 Powerups
 KOTH
 Order scoreboard by score

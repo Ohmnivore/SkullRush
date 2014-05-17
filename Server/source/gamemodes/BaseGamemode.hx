@@ -38,6 +38,8 @@ class BaseGamemode extends Sprite
 		Assets.loadConfig();
 		dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		
+		makeWeapons();
+		
 		//for each (var plug:BasePlugin in ServerInfo.pl)
 		//{
 			//plug.init();
@@ -85,6 +87,11 @@ class BaseGamemode extends Sprite
 	}
 	
 	public function onReceive(e:ReceiveEvent):Void
+	{
+		
+	}
+	
+	public function makeWeapons():Void
 	{
 		
 	}

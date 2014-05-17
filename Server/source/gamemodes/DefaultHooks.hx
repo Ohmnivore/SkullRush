@@ -17,6 +17,8 @@ import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NTimer;
 import networkobj.NWeapon;
+import weapons.Launcher;
+import weapons.Splasher;
 
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -48,6 +50,12 @@ class DefaultHooks
 		gm.addEventListener(ReceiveEvent.RECEIVE_EVENT, gm.onReceive, false, 10);
 	}
 	
+	static public function makeWeapons():Void
+	{
+		new Launcher();
+		new Splasher();
+	}
+	
 	static public function announceFall(victim:Player):Void 
 	{
 		var s:String = victim.name + " fell to his death.";
@@ -63,12 +71,12 @@ class DefaultHooks
 			new FlxMarkup(winner.name.length + 10, s.length, false, loser.header.color)]);
 	}
 	
-	static public function announceGun(winner:Player, loser:Player):Void
+	static public function announceGun(winner:Player, loser:Player, verb:String):Void
 	{
-		var s:String = winner.name + " gunned down " + loser.name;
+		var s:String = winner.name + ' $verb ' + loser.name;
 		Reg.server.announce(s,
 			[new FlxMarkup(0, winner.name.length, false, winner.header.color),
-			new FlxMarkup(winner.name.length + 13, s.length, false, loser.header.color)]);
+			new FlxMarkup(winner.name.length + verb.length + 2, s.length, false, loser.header.color)]);
 	}
 	
 	static public function checkIfFall():Void
@@ -189,7 +197,7 @@ class DefaultHooks
 			var victim:Player = Reg.server.playermap.get(info.victim);
 			
 			DefaultHooks.respawn(victim);
-			DefaultHooks.announceGun(killer, victim);
+			DefaultHooks.announceGun(killer, victim, info.weapon.verb);
 		}
 		
 		if (t == BaseGamemode.JUMPKILL)
@@ -287,7 +295,7 @@ class DefaultHooks
 			s.announce(P.ID);
 		}
 		
-		NWeapon.announceWeapons(P.ID);
+		//NWeapon.announceWeapons(P.ID);
 		NEmitter.announceEmitters(P.ID);
 		
 		var t_arr:Array<String> = [];
@@ -335,6 +343,7 @@ class DefaultHooks
 		Msg.PlayerInfoBack.data.set("graphic", p.graphicKey);
 		
 		Reg.server.sendMsg(E.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		NWeapon.announceWeapons(E.ID);
 		Reg.server.sendMsg(E.ID, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		Reg.server.id++;

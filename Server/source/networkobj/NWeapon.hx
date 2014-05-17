@@ -22,6 +22,7 @@ class NWeapon
 	public var bulletSpeed:Int = 100;
 	public var fireRate:Int = 1000;
 	public var name:String = "gun";
+	public var verb:String = "exploded";
 	public var bulletGraphic:String = "assets/images/explosionparticle.png";
 	public var gunGraphic:String = "assets/images/gun.png";
 	public var gunIcon:String = "assets/images/gun.png";
@@ -47,10 +48,11 @@ class NWeapon
 			var fw:FlxWeaponExt = w.makeWeapon(P);
 			fw.template = w;
 			fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
-				Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), true, 180);
+				Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
 			Reg.state.bullets.add(fw.group);
 			fw.gun = new FlxSprite(0, 0, Assets.images.get(w.gunGraphic));
 			fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
+			fw.gun.visible = false;
 			P.guns.add(fw.gun);
 			P.guns_arr.push(fw);
 			
@@ -89,7 +91,7 @@ class NWeapon
 		
 		if (bulletGravity != null)
 		{
-			w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
+			//w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
 		}
 		
 		if (bulletOffset != null)
@@ -153,20 +155,20 @@ class NWeapon
 			
 			array.push(arr);
 		}
-		trace(array);
+		//trace(array);
 		Msg.AnnounceGuns.data.set("serialized", Serializer.run(array));
 		
 		if (player == 0)
 		{
 			for (p in Reg.server.playermap.keys())
 			{
-				Reg.server.sendMsg(p, Msg.AnnounceGuns.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+				Reg.server.sendMsg(p, Msg.AnnounceGuns.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			}
 		}
 		
 		else
 		{
-			Reg.server.sendMsg(player, Msg.AnnounceGuns.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsg(player, Msg.AnnounceGuns.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 	}
 }

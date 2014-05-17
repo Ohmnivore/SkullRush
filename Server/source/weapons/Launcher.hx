@@ -23,6 +23,7 @@ class Launcher extends NWeapon
 		super();
 		
 		name = "launcher";
+		verb = "exploded";
 		bulletSpeed = 255;
 		fireRate = 1200;
 		bulletOffset = new FlxPoint(12, 12);
@@ -34,13 +35,11 @@ class Launcher extends NWeapon
 		var emit:FlxEmitterExt = new FlxEmitterExt();
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 17, 0.9, 360, 25, 0);
-		//emit.
 		emit.setAlpha(1, 1, 0, 0);
 		emit.setColor(0xffE69137, 0xffFFFB17);
 		emit.setXSpeed(150, 150);
 		emit.setYSpeed(150, 150);
 		emit.bounce = 0.5;
-		//emit.lifespan = 0.9;
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 	}
@@ -64,24 +63,20 @@ class Launcher extends NWeapon
 			{
 				var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
 				if (dist_coeff < 0) dist_coeff = 0;
-				//if (dist_coeff > 0.5) dist_coeff = 0.5;
 				
 				pl.velocity.x += v.x * 300 * dist_coeff;
 				pl.velocity.y += v.y * 300 * dist_coeff;
 				
-				//if (pl.team != Reflect.field(Bullet._weapon.parent, "team"))
 				if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
 				{
 					var dmg:Float = dist_coeff * 75;
-					//if (pl.health - dmg <= 0)
-						//announceGun(cast (Bullet._weapon.parent, Player), pl);
-					//pl.health -= dist_coeff * 75;
 					
 					var info:HurtInfo = new HurtInfo();
 					info.attacker = Reflect.field(Bullet._weapon.parent, "ID");
 					info.victim = pl.ID;
 					info.dmg = Std.int(dmg);
 					info.dmgsource = Bullet.getMidpoint();
+					info.weapon = this;
 					info.type = BaseGamemode.BULLET;
 					
 					Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));

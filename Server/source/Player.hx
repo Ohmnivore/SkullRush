@@ -98,6 +98,8 @@ class Player extends PlayerBase
 		var s:Spawn = Spawn.findSpawn(team);
 		if (s != null)
 		{
+			setGun(1, true);
+			
 			x = s.x;
 			y = s.y;
 			
@@ -159,20 +161,9 @@ class Player extends PlayerBase
 		}
 	}
 	
-	public function setGun(ID:Int):Void
+	override public function setGun(GunID:Int, Force:Bool = false):Void
 	{
-		if (Std.is(ID, Int))
-		{
-			var g:FlxWeaponExt = guns_arr[ID - 1];
-			if (g != null)
-			{
-				if (gun != null)
-					gun.visible = false;
-				g.gun.visible = true;
-				gun = g.gun;
-				cannon = g;
-			}
-		}
+		super.setGun(GunID, Force);
 	}
 	
 	override public function s_unserialize(S:String):Void 
@@ -196,7 +187,6 @@ class Player extends PlayerBase
 			{
 				setGun(_arr[9]);
 			}
-			current_weap = _arr[9];
 			
 			if (!dashing)
 			{

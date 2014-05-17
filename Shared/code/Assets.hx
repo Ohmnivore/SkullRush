@@ -20,7 +20,8 @@ class Assets
 		images.set("assets/images/explosionparticle.png", "shared/images/explosionparticle.png");
 		images.set("assets/images/gridtiles2.png", "shared/images/gridtiles2.png");
 		images.set("assets/images/gun.png", "shared/images/gun.png");
-		images.set("assets/images/gun2.png", "shared/images/gun2.png");
+		images.set("assets/images/gun_splasher.png", "shared/images/gun_splasher.png");
+		images.set("assets/images/gun_splasher_bullet.png", "shared/images/gun_splasher_bullet.png");
 		images.set("assets/images/playerblue.png", "shared/images/playerblue.png");
 		images.set("assets/images/playergreen.png", "shared/images/playergreen.png");
 		images.set("assets/images/playerred.png", "shared/images/playerred.png");

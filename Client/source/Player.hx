@@ -10,6 +10,12 @@ class Player extends PlayerBase
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
+		setGun(1);
+	}
+	
+	override public function setGun(GunID:Int, Force:Bool = false):Void
+	{
+		super.setGun(GunID, Force);
 	}
 	
 	override public function draw():Void
