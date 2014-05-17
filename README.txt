@@ -13,7 +13,6 @@ Interactive events:
 -Levers
 
 TODO (gameplay):
-blast shouldn't go through tiles
 test with new maps
 
 Bugs:

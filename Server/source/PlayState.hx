@@ -168,6 +168,17 @@ class PlayState extends FlxState
 		
 		OgmoLoader.loadXML(current_map_string, this);
 		
+		try
+		{
+			var res:FlxPoint = new FlxPoint();
+			var coll:Bool = Reg.state.collidemap.ray(new FlxPoint(32, 32), new FlxPoint(600, 600), res);
+			trace("Collide: ", coll, res);
+		}
+		catch (e:Dynamic)
+		{
+			trace(e);
+		}
+		
 		spect = new Spectator();
 		add(spect);
 		//trace("pl");

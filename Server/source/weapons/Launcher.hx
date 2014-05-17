@@ -60,15 +60,8 @@ class Launcher extends NWeapon
 			
 			v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
 			
-			//trace(Reg.state.collidemap.ray(Bullet.getMidpoint(), pl.getMidpoint(), new FlxPoint(), 2));
-			//var d:FlxPoint = FlxPoint.get(v.x, v.y);
-			//var res:FlxPoint = FlxPoint.get();
-			//Reg.state.collidemap.rayCast(Bullet.getMidpoint(), d, res);
-			//d.put();
-			//res.put();
-			
-			//if (FlxMath.distanceToPoint(Bullet, res) >= FlxMath.distanceBetween(Bullet, pl) - 2)
-			//{
+			if (Reg.state.collidemap.ray(Bullet.getMidpoint(), pl.getMidpoint()))
+			{
 				var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
 				if (dist_coeff < 0) dist_coeff = 0;
 				//if (dist_coeff > 0.5) dist_coeff = 0.5;
@@ -98,7 +91,7 @@ class Launcher extends NWeapon
 				{
 					pl.canChoose = true;
 				}
-			//}
+			}
 		}
 		
 		Bullet.kill();

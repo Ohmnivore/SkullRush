@@ -85,7 +85,7 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, Assets.getImg("assets/images/gridtiles2.png"), 16, 16, 0, 0, 0, 0);
+					map.loadMap(mapdata.arr, Assets.getImg("assets/images/gridtiles2.png"), 16, 16, 0, 0, 1, 1);
 					makeTileCollisions(map);
 					State.maps.add(map);
 					
@@ -104,8 +104,8 @@ class OgmoLoader
 	
 	static public function makeTileCollisions(M:FlxTilemap):Void
 	{
-		M.setTileProperties(16, FlxObject.NONE, 4);
-		M.setTileProperties(20, FlxObject.NONE, 2);
+		M.setTileProperties(17, FlxObject.NONE, 4);
+		M.setTileProperties(21, FlxObject.NONE, 2);
 	}
 	
 	static public function findGridWidth(GridStrArr:Array<String>):Int
@@ -205,6 +205,8 @@ class OgmoLoader
 					addDetail(i_col, i_row, g_row.length, buffer, sum);
 				}
 				
+				incrementTile(i_col, i_row, g_row.length, buffer, sum);
+				
 				i_col++;
 			}
 			
@@ -212,7 +214,13 @@ class OgmoLoader
 		}
 		
 		returnData.arr = buffer;
+		
 		return returnData;
+	}
+	
+	static public function incrementTile(X:Int, Y:Int, Width:Int, Buffer:Array<Int>, Sum:Int):Void
+	{
+		setBuffer(X, Y, Width, Sum + 1, Buffer);
 	}
 	
 	static public function addDetail(X:Int, Y:Int, Width:Int, Buffer:Array<Int>, Sum:Int):Void
@@ -222,7 +230,7 @@ class OgmoLoader
 			if (FlxRandom.chanceRoll(40))
 			{
 				if (Y - 1 >= 0) 
-					setBuffer(X, Y - 1, Width, FlxRandom.intRanged(16, 19), Buffer);
+					setBuffer(X, Y - 1, Width, FlxRandom.intRanged(17, 20), Buffer);
 			}
 		}
 		
@@ -231,7 +239,7 @@ class OgmoLoader
 			if (FlxRandom.chanceRoll(30))
 			{
 				if (Y + 1 < Buffer.length / Width)
-					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(20, 21), Buffer);
+					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(21, 22), Buffer);
 			}
 		}
 	}
