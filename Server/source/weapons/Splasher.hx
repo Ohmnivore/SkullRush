@@ -49,7 +49,7 @@ class Splasher extends NWeapon
 		super.collide(Bullet, Other);
 		
 		NEmitter.playEmitter(EMITTER, true, Std.int(Bullet.x + Bullet.width / 2),
-			Std.int(Bullet.y + Bullet.height / 2), "assets/images/explosionparticle.png", 1, 0, true, 35);
+			Std.int(Bullet.y + Bullet.height / 2), "assets/images/explosionparticle.png", 0, 0, true, 35);
 		
 		for (p in Reg.state.players.members)
 		{

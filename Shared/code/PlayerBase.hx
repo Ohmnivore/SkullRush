@@ -405,7 +405,7 @@ class PlayerBase extends FlxSprite
 			dash_right = _arr[10];
 			//if (current_weap != _arr[11])
 			//{
-				setGun(_arr[11]);
+				setGun(_arr[11], true);
 			//}
 			
 			if (shoot)

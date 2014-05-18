@@ -360,6 +360,29 @@ class SkullClient extends Client
 			//s.destroy();
 		}
 		
+		if (MsgID == Msg.SetSpriteImage.ID)
+		{
+			var s:FlxSprite = NReg.sprites.get(Msg.SetSpriteImage.data.get("id"));
+			
+			s.loadGraphic(Assets.images.get(Msg.SetSpriteImage.data.get("graphic")));
+		}
+		
+		if (MsgID == Msg.SetSpriteFields.ID)
+		{
+			var s:FlxSprite = NReg.sprites.get(Msg.SetSpriteFields.data.get("id"));
+			
+			var Fields:Array<String> = cast Unserializer.run(Msg.SetSpriteFields.data.get("fields"));
+			var Values:Array<Dynamic> = cast Unserializer.run(Msg.SetSpriteFields.data.get("values"));
+			
+			var i:Int = 0;
+			
+			while (i < Fields.length)
+			{
+				Reflect.setProperty(s, Fields[i], Values[i]);
+				i++;
+			}
+		}
+		
 		if (MsgID == Msg.PlaySound.ID)
 		{
 			FlxG.sound.play(Assets.sounds.get(Msg.PlaySound.data.get("assetkey")));
@@ -491,12 +514,11 @@ class SkullClient extends Client
 			var e:FlxEmitterExt = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")),
 				Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
 			e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
-				Msg.EmitterNew.data.get("quantity"), Msg.EmitterNew.data.get("rotationFrames"),
-				Msg.EmitterNew.data.get("collide"));
+				cast(Msg.EmitterNew.data.get("quantity"), Int), cast(Msg.EmitterNew.data.get("rotationFrames"), Int),
+				cast(Msg.EmitterNew.data.get("collide"), Float));
 			e.start(Msg.EmitterNew.data.get("explode"), e.life.min, e.frequency,
 				Msg.EmitterNew.data.get("quantity"), e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
-			//e.setPosition(Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
 			
 			NReg.live_emitters.set(Msg.EmitterNew.data.get("id2"), e);
 		}

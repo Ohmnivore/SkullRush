@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import gamemodes.CTF;
 import haxe.xml.Fast;
+import networkobj.NFlxSprite;
 import networkobj.NReg;
 import networkobj.NSprite;
 import networkobj.NTemplate;
@@ -33,7 +34,7 @@ class Flag extends NSprite
 		var templ:NTemplate = new NTemplate(data.att.graphic, 0);
 		NReg.registerTemplate(templ);
 		
-		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ);
+		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ, NFlxSprite);
 		
 		holder = new Holder(data, this);
 		
@@ -43,6 +44,11 @@ class Flag extends NSprite
 		s.x += 4;
 		
 		s.immovable = true;
+	}
+	
+	static public function makeFromXML(D:Fast):Flag
+	{
+		return new Flag(D);
 	}
 	
 	static public function updateFlags():Void
@@ -132,5 +138,6 @@ class Flag extends NSprite
 	static public function init():Void
 	{
 		taken_flags = new Map<Player, Flag>();
+		Holder.init();
 	}
 }

@@ -57,6 +57,9 @@ class Msg
 	
 	static public var AnnounceGuns:Message;
 	
+	static public var SetSpriteFields:Message;
+	static public var SetSpriteImage:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -104,6 +107,9 @@ class Msg
 		EmitterDelete = new Message(38, ["id"], true);
 		
 		AnnounceGuns = new Message(39, ["serialized"], true);
+		
+		SetSpriteFields = new Message(40, ["id", "fields", "values"], true);
+		SetSpriteImage = new Message(41, ["id", "graphic"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -152,5 +158,8 @@ class Msg
 		H.addMessage(EmitterDelete);
 		
 		H.addMessage(AnnounceGuns);
+		
+		H.addMessage(SetSpriteFields);
+		H.addMessage(SetSpriteImage);
 	}
 }

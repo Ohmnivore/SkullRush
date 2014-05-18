@@ -24,7 +24,7 @@ import flixel.util.FlxVector;
 import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
-import gamemodes.CTF;
+//import gamemodes.CTF;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
@@ -170,18 +170,8 @@ class PlayState extends FlxState
 		Msg.MapMsg.data.set("mapname", current_map);
 		Msg.MapMsg.data.set("mapstring", current_map_string);
 		
+		OgmoLoader.initTilemaps();
 		OgmoLoader.loadXML(current_map_string, this);
-		
-		try
-		{
-			var res:FlxPoint = new FlxPoint();
-			var coll:Bool = Reg.state.collidemap.ray(new FlxPoint(32, 32), new FlxPoint(600, 600), res);
-			trace("Collide: ", coll, res);
-		}
-		catch (e:Dynamic)
-		{
-			trace(e);
-		}
 		
 		spect = new Spectator();
 		add(spect);

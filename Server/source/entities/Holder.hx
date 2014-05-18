@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import gamemodes.CTF;
 import haxe.xml.Fast;
 import networkobj.NCounter;
+import networkobj.NFlxSprite;
 import networkobj.NReg;
 import networkobj.NSprite;
 import networkobj.NTemplate;
@@ -34,7 +35,7 @@ class Holder extends NSprite
 		var templ:NTemplate = new NTemplate(g, 0);
 		NReg.registerTemplate(templ);
 		
-		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ);
+		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ, NFlxSprite);
 		
 		var gm:CTF = cast(Reg.gm, CTF);
 		gm.holders.add(s);

@@ -42,6 +42,11 @@ class Spawn
 		Reg.state.spawns.push(this);
 	}
 	
+	static public function makeFromXML(D:Fast):Spawn
+	{
+		return new Spawn(D);
+	}
+	
 	static public function findSpawn(Team:Int):Spawn
 	{
 		while (true)
@@ -54,5 +59,10 @@ class Spawn
 					return s;
 			}
 		}
+	}
+	
+	static public function init():Void
+	{
+		
 	}
 }

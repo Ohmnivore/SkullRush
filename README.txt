@@ -1,5 +1,4 @@
 TODO (engine):
-Powerups
 KOTH
 Order scoreboard by score
 Plugins

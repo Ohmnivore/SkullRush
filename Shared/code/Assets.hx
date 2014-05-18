@@ -36,6 +36,7 @@ class Assets
 		images.set("assets/images/flag_bh.png", "shared/images/flag_bh.png");
 		images.set("assets/images/flag_yh.png", "shared/images/flag_yh.png");
 		images.set("assets/images/flag_rh.png", "shared/images/flag_rh.png");
+		images.set("assets/images/powerup_health.png", "shared/images/powerup_health.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

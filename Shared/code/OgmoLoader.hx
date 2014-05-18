@@ -4,6 +4,7 @@ package ;
 
 #else
 import entities.Flag;
+import entities.HealthPack;
 import entities.Spawn;
 import flixel.util.FlxPoint;
 #end
@@ -25,6 +26,7 @@ import haxe.xml.Fast;
 class OgmoLoader
 {
 	public static var tilemaps:Map<String, String>;
+	public static var inits:Map<String, Bool>;
 	
 	static public function initTilemaps():Void
 	{
@@ -34,7 +36,10 @@ class OgmoLoader
 		#else
 		Spawn;
 		Flag;
+		HealthPack;
 		#end
+		
+		inits = new Map<String, Bool>();
 		
 		tilemaps = new Map<String, String>();
 		tilemaps.set("grid", "assets/images/gridtiles2.png");
@@ -73,7 +78,17 @@ class OgmoLoader
 				{
 					for (ent in x.elements)
 					{
-						Type.createInstance(Type.resolveClass("entities." + ent.name), [ent]);
+						//Type.createInstance(Type.resolveClass("entities." + ent.name), [ent]);
+						var c:Class<Dynamic> = Type.resolveClass("entities." + ent.name);
+						var funct:Dynamic = Reflect.field(c, "makeFromXML");
+						Reflect.callMethod(c, funct, [ent]);
+						
+						if (!inits.exists(ent.name))
+						{
+							var funct2:Dynamic = Reflect.field(c, "init");
+							Reflect.callMethod(c, funct2, []);
+							inits.set(ent.name, true);
+						}
 					}
 				}
 				

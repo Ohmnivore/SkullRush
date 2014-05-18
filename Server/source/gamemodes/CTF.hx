@@ -52,13 +52,10 @@ class CTF extends BaseGamemode
 		flags = new FlxGroup();
 		holders = new FlxGroup();
 		
-		Flag.init();
-		Holder.init();
-		
 		greenCounter = new NCounter("Blue captures", 0xff0086BF, 5, 5, 0, true);
-		greenCounter.setCount(Holder.captures[0]);
+		greenCounter.setCount(0);
 		blueCounter = new NCounter("Yellow captures", 0xffE0DD00, 5, 25, 0, true);
-		blueCounter.setCount(Holder.captures[1]);
+		blueCounter.setCount(0);
 		
 		timeLeft = new NTimer("Time left", 0xffffffff, 5, 45, 0, true);
 		timeLeft.setTimer(maxtime * 60, NTimer.UNTICKING);
