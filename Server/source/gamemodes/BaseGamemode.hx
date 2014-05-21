@@ -56,6 +56,11 @@ class BaseGamemode extends Sprite
 		BaseGamemode.scores.delete();
 	}
 	
+	public function onSpawn(P:Player):Void
+	{
+		
+	}
+	
 	public function onHurt(e:HurtEvent):Void
 	{
 		

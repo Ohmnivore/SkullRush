@@ -27,7 +27,7 @@ class HealthPack extends NSprite
 	
 	static public function makeFromXML(D:Fast):HealthPack
 	{
-		return new HealthPack(Std.parseFloat(D.att.x), Std.parseFloat(D.att.y));
+		return new HealthPack(Std.parseInt(D.att.x), Std.parseInt(D.att.y));
 	}
 	
 	static public function init():Void

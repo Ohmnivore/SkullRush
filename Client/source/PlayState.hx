@@ -18,6 +18,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRect;
 import flixel.util.FlxVector;
 import haxe.io.Bytes;
 import haxe.macro.Expr.Function;
@@ -81,8 +82,8 @@ class PlayState extends FlxState
 		add(maps);
 		under_players = new FlxGroup();
 		add(under_players);
-		bullets = new FlxGroup();
-		add(bullets);
+		//bullets = new FlxGroup();
+		//add(bullets);
 		tocollide = new FlxGroup();
 		add(tocollide);
 		players = new FlxGroup();
@@ -91,6 +92,8 @@ class PlayState extends FlxState
 		add(over_players);
 		emitters = new FlxGroup();
 		add(emitters);
+		bullets = new FlxGroup();
+		add(bullets);
 		ent = new FlxGroup();
 		add(ent);
 		tocollide.add(ent);
@@ -107,7 +110,7 @@ class PlayState extends FlxState
 		
 		ping_text = new FlxText(0, 0, 70, "0");
 		ping_text.scrollFactor.set();
-		over_players.add(ping_text);
+		hud.add(ping_text);
 		switch (Assets.config.get("showping"))
 		{
 			case "true":
@@ -182,25 +185,52 @@ class PlayState extends FlxState
 		
 		if (NReg.HUDS != null)
 		{
-			for (h in NReg.HUDS)
+			for (i in NReg.HUDS.keys())
 			{
-				h.destroy();
+				trace("Delete ", i);
+				var h:FlxText = NReg.HUDS.get(i);
+				hud.remove(h, true);
+				//h.kill();
+				NReg.HUDS.remove(i);
+				//h.destroy();
 			}
-			for (h in NReg.sprites)
+			for (k in NReg.sprites.keys())
 			{
-				h.destroy();
+				var s:FlxSprite = NReg.HUDS.get(k);
+				//ent.remove(s, true);
+				//s.kill();
+				//NReg.sprites.remove(s);
+				//s.destroy();
+				//if (s != null)
+					//s.kill();
+					//s.destroy();
 			}
 		}
-		NReg.init();
 		
 		current_map = MapName;
+		
 		OgmoLoader.loadXML(MapString, this);
+		//SkullClient.initClient();
 		
 		for (p in playermap.iterator())
 		{
 			var pl:Player = p;
 			
-			pl.cannon.bounds = collidemap.getBounds();
+			for (c in pl.guns_arr)
+			{
+				var w:FlxWeaponExt = c;
+				var bounds:FlxRect = Reg.state.collidemap.getBounds();
+				bounds.x -= FlxG.width / 2;
+				bounds.width += FlxG.width;
+				bounds.y -= FlxG.height / 2;
+				bounds.height += FlxG.height;
+				w.setBulletBounds(bounds);
+				
+				//if (pl.ID != player.ID)
+				//{
+				w.setFireRate(0);
+				//}
+			}
 		}
 	}
 	
@@ -266,7 +296,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide(tocollide, collidemap);
 		FlxG.collide(bullets, collidemap, bulletCollide);
-		FlxG.collide(bullets, players, bulletCollidePl);
+		FlxG.overlap(bullets, players, bulletCollidePl);
 		FlxG.collide(emitters, collidemap);
 		
 		if (player != null)
@@ -392,7 +422,7 @@ class PlayState extends FlxState
 			if (FlxG.mouse.pressed && player.health > 0)
 			{
 				player.shoot = true;
-				player.fire();
+				//player.fire();
 			}
 			else
 			{

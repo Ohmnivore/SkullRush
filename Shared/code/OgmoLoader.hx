@@ -1,14 +1,5 @@
 package ;
 
-#if CLIENT
-
-#else
-import entities.Flag;
-import entities.HealthPack;
-import entities.Spawn;
-import flixel.util.FlxPoint;
-#end
-
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -17,7 +8,19 @@ import flixel.util.FlxBitmapUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.FlxPoint;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import haxe.xml.Fast;
+
+#if CLIENT
+
+#else
+import entities.Flag;
+import entities.HealthPack;
+import entities.Spawn;
+#end
+
 /**
  * ...
  * @author Ohmnivore
@@ -76,12 +79,12 @@ class OgmoLoader
 			{
 				if (!x.has.exportMode) //Entity layer
 				{
+					#if CLIENT
+					
+					#else
 					for (ent in x.elements)
 					{
-						//Type.createInstance(Type.resolveClass("entities." + ent.name), [ent]);
 						var c:Class<Dynamic> = Type.resolveClass("entities." + ent.name);
-						var funct:Dynamic = Reflect.field(c, "makeFromXML");
-						Reflect.callMethod(c, funct, [ent]);
 						
 						if (!inits.exists(ent.name))
 						{
@@ -89,7 +92,11 @@ class OgmoLoader
 							Reflect.callMethod(c, funct2, []);
 							inits.set(ent.name, true);
 						}
+						
+						var funct:Dynamic = Reflect.field(c, "makeFromXML");
+						Reflect.callMethod(c, funct, [ent]);
 					}
+					#end
 				}
 				
 				else //Grid layer
@@ -100,9 +107,29 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, Assets.getImg("assets/images/gridtiles2.png"), 16, 16, 0, 0, 1, 1);
+					var cached:CachedGraphics = FlxG.bitmap.get(Assets.getImg("assets/images/gridtiles3.png"));
+					if (cached == null)
+						cached = FlxG.bitmap.add(Assets.getImg("assets/images/gridtiles3.png"));
+					// top left corner of the first tile
+					var startX:Int = 1;
+					var startY:Int = 1;
+					// tile size
+					var tileWidth:Int = 16;
+					var tileHeight:Int = 16;
+					// tile spacing
+					var spacingX:Int = 2;
+					var spacingY:Int = 2;
+					// end of tiles
+					var width:Int = Std.int(cached.bitmap.width - startX);
+					var height:Int = Std.int(cached.bitmap.height - startY);
+					// define region
+					var textureRegion:TextureRegion = new TextureRegion(cached, startX, startY, tileWidth, tileHeight, spacingX, spacingY, width, height);
+					// and finally load it into the tilemap
+					
+					map.loadMap(mapdata.arr, textureRegion, 16, 16, 0, 0, 1, 1);
 					makeTileCollisions(map);
 					State.maps.add(map);
+					map.setDirty(true);
 					
 					State.collidemap = map;
 					
@@ -254,7 +281,7 @@ class OgmoLoader
 			if (FlxRandom.chanceRoll(30))
 			{
 				if (Y + 1 < Buffer.length / Width)
-					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(21, 22), Buffer);
+					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(20, 23), Buffer);
 			}
 		}
 	}

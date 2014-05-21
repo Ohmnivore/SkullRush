@@ -13,8 +13,10 @@ import flixel.util.FlxPoint;
  */
 class NWeapon
 {
-	static public var weapons:Array<NWeapon>;
+	//static public var weapons:Array<NWeapon>;
+	static public var weapons:Map<Int, NWeapon>;
 	
+	public var slot:Int;
 	public var bulletElasticity:Float = 0;
 	public var bulletLifeSpan:Float = 0;
 	public var bulletSpeed:Int = 100;
@@ -29,6 +31,9 @@ class NWeapon
 	public var bulletGravity:FlxPoint;
 	public var bulletOffset:FlxPoint;
 	public var bulletInheritance:FlxPoint;
+	
+	public var TRAIL_EMITTER:Int;
+	public var TRAIL_EMITTER_GRAPHIC:String;
 	
 	public function new(Arr:Array<Dynamic>) 
 	{
@@ -46,7 +51,8 @@ class NWeapon
 		bulletOffset = Arr[11];
 		bulletInheritance = Arr[12];
 		
-		addWeapon(this);
+		TRAIL_EMITTER = Arr[14];
+		TRAIL_EMITTER_GRAPHIC = Arr[15];
 	}
 	
 	static public function setUpWeapons(P:PlayerBase):Void
@@ -57,14 +63,19 @@ class NWeapon
 			
 			var fw:FlxWeaponExt = w.makeWeapon(P);
 			fw.template = w;
-			fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
-				Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
+			//fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
+				//Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
 			Reg.state.bullets.add(fw.group);
 			fw.gun = new FlxSprite(0, 0, Assets.images.get(w.gunGraphic));
 			fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
 			fw.gun.visible = false;
 			P.guns.add(fw.gun);
 			P.guns_arr.push(fw);
+			
+			if (w.slot == 1)
+				P.grantedWeps.set(w.slot, true);
+			else
+				P.grantedWeps.set(w.slot, false);
 			
 			var bounds:FlxRect = Reg.state.collidemap.getBounds();
 			bounds.x -= FlxG.width / 2;
@@ -77,13 +88,15 @@ class NWeapon
 	
 	public function makeWeapon(Parent:FlxSprite):FlxWeaponExt
 	{
-		var w:FlxWeaponExt = new FlxWeaponExt(name, Parent);
+		var w:FlxWeaponExt = new FlxWeaponExt(name, Parent, FlxBulletExt);
 		
 		w.setBulletElasticity(bulletElasticity);
 		w.setBulletLifeSpan(bulletLifeSpan);
 		w.setBulletSpeed(bulletSpeed);
-		w.setFireRate(fireRate);
 		w.name = name;
+		
+		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
+				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);
 		
 		if (bulletAcceleration != null)
 		{
@@ -96,7 +109,7 @@ class NWeapon
 		
 		if (bulletGravity != null)
 		{
-			//w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
+			w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
 		}
 		
 		if (bulletOffset != null)
@@ -114,22 +127,25 @@ class NWeapon
 	
 	static public function init():Void
 	{
-		NWeapon.weapons = [];
-		
+		NWeapon.weapons = new Map<Int, NWeapon>();
 	}
 	
-	static public function addWeapon(W:NWeapon):Void
+	static public function addWeapon(W:NWeapon, Slot:Int):Void
 	{
-		NWeapon.weapons.push(W);
+		var s:Int = Slot - 1;
+		NWeapon.weapons.set(s, W);
+		W.slot = Slot;
 	}
 	
-	static public function deleteWeapon(W:NWeapon):Void
+	static public function deleteWeapon(Slot:Int):Void
 	{
-		NWeapon.weapons.remove(W);
+		var s:Int = Slot - 1;
+		NWeapon.weapons.remove(s);
 	}
 	
-	static public function getWeapon(ID:Int):NWeapon
+	static public function getWeapon(Slot:Int):NWeapon
 	{
-		return NWeapon.weapons[ID];
+		var s:Int = Slot - 1;
+		return NWeapon.weapons.get(s);
 	}
 }

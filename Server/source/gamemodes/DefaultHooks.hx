@@ -52,8 +52,13 @@ class DefaultHooks
 	
 	static public function makeWeapons():Void
 	{
-		new Launcher();
-		new Splasher();
+		NWeapon.addWeapon(new Launcher(), 1);
+		NWeapon.addWeapon(new Splasher(), 2);
+	}
+	
+	static public function onSpawn(P:Player):Void
+	{
+		NWeapon.grantWeapon(P.ID, [1, 2]);
 	}
 	
 	static public function announceFall(victim:Player):Void 
@@ -269,8 +274,18 @@ class DefaultHooks
 		}
 	}
 	
+	static public function preInitPlayer(P:Player):Void
+	{
+		//NWeapon.announceWeapons(P.ID);
+	}
+	
 	static public function initPlayer(P:Player):Void
 	{
+		Reg.server.sendMsg(P.ID, Msg.MapMsg.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+		
+		NEmitter.announceEmitters(P.ID);
+		NWeapon.announceWeapons(P.ID);
+		
 		Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
 		
 		Reg.server.sendMsg(P.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -295,16 +310,13 @@ class DefaultHooks
 			s.announce(P.ID);
 		}
 		
-		//NWeapon.announceWeapons(P.ID);
-		NEmitter.announceEmitters(P.ID);
-		
 		var t_arr:Array<String> = [];
 		for (t in Reg.gm.teams)
 		{
 			t_arr.push(t.serialize());
 		}
 		Msg.Teams.data.set("serialized", Serializer.run(t_arr));
-		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		P.health = 0;
 		P.respawnIn(Reg.gm.spawn_time);
@@ -330,10 +342,6 @@ class DefaultHooks
 		
 		var color:Int = Msg.PlayerInfo.data.get("team");
 		
-		//var s:Spawn = Spawn.findSpawn(p.team);
-		//p.x = s.x;
-		//p.y = s.y;
-		
 		Reg.server.peermap.set(p, p.ID);
 		Reg.server.playermap.set(p.ID, p);
 		
@@ -343,7 +351,7 @@ class DefaultHooks
 		Msg.PlayerInfoBack.data.set("graphic", p.graphicKey);
 		
 		Reg.server.sendMsg(E.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-		NWeapon.announceWeapons(E.ID);
+		preInitPlayer(p);
 		Reg.server.sendMsg(E.ID, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		Reg.server.id++;
@@ -354,7 +362,7 @@ class DefaultHooks
 		Msg.PlayerInfoAnnounce.data.set("color", p.header.color);
 		Msg.PlayerInfoAnnounce.data.set("graphic", p.graphicKey);
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, name + " has joined!", 12, false,
-			[new FlxMarkup(0, name.length, false, p.header.color)]);
+			[new FlxMarkup(0, name.length, false, 0xffffffff)]);
 		Reg.announcer.addMsg(name + " has joined!", []);
 		Msg.Announce.data.set("message", name + " has joined!");
 		Msg.Announce.data.set("markup", t.ExportMarkups());
@@ -383,18 +391,14 @@ class DefaultHooks
 			}
 		}
 		
-		//initPlayer(p);
 		Reg.gm.initPlayer(p);
-		
-		//p.health = 0;
-		//p.respawnIn(Reg.gm.spawn_time);
 	}
 	
 	static public function update(elapsed:Float):Void
 	{
 		FlxG.collide(Reg.state.tocollide, Reg.state.collidemap);
 		FlxG.collide(Reg.state.bullets, Reg.state.collidemap, DefaultHooks.bulletCollide);
-		FlxG.collide(Reg.state.bullets, Reg.state.players, DefaultHooks.bulletCollide);
+		FlxG.overlap(Reg.state.bullets, Reg.state.players, DefaultHooks.bulletCollide);
 		FlxG.collide(Reg.state.players, DefaultHooks.playerCollide);
 		FlxG.collide(Reg.state.players);
 		FlxG.collide(Reg.state.emitters, Reg.state.collidemap);

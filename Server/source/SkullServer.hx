@@ -229,6 +229,7 @@ class SkullServer extends Server
 				}
 				
 				p.respawn();
+				Reg.gm.onSpawn(p);
 			}
 		}
 		

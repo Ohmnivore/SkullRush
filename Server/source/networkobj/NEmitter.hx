@@ -11,8 +11,8 @@ import haxe.Serializer;
  */
 class NEmitter
 {
-	static private var emitters:Map<Int, FlxEmitterExt>;
-	static private var live_emitters:Map<Int, FlxEmitterExt>;
+	static public var emitters:Map<Int, FlxEmitterExt>;
+	static public var live_emitters:Map<Int, FlxEmitterExt>;
 	
 	static public function init():Void
 	{
@@ -94,7 +94,6 @@ class NEmitter
 			e.makeParticles(Assets.images.get(Graphic), Quantity, rotationFrames, Collide);
 			e.start(Explode, e.life.min, e.frequency, Quantity, e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
-			//e.setPosition(X, Y);
 			
 			live_emitters.set(ID_R, e);
 		}

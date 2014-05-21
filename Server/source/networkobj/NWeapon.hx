@@ -15,8 +15,10 @@ import haxe.Serializer;
  */
 class NWeapon
 {
-	static public var weapons:Array<NWeapon>;
+	//static public var weapons:Array<NWeapon>;
+	static public var weapons:Map<Int, NWeapon>;
 	
+	public var slot:Int;
 	public var bulletElasticity:Float = 0;
 	public var bulletLifeSpan:Float = 0;
 	public var bulletSpeed:Int = 100;
@@ -33,10 +35,24 @@ class NWeapon
 	public var bulletInheritance:FlxPoint;
 	
 	public var EMITTER:Int;
+	public var TRAIL_EMITTER:Int;
+	public var TRAIL_EMITTER_GRAPHIC:String;
 	
 	public function new()
 	{
-		addWeapon(this);
+		
+	}
+	
+	static public function grantWeapon(P:Int, Slots:Array<Int>):Void
+	{
+		var p:Player = Reg.server.playermap.get(P);
+		for (Slot in Slots)
+		{
+			p.grantedWeps.set(NWeapon.getWeapon(Slot).slot, true);
+		}
+		
+		Msg.GrantGun.data.set("slot", Serializer.run(p.grantedWeps));
+		Reg.server.sendMsg(P, Msg.GrantGun.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	static public function setUpWeapons(P:PlayerBase):Void
@@ -47,14 +63,19 @@ class NWeapon
 			
 			var fw:FlxWeaponExt = w.makeWeapon(P);
 			fw.template = w;
-			fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
-				Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
+			//fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
+				//Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
 			Reg.state.bullets.add(fw.group);
 			fw.gun = new FlxSprite(0, 0, Assets.images.get(w.gunGraphic));
 			fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
 			fw.gun.visible = false;
 			P.guns.add(fw.gun);
 			P.guns_arr.push(fw);
+			
+			if (w.slot == 1)
+				P.grantedWeps.set(w.slot, true);
+			else
+				P.grantedWeps.set(w.slot, false);
 			
 			var bounds:FlxRect = Reg.state.collidemap.getBounds();
 			bounds.x -= FlxG.width / 2;
@@ -72,13 +93,16 @@ class NWeapon
 	
 	public function makeWeapon(Parent:FlxSprite):FlxWeaponExt
 	{
-		var w:FlxWeaponExt = new FlxWeaponExt(name, Parent);
+		var w:FlxWeaponExt = new FlxWeaponExt(name, Parent, FlxBulletExt);
 		
 		w.setBulletElasticity(bulletElasticity);
 		w.setBulletLifeSpan(bulletLifeSpan);
 		w.setBulletSpeed(bulletSpeed);
 		w.setFireRate(fireRate);
 		w.name = name;
+		
+		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
+				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);
 		
 		if (bulletAcceleration != null)
 		{
@@ -88,10 +112,10 @@ class NWeapon
 					Std.int(bulletMaxSpeed.x), Std.int(bulletMaxSpeed.y));
 			}
 		}
-		
+		//w.setBulletAcceleration(50, 50, 300, 300);
 		if (bulletGravity != null)
 		{
-			//w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
+			w.setBulletGravity(Std.int(bulletGravity.x), Std.int(bulletGravity.y));
 		}
 		
 		if (bulletOffset != null)
@@ -109,34 +133,37 @@ class NWeapon
 	
 	static public function init():Void
 	{
-		NWeapon.weapons = [];
-		
+		NWeapon.weapons = new Map<Int, NWeapon>();
 	}
 	
-	static public function addWeapon(W:NWeapon):Void
+	static public function addWeapon(W:NWeapon, Slot:Int):Void
 	{
-		NWeapon.weapons.push(W);
+		var s:Int = Slot - 1;
+		NWeapon.weapons.set(s, W);
+		W.slot = Slot;
 	}
 	
-	static public function deleteWeapon(W:NWeapon):Void
+	static public function deleteWeapon(Slot:Int):Void
 	{
-		NWeapon.weapons.remove(W);
+		var s:Int = Slot - 1;
+		NWeapon.weapons.remove(s);
 	}
 	
-	static public function getWeapon(ID:Int):NWeapon
+	static public function getWeapon(Slot:Int):NWeapon
 	{
-		return NWeapon.weapons[ID];
+		var s:Int = Slot - 1;
+		return NWeapon.weapons.get(s);
 	}
 	
 	static public function announceWeapons(player:Int = 0):Void
 	{
-		var array:Array<Dynamic> = [];
+		var map:Map<Int, Dynamic> = new Map<Int, Dynamic>();
 		//trace(array);
-		for (wep in NWeapon.weapons.iterator())
+		for (slot in NWeapon.weapons.keys())
 		{
 			//trace("trace");
 			var arr:Array<Dynamic> = [];
-			var w:NWeapon = cast wep;
+			var w:NWeapon = cast NWeapon.weapons.get(slot);
 			//trace("Wep:", w);
 			
 			arr.push(w.bulletElasticity);
@@ -152,11 +179,14 @@ class NWeapon
 			arr.push(w.bulletGravity);
 			arr.push(w.bulletOffset);
 			arr.push(w.bulletInheritance);
+			arr.push(w.EMITTER);
+			arr.push(w.TRAIL_EMITTER);
+			arr.push(w.TRAIL_EMITTER_GRAPHIC);
 			
-			array.push(arr);
+			map.set(slot, arr);
 		}
 		//trace(array);
-		Msg.AnnounceGuns.data.set("serialized", Serializer.run(array));
+		Msg.AnnounceGuns.data.set("serialized", Serializer.run(map));
 		
 		if (player == 0)
 		{

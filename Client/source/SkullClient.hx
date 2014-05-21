@@ -100,7 +100,14 @@ class SkullClient extends Client
 	public function updatePingText():Void
 	{
 		if (_s_id > 0)
+		try
+		{
 			Reg.state.ping_text.text = Std.string(ENet.getPeerPing(_s_id));
+		}
+		catch (E:Dynamic)
+		{
+			
+		}
 	}
 	
 	override public function onPeerConnect(e:ENetEvent):Void
@@ -138,6 +145,8 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.MapMsg.ID)
 		{
+			//if (Reg.state.collidemap != null)
+				//FlxG.switchState(new PlayState());
 			Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
 		}
 		
@@ -248,14 +257,18 @@ class SkullClient extends Client
 			NReg.HUDS.set(Msg.NewLabel.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
+			//trace("new label: ", t.text);
 		}
 		
 		if (MsgID == Msg.SetLabel.ID)
 		{
 			var t:FlxText = NReg.HUDS.get(Msg.SetLabel.data.get("id"));
 			
-			t.text = Msg.SetLabel.data.get("text");
-			t.color = Msg.SetLabel.data.get("color");
+			if (t != null)
+			{
+				t.text = Msg.SetLabel.data.get("text");
+				t.color = Msg.SetLabel.data.get("color");
+			}
 		}
 		
 		if (MsgID == Msg.NewCounter.ID)
@@ -277,10 +290,11 @@ class SkullClient extends Client
 		{
 			var t:FlxText = NReg.HUDS.get(Msg.SetCounter.data.get("id"));
 			
-			t.color = Msg.SetCounter.data.get("color");
-			t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
-			
-			//trace("set counter: ", t.text);
+			if (t != null)
+			{
+				t.color = Msg.SetCounter.data.get("color");
+				t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
+			}
 		}
 		
 		if (MsgID == Msg.NewTimer.ID)
@@ -292,29 +306,35 @@ class SkullClient extends Client
 			NReg.HUDS.set(Msg.NewTimer.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
-			
-			//trace("delete counter: ", t.text);
+			//trace("new timer: ", t.text);
 		}
 		
 		if (MsgID == Msg.SetTimer.ID)
 		{
 			var t:NTimer = cast(NReg.HUDS.get(Msg.SetTimer.data.get("id")), NTimer);
-			t.base = Msg.SetTimer.data.get("base");
-			t.color = Msg.SetTimer.data.get("color");
-			t.status = Msg.SetTimer.data.get("status");
-			t.count = Msg.SetTimer.data.get("count");
+			
+			if (t != null)
+			{
+				t.base = Msg.SetTimer.data.get("base");
+				t.color = Msg.SetTimer.data.get("color");
+				t.status = Msg.SetTimer.data.get("status");
+				t.count = Msg.SetTimer.data.get("count");
+			}
 		}
 		
 		if (MsgID == Msg.DeleteHUD.ID)
 		{
 			var t:FlxText = NReg.HUDS.get(Msg.DeleteHUD.data.get("id"));
 			
-			NReg.HUDS.remove(Msg.DeleteHUD.data.get("id"));
-			
-			Reg.state.hud.remove(t, true);
-			
-			t.kill();
-			t.destroy();
+			if (t != null)
+			{
+				NReg.HUDS.remove(Msg.DeleteHUD.data.get("id"));
+				
+				Reg.state.hud.remove(t, true);
+				
+				t.kill();
+				t.destroy();
+			}
 		}
 		
 		if (MsgID == Msg.AnnounceTemplates.ID)
@@ -343,18 +363,26 @@ class SkullClient extends Client
 		{
 			var s:FlxSprite = NReg.sprites.get(Msg.UpdateSprite.data.get("id"));
 			
-			s.x = Msg.UpdateSprite.data.get("x");
-			s.y = Msg.UpdateSprite.data.get("y");
-			s.velocity.x = Msg.UpdateSprite.data.get("velocity.x");
-			s.velocity.y = Msg.UpdateSprite.data.get("velocity.y");
+			if (s != null)
+			{
+				s.x = Msg.UpdateSprite.data.get("x");
+				s.y = Msg.UpdateSprite.data.get("y");
+				s.velocity.x = Msg.UpdateSprite.data.get("velocity.x");
+				s.velocity.y = Msg.UpdateSprite.data.get("velocity.y");
+			}
 		}
 		
 		if (MsgID == Msg.DeleteSprite.ID)
 		{
 			var s:FlxSprite = NReg.sprites.get(Msg.DeleteSprite.data.get("id"));
 			
-			NReg.sprites.remove(Msg.DeleteSprite.data.get("id"));
-			Reg.state.ent.remove(s, true);
+			if (s != null)
+			{
+				NReg.sprites.remove(Msg.DeleteSprite.data.get("id"));
+				Reg.state.ent.remove(s, true);
+				s.kill();
+				s.destroy();
+			}
 			
 			//s.kill();
 			//s.destroy();
@@ -364,22 +392,28 @@ class SkullClient extends Client
 		{
 			var s:FlxSprite = NReg.sprites.get(Msg.SetSpriteImage.data.get("id"));
 			
-			s.loadGraphic(Assets.images.get(Msg.SetSpriteImage.data.get("graphic")));
+			if (s != null)
+			{
+				s.loadGraphic(Assets.images.get(Msg.SetSpriteImage.data.get("graphic")));
+			}
 		}
 		
 		if (MsgID == Msg.SetSpriteFields.ID)
 		{
 			var s:FlxSprite = NReg.sprites.get(Msg.SetSpriteFields.data.get("id"));
 			
-			var Fields:Array<String> = cast Unserializer.run(Msg.SetSpriteFields.data.get("fields"));
-			var Values:Array<Dynamic> = cast Unserializer.run(Msg.SetSpriteFields.data.get("values"));
-			
-			var i:Int = 0;
-			
-			while (i < Fields.length)
+			if (s != null)
 			{
-				Reflect.setProperty(s, Fields[i], Values[i]);
-				i++;
+				var Fields:Array<String> = cast Unserializer.run(Msg.SetSpriteFields.data.get("fields"));
+				var Values:Array<Dynamic> = cast Unserializer.run(Msg.SetSpriteFields.data.get("values"));
+				
+				var i:Int = 0;
+				
+				while (i < Fields.length)
+				{
+					Reflect.setProperty(s, Fields[i], Values[i]);
+					i++;
+				}
 			}
 		}
 		
@@ -412,16 +446,23 @@ class SkullClient extends Client
 		if (MsgID == Msg.SetBoard.ID)
 		{
 			var board:NScoreboard = Reg.state.scores.scores.get(Msg.SetBoard.data.get("id"));
-			board.setData(Msg.SetBoard.data.get("serialized"));
+			
+			if (board != null)
+			{
+				board.setData(Msg.SetBoard.data.get("serialized"));
+			}
 		}
 		
 		if (MsgID == Msg.DeleteBoard.ID)
 		{
 			var board:NScoreboard = Reg.state.scores.scores.get(Msg.DeleteBoard.data.get("id"));
 			
-			Reg.state.scores.removeBoard(board);
-			
-			board.destroy();
+			if (board != null)
+			{
+				Reg.state.scores.removeBoard(board);
+				
+				board.destroy();
+			}
 		}
 		
 		if (MsgID == Msg.Teams.ID)
@@ -435,8 +476,6 @@ class SkullClient extends Client
 				team.unserialize(s);
 				Reg.state.teams.push(team);
 			}
-			
-			trace(Reg.state.teams);
 		}
 		
 		if (MsgID == Msg.DeathInfo.ID)
@@ -458,7 +497,11 @@ class SkullClient extends Client
 		if (MsgID == Msg.SetAppearance.ID)
 		{
 			var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
-			p.setColor(Msg.SetAppearance.data.get("color"), Msg.SetAppearance.data.get("graphic"));
+			
+			if (p != null)
+			{
+				p.setColor(Msg.SetAppearance.data.get("color"), Msg.SetAppearance.data.get("graphic"));
+			}
 		}
 		
 		if (MsgID == Msg.EmitterAnnounce.ID)
@@ -529,20 +572,36 @@ class SkullClient extends Client
 			
 			var e:FlxEmitterExt = NReg.live_emitters.get(ID);
 			
-			Reg.state.emitters.remove(e, true);
-			NReg.live_emitters.remove(ID);
-			e.kill();
-			e.destroy();
+			if (e != null)
+			{
+				Reg.state.emitters.remove(e, true);
+				NReg.live_emitters.remove(ID);
+				e.kill();
+				e.destroy();
+			}
 		}
 		
 		if (MsgID == Msg.AnnounceGuns.ID)
 		{
-			var array:Array<Dynamic> = cast Unserializer.run(Msg.AnnounceGuns.data.get("serialized"));
-			
-			for (w in array)
+			var map:Map<Int, Dynamic> = cast Unserializer.run(Msg.AnnounceGuns.data.get("serialized"));
+			//trace(map);
+			for (slot in map.keys())
 			{
-				new NWeapon(w);
+				NWeapon.addWeapon(new NWeapon(map.get(slot)), slot + 1);
+				//trace(slot + 1);
 			}
+			for (p in Reg.state.playermap.iterator())
+			{
+				p.guns_arr = [];
+				NWeapon.setUpWeapons(p);
+				p.setGun(1);
+				//trace(p);
+			}
+		}
+		
+		if (MsgID == Msg.GrantGun.ID)
+		{
+			Reg.state.player.grantedWeps = Unserializer.run(Msg.GrantGun.data.get("slot"));
 		}
 	}
 	

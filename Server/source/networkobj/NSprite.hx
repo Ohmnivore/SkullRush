@@ -160,7 +160,7 @@ class NSprite
 			Reg.server.sendMsg(id, Msg.DeleteSprite.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
-		Reg.state.ent.remove(s);
+		Reg.state.ent.remove(s, true);
 		s.kill();
 		s.destroy();
 		

@@ -64,5 +64,6 @@
     <Spawn id="1" x="464" y="288" Teams="1111" />
     <Spawn id="2" x="160" y="400" Teams="1111" />
     <Spawn id="3" x="0" y="400" Teams="1111" />
+    <HealthPack id="4" x="368" y="368" />
   </Entities>
 </level>

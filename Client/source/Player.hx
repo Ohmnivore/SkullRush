@@ -7,6 +7,8 @@ import flixel.util.FlxSpriteUtil;
  */
 class Player extends PlayerBase
 {
+	//public var requestShoot:Bool = false;
+	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
@@ -15,7 +17,20 @@ class Player extends PlayerBase
 	
 	override public function setGun(GunID:Int, Force:Bool = false):Void
 	{
-		super.setGun(GunID, Force);
+		if (Std.is(GunID, Int))
+		{
+			var g:FlxWeaponExt = guns_arr[GunID - 1];
+			if (g != null)
+			{
+					if (gun != null)
+						gun.visible = false;
+					g.gun.visible = true;
+					gun = g.gun;
+					cannon = g;
+					
+					current_weap = GunID;
+			}
+		}
 	}
 	
 	override public function draw():Void

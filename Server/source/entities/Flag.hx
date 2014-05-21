@@ -61,6 +61,8 @@ class Flag extends NSprite
 				{
 					f.s.x = f.owner.x;
 					f.s.y = f.owner.y;
+					f.s.velocity.x = f.owner.velocity.x;
+					f.s.velocity.y = f.owner.velocity.y;
 				}
 				
 				else

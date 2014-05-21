@@ -41,6 +41,7 @@ class PlayerBase extends FlxSprite
 	
 	private var weap_change_timer:FlxTimer;
 	private var canChange:Bool = true;
+	public var grantedWeps:Map<Int, Bool>;
 	
 	private var _arr:Array<Dynamic>;
 	public var cannon:FlxWeaponExt;
@@ -66,9 +67,10 @@ class PlayerBase extends FlxSprite
 		ceilingwalk = false;
 		current_weap = -1;
 		_arr = [];
+		grantedWeps = new Map<Int, Bool>();
+		grantedWeps.set(1, true);
 		
 		weap_change_timer = new FlxTimer(0.3, setChange);
-		//weap_change_timer
 		
 		graphicKey = "assets/images/playerblue.png";
 		loadGraphic(Assets.getImg("assets/images/playerblue.png"), true, 24, 24);
@@ -170,7 +172,7 @@ class PlayerBase extends FlxSprite
 		guns.kill();
 		header.kill();
 		healthBar.kill();
-		cannon = null;
+		cannon.group.kill();
 		super.kill();
 	}
 	
@@ -336,25 +338,32 @@ class PlayerBase extends FlxSprite
 	{
 		if (Std.is(GunID, Int))
 		{
-			var g:FlxWeaponExt = guns_arr[GunID - 1];
-			if (g != null)
+			if (grantedWeps.exists(GunID))
 			{
-				if (Force || canChange)
+				//trace(GunID);
+				if (grantedWeps.get(GunID) == true)
 				{
-					if (gun != null)
-						gun.visible = false;
-					g.gun.visible = true;
-					gun = g.gun;
-					cannon = g;
-					
-					current_weap = GunID;
-					
-					//weap_change_timer.reset(0.3);
-					//weap_change_timer = new FlxTimer(0.3);
-					canChange = false;
-					weap_change_timer.reset(0.3);
-					
-					//trace(current_weap);
+					var g:FlxWeaponExt = guns_arr[GunID - 1];
+					if (g != null)
+					{
+						if (Force || canChange)
+						{
+							if (gun != null)
+								gun.visible = false;
+							g.gun.visible = true;
+							gun = g.gun;
+							cannon = g;
+							
+							current_weap = GunID;
+							
+							//weap_change_timer.reset(0.3);
+							//weap_change_timer = new FlxTimer(0.3);
+							canChange = false;
+							weap_change_timer.reset(0.3);
+							
+							//trace(current_weap);
+						}
+					}
 				}
 			}
 		}
@@ -480,7 +489,10 @@ class PlayerBase extends FlxSprite
 			
 			if (shoot && alive) //shoot
 			{
-				fire();
+				if (!(cannon.fireRate > 0 && FlxG.game.ticks < cannon.nextFire))
+					fire();
+				else
+					shoot = false;
 			}
 		}
 	}

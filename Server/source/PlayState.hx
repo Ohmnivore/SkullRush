@@ -71,7 +71,6 @@ class PlayState extends FlxState
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = true;
 		#end
-		
 		super.create();
 		Reg.state = this;
 		spawns = [];
@@ -83,8 +82,8 @@ class PlayState extends FlxState
 		add(maps);
 		under_players = new FlxGroup();
 		add(under_players);
-		bullets = new FlxGroup();
-		add(bullets);
+		//bullets = new FlxGroup();
+		//add(bullets);
 		tocollide = new FlxGroup();
 		add(tocollide);
 		players = new FlxGroup();
@@ -93,6 +92,8 @@ class PlayState extends FlxState
 		add(over_players);
 		emitters = new FlxGroup();
 		add(emitters);
+		bullets = new FlxGroup();
+		add(bullets);
 		ent = new FlxGroup();
 		add(ent);
 		tocollide.add(ent);
@@ -149,10 +150,6 @@ class PlayState extends FlxState
 		if (Reg.gm != null)
 		{
 			Reg.gm.shutdown();
-			//spect.destroy();
-			//remove(spect, true);
-			//spect.kill();
-			//spect.destroy();
 		}
 		
 		current_map = Name;
@@ -175,20 +172,14 @@ class PlayState extends FlxState
 		
 		spect = new Spectator();
 		add(spect);
-		//trace("pl");
+		
 		for (i in Reg.server.playermap.keys())
 		{
 			var p:Player = Reg.server.playermap.get(i);
 			
-			//var s:Spawn = Spawn.findSpawn(p.team);
 			var p_new:Player;
-			//if (s != null)
-				//p_new = new Player(p.ID, p.name, s.x, s.y);
-			//else
-				p_new = new Player(p.ID, p.name, 50, 50);
-			//p_new.team = 0;
+			p_new = new Player(p.ID, p.name, 50, 50);
 			Reg.gm.setTeam(p_new, Reg.gm.teams[0]);
-			//p_new.setColor(p.header.color, p.graphicKey);
 			
 			Reg.server.playermap.set(i, p_new);
 			
@@ -210,16 +201,15 @@ class PlayState extends FlxState
 	 */
 	override public function destroy():Void
 	{
-		super.destroy();
-		
 		m.acquire;
+		super.destroy();
 		Reg.shutdown = true;
-		m.release;
 		
 		current_map = null;
 		current_map_string = null;
-		m = null;
 		spawns = null;
+		m.release;
+		m = null;
 	}
 	
 	public function thread():Void

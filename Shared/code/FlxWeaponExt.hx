@@ -2,6 +2,7 @@ package ;
 import flixel.addons.weapon.FlxBullet;
 import flixel.addons.weapon.FlxWeapon;
 import flixel.FlxSprite;
+import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 import flixel.FlxG;
 import flixel.util.FlxVelocity;
@@ -136,6 +137,8 @@ class FlxWeaponExt extends FlxWeapon
 		//Set projectile speed inheritance
 		currentBullet.velocity.x += parent.velocity.x * _inheritance.x;
 		currentBullet.velocity.y += parent.velocity.y * _inheritance.x;
+		
+		currentBullet.angle = FlxAngle.getPolarCoords(currentBullet.velocity.x, currentBullet.velocity.y).y;
 		
 		return true;
 	}

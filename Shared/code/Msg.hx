@@ -60,6 +60,8 @@ class Msg
 	static public var SetSpriteFields:Message;
 	static public var SetSpriteImage:Message;
 	
+	static public var GrantGun:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -110,6 +112,8 @@ class Msg
 		
 		SetSpriteFields = new Message(40, ["id", "fields", "values"], true);
 		SetSpriteImage = new Message(41, ["id", "graphic"], true);
+		
+		GrantGun = new Message(42, ["slot"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -161,5 +165,7 @@ class Msg
 		
 		H.addMessage(SetSpriteFields);
 		H.addMessage(SetSpriteImage);
+		
+		H.addMessage(GrantGun);
 	}
 }

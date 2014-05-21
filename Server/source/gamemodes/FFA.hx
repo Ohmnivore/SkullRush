@@ -60,6 +60,11 @@ class FFA extends BaseGamemode
 		Reg.state.hud.add(score.group);
 	}
 	
+	override public function onSpawn(P:Player):Void 
+	{
+		DefaultHooks.onSpawn(P);
+	}
+	
 	override public function makeWeapons():Void 
 	{
 		super.makeWeapons();
@@ -205,9 +210,4 @@ class FFA extends BaseGamemode
 		maxkills = Std.parseInt(Assets.config.get("ffa_maxkills"));
 		maxtime = Std.parseInt(Assets.config.get("ffa_maxtime"));
 	}
-	
-	//override public function createScore():Void
-	//{
-		//DefaultHooks.createScore();
-	//}
 }

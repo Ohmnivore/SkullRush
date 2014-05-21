@@ -18,6 +18,7 @@ class Settings extends FlxUIState
 {
 	public var name:FlxUIInputText;
 	public var color:FlxUIDropDownMenu;
+	public var version:FlxUIText;
 	
 	public var full:FlxUICheckBox;
 	public var ping:FlxUICheckBox;
@@ -43,27 +44,27 @@ class Settings extends FlxUIState
 		
 		var t:FlxUIText = new FlxUIText();
 		t.x = 10;
-		t.y = 10;
+		t.y = 30;
 		t.text = "Player name: ";
 		add(t);
 		
 		name = new FlxUIInputText();
 		name.x = 90;
-		name.y = 10;
+		name.y = 30;
 		name.text = Assets.config.get("name");
 		add(name);
 		
 		var th:FlxUIText = new FlxUIText();
 		th.text = "Player color: ";
 		th.x = 10;
-		th.y = 30;
+		th.y = 50;
 		add(th);
 		
 		var data:Array<StrIdLabel> = [new StrIdLabel("g", "Green"),
 										new StrIdLabel("b", "Blue"),
 										new StrIdLabel("r", "Red"),
 										new StrIdLabel("y", "Yellow")];
-		color = new FlxUIDropDownMenu(90, 30, data);
+		color = new FlxUIDropDownMenu(90, 50, data);
 		switch (Assets.config.get("team"))
 		{
 			case "0":
@@ -77,10 +78,16 @@ class Settings extends FlxUIState
 		}
 		add(color);
 		
+		version = new FlxUIText();
+		version.text = "Version: " + Assets.config.get("version");
+		version.x = 10;
+		version.y = 10;
+		add(version);
+		
 		var settings:Map<String, Dynamic> = SharedSettings.returnGraphicOptions();
 		full = cast settings.get("full");
 		full.x = 10;
-		full.y = 100;
+		full.y = 120;
 		full.callback = handleFull;
 		switch (Assets.config.get("fullscreen"))
 		{
@@ -94,7 +101,7 @@ class Settings extends FlxUIState
 		
 		ping = cast settings.get("ping");
 		ping.x = 10;
-		ping.y = 120;
+		ping.y = 140;
 		switch (Assets.config.get("showping"))
 		{
 			case "true":

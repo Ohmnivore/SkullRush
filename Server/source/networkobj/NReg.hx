@@ -32,11 +32,11 @@ class NReg
 	static public function resetReg():Void
 	{
 		_templates = new Map<Int, NTemplate>();
-		//for (s in sprites.iterator())
-		//{
-			//s.delete();
-		//}
-		//sprites = new Map<Int, NSprite>();
+		for (s in sprites.iterator())
+		{
+			s.delete();
+		}
+		sprites = new Map<Int, NSprite>();
 		for (h in huds)
 		{
 			h.delete();

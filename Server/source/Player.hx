@@ -1,10 +1,13 @@
 package ;
 import enet.ENet;
 import entities.Spawn;
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import haxe.Unserializer;
+import networkobj.NEmitter;
+import networkobj.NWeapon;
 
 /**
  * ...
@@ -163,7 +166,34 @@ class Player extends PlayerBase
 	
 	override public function setGun(GunID:Int, Force:Bool = false):Void
 	{
-		super.setGun(GunID, Force);
+		if (Std.is(GunID, Int))
+		{
+			if (grantedWeps.exists(GunID))
+			{
+				if (grantedWeps.get(GunID) == true)
+				{
+					var g:FlxWeaponExt = guns_arr[GunID - 1];
+					if (g != null)
+					{
+						if (Force || canChange)
+						{
+							if (gun != null)
+								gun.visible = false;
+							g.gun.visible = true;
+							gun = g.gun;
+							if (cannon != null)
+								g.nextFire = cannon.nextFire;
+							cannon = g;
+							
+							current_weap = GunID;
+							
+							canChange = false;
+							weap_change_timer.reset(0.3);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	override public function s_unserialize(S:String):Void 
@@ -262,7 +292,10 @@ class Player extends PlayerBase
 			
 			if (shoot && alive) //shoot
 			{
-				fire();
+				if (!(cannon.fireRate > 0 && FlxG.game.ticks < cannon.nextFire))
+					fire();
+				else
+					shoot = false;
 			}
 		}
 	}
