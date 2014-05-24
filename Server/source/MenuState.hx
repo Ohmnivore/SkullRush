@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.system.scaleModes.FillScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.system.scaleModes.StageSizeScaleMode;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -45,13 +46,13 @@ class MenuState extends FlxState
 			{
 				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
 				FlxG.cameras.reset(cam);
-				FlxG.scaleMode = new FillScaleMode();
-				FlxG.cameras.bgColor = 0x00000000;
+				FlxG.scaleMode = new RatioScaleMode();
+				FlxG.cameras.bgColor = 0xff000000;
 			}
 			
 			else
 			{
-				FlxG.scaleMode = new FillScaleMode();
+				FlxG.scaleMode = new RatioScaleMode();
 				FlxG.cameras.bgColor = 0xff000000;
 			}
 			

@@ -25,6 +25,8 @@ class Assets
 		images.set("assets/images/gun_launcher_bullet.png", "shared/images/gun_launcher_bullet.png");
 		images.set("assets/images/gun_splasher.png", "shared/images/gun_splasher.png");
 		images.set("assets/images/gun_splasher_bullet.png", "shared/images/gun_splasher_bullet.png");
+		images.set("assets/images/gun_eviscerator.png", "shared/images/gun_eviscerator.png");
+		images.set("assets/images/gun_eviscerator_bullet.png", "shared/images/gun_eviscerator_bullet.png");
 		images.set("assets/images/playerblue.png", "shared/images/playerblue.png");
 		images.set("assets/images/playergreen.png", "shared/images/playergreen.png");
 		images.set("assets/images/playerred.png", "shared/images/playerred.png");

@@ -21,11 +21,11 @@
 	
 	<haxelib name="openfl" version="1.4.0"/>
 	<haxelib name="lime" version="0.9.7"/>
-	<haxelib name="flixel" version="3.3.1"/>
+	<haxelib name="flixel" version="3.3.3"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
-	<haxelib name="mloader" version="2.2.0" />
-	<haxelib name="msignal" version="1.2.2" />
+	<!--<haxelib name="mloader" version="2.2.0" />-->
+	<!--<haxelib name="msignal" version="1.2.2" />-->
 	
 	<haxedef name="CLIENT" />
 	<haxedef name="HXCPP_STACK_TRACE" />

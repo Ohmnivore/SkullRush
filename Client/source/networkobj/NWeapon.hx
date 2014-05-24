@@ -31,6 +31,9 @@ class NWeapon
 	public var bulletGravity:FlxPoint;
 	public var bulletOffset:FlxPoint;
 	public var bulletInheritance:FlxPoint;
+	public var shotsToFire:Int = 1;
+	public var spread:Int = 0;
+	public var ignoreCollisions:Bool = false;
 	
 	public var TRAIL_EMITTER:Int;
 	public var TRAIL_EMITTER_GRAPHIC:String;
@@ -53,6 +56,11 @@ class NWeapon
 		
 		TRAIL_EMITTER = Arr[14];
 		TRAIL_EMITTER_GRAPHIC = Arr[15];
+		
+		shotsToFire = Arr[16];
+		spread = Arr[17];
+		
+		ignoreCollisions = Arr[18];
 	}
 	
 	static public function setUpWeapons(P:PlayerBase):Void
@@ -67,7 +75,8 @@ class NWeapon
 				//Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
 			Reg.state.bullets.add(fw.group);
 			fw.gun = new FlxSprite(0, 0, Assets.images.get(w.gunGraphic));
-			fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
+			fw.gun.loadGraphic(Assets.getImg(w.gunGraphic));
+			//fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
 			fw.gun.visible = false;
 			P.guns.add(fw.gun);
 			P.guns_arr.push(fw);
@@ -94,6 +103,8 @@ class NWeapon
 		w.setBulletLifeSpan(bulletLifeSpan);
 		w.setBulletSpeed(bulletSpeed);
 		w.name = name;
+		w.shotsToFire = shotsToFire;
+		w.spread = spread;
 		
 		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
 				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);
@@ -123,6 +134,21 @@ class NWeapon
 		}
 		
 		return w;
+	}
+	
+	public function collide(Bullet:FlxBullet, Other:Dynamic):Void
+	{
+		
+	}
+	
+	public function fire(Parent:FlxSprite, LaunchX:Float, LaunchY:Float, Angle:Int, BulletSpeed:Int):Void
+	{
+		
+	}
+	
+	public function kill(Parent:FlxSprite, Bullet:FlxBullet):Void
+	{
+		
 	}
 	
 	static public function init():Void

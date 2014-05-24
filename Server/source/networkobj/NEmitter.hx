@@ -2,7 +2,6 @@ package networkobj;
 
 import enet.ENet;
 import flixel.effects.particles.FlxEmitterExt;
-import flixel.effects.particles.FlxEmitterExt;
 import haxe.Serializer;
 
 /**
@@ -11,13 +10,13 @@ import haxe.Serializer;
  */
 class NEmitter
 {
-	static public var emitters:Map<Int, FlxEmitterExt>;
-	static public var live_emitters:Map<Int, FlxEmitterExt>;
+	static public var emitters:Map<Int, FlxEmitterAuto>;
+	static public var live_emitters:Map<Int, FlxEmitterAuto>;
 	
 	static public function init():Void
 	{
-		emitters = new Map<Int, FlxEmitterExt>();
-		live_emitters = new Map<Int, FlxEmitterExt>();
+		emitters = new Map<Int, FlxEmitterAuto>();
+		live_emitters = new Map<Int, FlxEmitterAuto>();
 	}
 	
 	static public function announceEmitters(player:Int = 0):Void
@@ -27,7 +26,7 @@ class NEmitter
 		for (id in emitters.keys())
 		{
 			var arr:Array<Dynamic> = [];
-			var e:FlxEmitterExt = emitters.get(id);
+			var e:FlxEmitterAuto = emitters.get(id);
 			
 			arr.push(id);
 			arr.push("placeholder");
@@ -90,7 +89,7 @@ class NEmitter
 		
 		if (Local)
 		{
-			var e:FlxEmitterExt = cloneFromEmitter(emitters.get(ID), X, Y);
+			var e:FlxEmitterAuto = cloneFromEmitter(emitters.get(ID), X, Y);
 			e.makeParticles(Assets.images.get(Graphic), Quantity, rotationFrames, Collide);
 			e.start(Explode, e.life.min, e.frequency, Quantity, e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
@@ -116,9 +115,9 @@ class NEmitter
 		return ID_R;
 	}
 	
-	static public function cloneFromEmitter(E:FlxEmitterExt, X:Int, Y:Int):FlxEmitterExt
+	static public function cloneFromEmitter(E:FlxEmitterAuto, X:Int, Y:Int):FlxEmitterAuto
 	{
-		var e:FlxEmitterExt = new FlxEmitterExt(X, Y);
+		var e:FlxEmitterAuto = new FlxEmitterAuto(X, Y);
 		
 		e.bounce = E.bounce;
 		e.frequency = E.frequency;
@@ -147,7 +146,7 @@ class NEmitter
 	
 	static public function stopEmitter(Handle:Int):Void
 	{
-		var e:FlxEmitterExt = live_emitters.get(Handle);
+		var e:FlxEmitterAuto = live_emitters.get(Handle);
 		//trace(e);
 		if (e != null)
 		{
@@ -164,7 +163,7 @@ class NEmitter
 		}
 	}
 	
-	static public function registerEmitter(E:FlxEmitterExt):Int
+	static public function registerEmitter(E:FlxEmitterAuto):Int
 	{
 		var ID:Int = NReg.getID();
 		

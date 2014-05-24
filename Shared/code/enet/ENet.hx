@@ -73,7 +73,10 @@ class ENet
 	{
 		var e:Dynamic = _enet_poll(Host, Timeout);
 		
-		return new ENetEvent(e);
+		var r:ENetEvent = new ENetEvent(e);
+		ENet.event_destroy(e);
+		
+		return r;
 	}
 	
 	/**

@@ -18,6 +18,9 @@ class FlxWeaponExt extends FlxWeapon
 	public var icon:FlxSprite;
 	public var template:NWeapon;
 	
+	public var shotsToFire:Int = 1;
+	public var spread:Int = 0;
+	
 	private var _inheritance:FlxPoint;
 	
 	public function new(Name:String, ?ParentRef:FlxSprite, ?BulletType:Class<FlxBullet>, ?BulletID:Int = 0) 
@@ -100,8 +103,28 @@ class FlxWeaponExt extends FlxWeapon
 		}
 		else if (Method == FlxWeapon.FIRE_FROM_ANGLE)
 		{
-			currentBullet.fireFromAngle(launchX, launchY, Angle, bulletSpeed);
-			currentBullet.angle = Angle;
+			if (shotsToFire == 1)
+			{
+				currentBullet.fireFromAngle(launchX, launchY, Angle, bulletSpeed);
+				currentBullet.angle = Angle;
+			}
+			
+			else
+			{
+				var incr:Int = Std.int(spread / (shotsToFire - 1));
+				
+				var start:Int = Std.int(Angle - spread / 2);
+				
+				var i:Int = 0;
+				while (i < shotsToFire)
+				{
+					fireAngle(launchX, launchY, start, bulletSpeed);
+					start += incr;
+					i++;
+				}
+			}
+			
+			template.fire(parent, launchX, launchY, Angle, bulletSpeed);
 		}
 		else if (Method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
 		{
@@ -141,5 +164,16 @@ class FlxWeaponExt extends FlxWeapon
 		currentBullet.angle = FlxAngle.getPolarCoords(currentBullet.velocity.x, currentBullet.velocity.y).y;
 		
 		return true;
+	}
+	
+	public function fireAngle(launchX:Float, launchY:Float, Angle:Int, bulletSpeed:Int):Void
+	{
+		currentBullet = getFreeBullet();
+		
+		if (currentBullet != null)
+		{
+			currentBullet.fireFromAngle(launchX, launchY, Angle, bulletSpeed);
+			currentBullet.angle = Angle;
+		}
 	}
 }

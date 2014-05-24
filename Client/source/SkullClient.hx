@@ -8,6 +8,7 @@ import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.scaleModes.FillScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import haxe.io.BytesInput;
@@ -47,13 +48,13 @@ class SkullClient extends Client
 			{
 				var cam:FlxZoomCamera = new FlxZoomCamera(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height/2), 2);
 				FlxG.cameras.reset(cam);
-				FlxG.scaleMode = new FillScaleMode();
-				FlxG.cameras.bgColor = 0x00000000;
+				FlxG.scaleMode = new RatioScaleMode();
+				FlxG.cameras.bgColor = 0xff000000;
 			}
 			
 			else
 			{
-				FlxG.scaleMode = new FillScaleMode();
+				FlxG.scaleMode = new RatioScaleMode();
 				FlxG.cameras.bgColor = 0xff000000;
 			}
 			
@@ -511,7 +512,7 @@ class SkullClient extends Client
 			for (e in array)
 			{
 				var arr:Array<Dynamic> = cast e;
-				var em:FlxEmitterExt = new FlxEmitterExt();
+				var em:FlxEmitterAuto = new FlxEmitterAuto();
 				NReg.emitters.set(cast arr[0], em);
 				var acc:FlxPoint = cast arr[2];
 				em.acceleration.x = acc.x;
@@ -554,7 +555,7 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.EmitterNew.ID)
 		{
-			var e:FlxEmitterExt = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")),
+			var e:FlxEmitterAuto = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")),
 				Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
 			e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
 				cast(Msg.EmitterNew.data.get("quantity"), Int), cast(Msg.EmitterNew.data.get("rotationFrames"), Int),
@@ -570,7 +571,7 @@ class SkullClient extends Client
 		{
 			var ID:Int = Msg.EmitterDelete.data.get("id");
 			
-			var e:FlxEmitterExt = NReg.live_emitters.get(ID);
+			var e:FlxEmitterAuto = NReg.live_emitters.get(ID);
 			
 			if (e != null)
 			{
@@ -603,11 +604,13 @@ class SkullClient extends Client
 		{
 			Reg.state.player.grantedWeps = Unserializer.run(Msg.GrantGun.data.get("slot"));
 		}
+		
+		E = null;
 	}
 	
-	static public function cloneFromEmitter(E:FlxEmitterExt, X:Int, Y:Int):FlxEmitterExt
+	static public function cloneFromEmitter(E:FlxEmitterAuto, X:Int, Y:Int):FlxEmitterAuto
 	{
-		var e:FlxEmitterExt = new FlxEmitterExt(X, Y);
+		var e:FlxEmitterAuto = new FlxEmitterAuto(X, Y);
 		
 		e.bounce = E.bounce;
 		e.frequency = E.frequency;

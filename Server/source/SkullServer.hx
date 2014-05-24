@@ -258,5 +258,7 @@ class SkullServer extends Server
 				//t.announce(E.ID);
 			//}
 		}
+		
+		E = null;
 	}
 }

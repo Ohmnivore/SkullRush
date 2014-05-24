@@ -78,7 +78,7 @@ class PlayerBase extends FlxSprite
 		
 		#if CLIENT
 		gun = new FlxSprite(0, 0, Assets.getImg("assets/images/gun.png"));
-		gun.loadRotatedGraphic(Assets.getImg("assets/images/gun.png"), 180, -1, false, false);
+		gun.loadGraphic(Assets.getImg("assets/images/gun.png"));
 		Reg.state.over_players.add(gun);
 		guns_arr = [];
 		guns = new FlxGroup();
@@ -267,7 +267,7 @@ class PlayerBase extends FlxSprite
 			}
 			else
 			{
-				gun.angle = 360 - a;
+				gun.angle = a;
 				gun.facing = FlxObject.LEFT;
 				gun.flipY = true;
 				facing = FlxObject.LEFT;
@@ -330,8 +330,8 @@ class PlayerBase extends FlxSprite
 		header.y = y - header.height - 4;
 		header.x = x - (header.width - width) / 2;
 		
-		gun.x = x;
-		gun.y = y + 2;
+		gun.x = x + width/2 - gun.width / 2;
+		gun.y = y + height/2 - gun.height / 2 + 2;
 	}
 	
 	public function setGun(GunID:Int, Force:Bool = false):Void

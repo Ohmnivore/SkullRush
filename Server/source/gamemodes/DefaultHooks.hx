@@ -17,6 +17,7 @@ import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NTimer;
 import networkobj.NWeapon;
+import weapons.Eviscerator;
 import weapons.Launcher;
 import weapons.Splasher;
 
@@ -54,11 +55,12 @@ class DefaultHooks
 	{
 		NWeapon.addWeapon(new Launcher(), 1);
 		NWeapon.addWeapon(new Splasher(), 2);
+		NWeapon.addWeapon(new Eviscerator(), 3);
 	}
 	
 	static public function onSpawn(P:Player):Void
 	{
-		NWeapon.grantWeapon(P.ID, [1, 2]);
+		NWeapon.grantWeapon(P.ID, [1, 2, 3]);
 	}
 	
 	static public function announceFall(victim:Player):Void 
@@ -219,8 +221,8 @@ class DefaultHooks
 	
 	static public function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
 	{
-		var parent:Player = cast Bullet._weapon.parent;
-		parent.cannon.template.collide(Bullet, Other);
+		var wep_ext:FlxWeaponExt = cast Bullet._weapon;
+		wep_ext.template.collide(Bullet, Other);
 		
 		return;
 	}

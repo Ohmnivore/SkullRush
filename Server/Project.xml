@@ -25,7 +25,7 @@
 	
 	<haxelib name="openfl" version="1.4.0"/>
 	<haxelib name="lime" version="0.9.7"/>
-	<haxelib name="flixel" version="3.3.1"/>
+	<haxelib name="flixel" version="3.3.3"/>
 	<haxelib name="flixel-addons"/>
 	
 	<haxedef name="HXCPP_STACK_TRACE" />

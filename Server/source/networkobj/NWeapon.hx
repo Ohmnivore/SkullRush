@@ -33,6 +33,9 @@ class NWeapon
 	public var bulletGravity:FlxPoint;
 	public var bulletOffset:FlxPoint;
 	public var bulletInheritance:FlxPoint;
+	public var shotsToFire:Int = 1;
+	public var spread:Int = 0;
+	public var ignoreCollisions:Bool = false;
 	
 	public var EMITTER:Int;
 	public var TRAIL_EMITTER:Int;
@@ -63,11 +66,9 @@ class NWeapon
 			
 			var fw:FlxWeaponExt = w.makeWeapon(P);
 			fw.template = w;
-			//fw.makeImageBullet(4, Assets.images.get(w.bulletGraphic),
-				//Std.int(w.bulletOffset.x), Std.int(w.bulletOffset.y), false, 180);
 			Reg.state.bullets.add(fw.group);
 			fw.gun = new FlxSprite(0, 0, Assets.images.get(w.gunGraphic));
-			fw.gun.loadRotatedGraphic(Assets.getImg(w.gunGraphic), 180, -1, false, false);
+			fw.gun.loadGraphic(Assets.getImg(w.gunGraphic));
 			fw.gun.visible = false;
 			P.guns.add(fw.gun);
 			P.guns_arr.push(fw);
@@ -91,6 +92,16 @@ class NWeapon
 		
 	}
 	
+	public function fire(Parent:FlxSprite, LaunchX:Float, LaunchY:Float, Angle:Int, BulletSpeed:Int):Void
+	{
+		
+	}
+	
+	public function kill(Parent:FlxSprite, Bullet:FlxBullet):Void
+	{
+		
+	}
+	
 	public function makeWeapon(Parent:FlxSprite):FlxWeaponExt
 	{
 		var w:FlxWeaponExt = new FlxWeaponExt(name, Parent, FlxBulletExt);
@@ -100,6 +111,8 @@ class NWeapon
 		w.setBulletSpeed(bulletSpeed);
 		w.setFireRate(fireRate);
 		w.name = name;
+		w.shotsToFire = shotsToFire;
+		w.spread = spread;
 		
 		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
 				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);
@@ -127,7 +140,7 @@ class NWeapon
 		{
 			w.setBulletInheritance(bulletInheritance.x, bulletInheritance.y);
 		}
-		
+		//w.setBulletLifeSpan(1.5);
 		return w;
 	}
 	
@@ -182,6 +195,9 @@ class NWeapon
 			arr.push(w.EMITTER);
 			arr.push(w.TRAIL_EMITTER);
 			arr.push(w.TRAIL_EMITTER_GRAPHIC);
+			arr.push(w.shotsToFire);
+			arr.push(w.spread);
+			arr.push(w.ignoreCollisions);
 			
 			map.set(slot, arr);
 		}

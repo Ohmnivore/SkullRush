@@ -5,6 +5,8 @@ import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
 import entities.Spawn;
+import flash.display.BitmapData;
+import flash.display.StageQuality;
 import flixel.addons.tile.FlxRayCastTilemap;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitterExt;
@@ -13,14 +15,19 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.system.layer.Region;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
+import flixel.util.FlxBitmapUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxVector;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
@@ -322,7 +329,7 @@ class PlayState extends FlxState
 		
 		m.release();
 		
-		Reg.server.updateS();
+		//Reg.server.updateS();
 		}
 	}
 }

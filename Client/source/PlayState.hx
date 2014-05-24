@@ -266,7 +266,7 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
-		Reg.client.updateS();
+		//Reg.client.updateS();
 		
 		if (FlxG.keys.justPressed.ESCAPE && !Menu.OPENED)
 		{
@@ -453,14 +453,22 @@ class PlayState extends FlxState
 	
 	private function bulletCollide(Bullet:FlxBullet, Tilemap:Dynamic):Void
 	{
-		Bullet.kill();
+		var wep_ext:FlxWeaponExt = cast Bullet._weapon;
+		
+		if (!wep_ext.template.ignoreCollisions)
+			Bullet.kill();
 	}
 	
 	private function bulletCollidePl(Bullet:FlxBullet, Pl:Player):Void
 	{
-		if (Pl.ID != Bullet._weapon.parent.ID)
+		var wep_ext:FlxWeaponExt = cast Bullet._weapon;
+		
+		if (!wep_ext.template.ignoreCollisions)
 		{
-			Bullet.kill();
+			if (Pl.ID != Bullet._weapon.parent.ID)
+			{
+				Bullet.kill();
+			}
 		}
 	}
 }

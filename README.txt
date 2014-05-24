@@ -1,6 +1,5 @@
 TODO (engine):
 Weapon icons
-Multi-shot weapons
 KOTH
 Super crate box game mode
 Order scoreboard by score

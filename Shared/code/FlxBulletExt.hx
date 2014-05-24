@@ -5,6 +5,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
+import flixel.util.FlxTimer;
 import flixel.util.FlxVelocity;
 import networkobj.NReg;
 
@@ -20,7 +21,7 @@ import networkobj.NEmitter;
  */
 class FlxBulletExt extends FlxBullet
 {
-	public var emitter:FlxEmitterExt;
+	public var emitter:FlxEmitterAuto;
 	
 	public function new(Weapon:FlxWeapon, WeaponID:Int)
 	{
@@ -39,10 +40,15 @@ class FlxBulletExt extends FlxBullet
 	
 	override public function kill():Void 
 	{
+		var wep_ext:FlxWeaponExt = cast _weapon;
+		wep_ext.template.kill(_weapon.parent, this);
+		
 		super.kill();
 		
 		if (emitter != null)
+		{
 			emitter.on = false;
+		}
 	}
 	
 	override public function destroy():Void 
@@ -50,7 +56,9 @@ class FlxBulletExt extends FlxBullet
 		super.destroy();
 		
 		if (emitter != null)
+		{
 			emitter.on = false;
+		}
 	}
 	
 	override public function fireFromAngle(FromX:Float, FromY:Float, FireAngle:Int, Speed:Int):Void
@@ -75,14 +83,22 @@ class FlxBulletExt extends FlxBullet
 		
 		var ext_w:FlxWeaponExt = cast _weapon;
 		#if CLIENT
-		emitter = SkullClient.cloneFromEmitter(NReg.emitters.get(ext_w.template.TRAIL_EMITTER), 0, 0);
-		Reg.state.emitters.add(emitter);
-		emitter.makeParticles(Assets.images.get(ext_w.template.TRAIL_EMITTER_GRAPHIC), 40);
+		if (emitter == null)
+		{
+			emitter = SkullClient.cloneFromEmitter(NReg.emitters.get(ext_w.template.TRAIL_EMITTER), 0, 0);
+			Reg.state.emitters.add(emitter);
+			emitter.makeParticles(Assets.images.get(ext_w.template.TRAIL_EMITTER_GRAPHIC), 40);
+			emitter.autoDestroy = false;
+		}
 		emitter.start(false, emitter.life.min, emitter.frequency, 40, emitter.life.max - emitter.life.min);
 		#else
-		emitter = NEmitter.cloneFromEmitter(NEmitter.emitters.get(ext_w.template.TRAIL_EMITTER), 0, 0);
-		Reg.state.emitters.add(emitter);
-		emitter.makeParticles(Assets.images.get(ext_w.template.TRAIL_EMITTER_GRAPHIC), 40);
+		if (emitter == null)
+		{
+			emitter = NEmitter.cloneFromEmitter(NEmitter.emitters.get(ext_w.template.TRAIL_EMITTER), 0, 0);
+			Reg.state.emitters.add(emitter);
+			emitter.makeParticles(Assets.images.get(ext_w.template.TRAIL_EMITTER_GRAPHIC), 40);
+			emitter.autoDestroy = false;
+		}
 		emitter.start(false, emitter.life.min, emitter.frequency, 40, emitter.life.max - emitter.life.min);
 		#end
 		

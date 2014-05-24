@@ -107,26 +107,8 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					var cached:CachedGraphics = FlxG.bitmap.get(Assets.getImg("assets/images/gridtiles3.png"));
-					if (cached == null)
-						cached = FlxG.bitmap.add(Assets.getImg("assets/images/gridtiles3.png"));
-					// top left corner of the first tile
-					var startX:Int = 1;
-					var startY:Int = 1;
-					// tile size
-					var tileWidth:Int = 16;
-					var tileHeight:Int = 16;
-					// tile spacing
-					var spacingX:Int = 2;
-					var spacingY:Int = 2;
-					// end of tiles
-					var width:Int = Std.int(cached.bitmap.width - startX);
-					var height:Int = Std.int(cached.bitmap.height - startY);
-					// define region
-					var textureRegion:TextureRegion = new TextureRegion(cached, startX, startY, tileWidth, tileHeight, spacingX, spacingY, width, height);
-					// and finally load it into the tilemap
-					
-					map.loadMap(mapdata.arr, textureRegion, 16, 16, 0, 0, 1, 1);
+					map.loadMap(mapdata.arr, TestFeatures.artefactFix(Assets.getImg("assets/images/gridtiles2.png"), 16, 16),
+						16, 16, 0, 0, 1, 1);
 					makeTileCollisions(map);
 					State.maps.add(map);
 					map.setDirty(true);
