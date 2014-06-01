@@ -10,6 +10,7 @@ so the server can run truly run game-changing mods.
 At the moment the source code is a mess. I'll take a couple of weeks to clean all of it up.
 
 ### Links:
+* [Download](http://skullrush.elementfx.com/smf/index.php?topic=2.0)
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
 * [Server browser](http://ms.skullrush.elementfx.com/)
 
