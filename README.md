@@ -6,6 +6,7 @@ other games of the same type, I've found none to be particularly alike to the ex
 
 ### Links:
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
+* [Server browser](http://ms.skullrush.elementfx.com/)
 
 # Powered by:
 * [Haxe](http://haxe.org/)
@@ -60,4 +61,3 @@ other games of the same type, I've found none to be particularly alike to the ex
 * route through HTTPS
 * use params instead of url variables
 * CSS styling and background
-***
