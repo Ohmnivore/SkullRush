@@ -24,3 +24,8 @@ Masterserver:
 route through HTTPS
 use params instead of url variables
 CSS styling and background
+
+footstool jumping
+buff launcher
+weapons hud
+custom tiles

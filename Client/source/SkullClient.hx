@@ -589,14 +589,12 @@ class SkullClient extends Client
 			for (slot in map.keys())
 			{
 				NWeapon.addWeapon(new NWeapon(map.get(slot)), slot + 1);
-				//trace(slot + 1);
 			}
 			for (p in Reg.state.playermap.iterator())
 			{
 				p.guns_arr = [];
 				NWeapon.setUpWeapons(p);
 				p.setGun(1);
-				//trace(p);
 			}
 		}
 		

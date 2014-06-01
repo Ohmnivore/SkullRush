@@ -43,7 +43,8 @@ class NWeapon
 		bulletElasticity = Arr[0];
 		bulletLifeSpan = Arr[1];
 		bulletSpeed = Arr[2];
-		fireRate = Arr[3];
+		fireRate = Std.int(Arr[3] / 2);
+		//trace(fireRate);
 		name = Arr[4];
 		bulletGraphic = Arr[5];
 		gunGraphic = Arr[6];
@@ -105,6 +106,7 @@ class NWeapon
 		w.name = name;
 		w.shotsToFire = shotsToFire;
 		w.spread = spread;
+		w.setFireRate(fireRate);
 		
 		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
 				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);

@@ -228,7 +228,7 @@ class PlayState extends FlxState
 				
 				//if (pl.ID != player.ID)
 				//{
-				w.setFireRate(0);
+				//w.setFireRate(0);w
 				//}
 			}
 		}
@@ -440,12 +440,12 @@ class PlayState extends FlxState
 			
 			player.a = FlxAngle.angleBetweenMouse(player, true);
 			
-			if (framebuffer > 0.03)
-			{
+			//if (framebuffer > 0.03)
+			//{
 				Msg.PlayerInput.data.set("serialized", player.c_serialize());
 				Reg.client.send(Msg.PlayerInput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
 				//Reg.client.send(Msg.PlayerInput.ID, 0);
-			}
+			//}
 			
 			framebuffer += FlxG.elapsed;
 		}

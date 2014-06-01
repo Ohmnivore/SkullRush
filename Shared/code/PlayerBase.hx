@@ -13,6 +13,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRect;
 import flixel.util.FlxTimer;
+import flixel.util.FlxVelocity;
 import haxe.Serializer;
 import haxe.Unserializer;
 import networkobj.NWeapon;
@@ -53,6 +54,8 @@ class PlayerBase extends FlxSprite
 	
 	private var healthBar:FlxBar;
 	public var header:FlxTextExt;
+	
+	private var last_shot:FlxWeaponExt;
 	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
@@ -129,6 +132,8 @@ class PlayerBase extends FlxSprite
 		Reg.state.under_players.add(trail);
 		Reg.state.bullets.add(cannon.group);
 		Reg.state.players.add(this);
+		
+		last_shot = cannon;
 	}
 	
 	private function setChange(T:FlxTimer):Void
@@ -252,6 +257,8 @@ class PlayerBase extends FlxSprite
 	public function fire():Void
 	{
 		cannon.fireFromAngle(Std.int(a));
+		
+		last_shot = cannon;
 	}
 	
 	private function updateGuns():Void
@@ -389,6 +396,10 @@ class PlayerBase extends FlxSprite
 		_arr.push(current_weap);
 		//trace(current_weap);
 		
+		//trace(cannon.nextFire - FlxG.game.ticks);
+		_arr.push(cannon.nextFire - FlxG.game.ticks);
+		_arr.push(last_shot.template.slot - 1);
+		
 		return Serializer.run(_arr);
 	}
 	
@@ -396,7 +407,7 @@ class PlayerBase extends FlxSprite
 	{
 		_arr = Arr;
 		
-		if (_arr.length == 12) //used to be 7
+		if (_arr.length == 14) //used to be 7
 		{
 			x = _arr[1];
 			y = _arr[2];
@@ -417,10 +428,28 @@ class PlayerBase extends FlxSprite
 				setGun(_arr[11], true);
 			//}
 			
-			if (shoot)
-			{
-				fire();
-			}
+			var ind:Int = _arr[13];
+			
+			//if (guns_arr)
+			//{
+				var shot_gun:FlxWeaponExt = guns_arr[ind];
+				if (shot_gun != null)
+				{
+					var diff:Int = Std.int(_arr[12] / 2);
+					diff -= Std.int(shot_gun.fireRate / 2);
+					if (diff > 0)
+					{
+						if (!(shot_gun.fireRate > 0 && FlxG.game.ticks < shot_gun.nextFire))
+						{
+							fire();
+						}
+						else
+						{
+							shoot = false;
+						}
+					}
+				}
+			//}
 		}
 	}
 	

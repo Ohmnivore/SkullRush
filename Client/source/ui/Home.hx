@@ -5,7 +5,7 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
-import flixel.system.scaleModes.FillScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
 
 /**
  * ...
@@ -21,7 +21,7 @@ class Home extends FlxUIState
 	
 	override public function create() 
 	{
-		FlxG.scaleMode = new FillScaleMode();
+		FlxG.scaleMode = new RatioScaleMode();
 		
 		Util.initXML(this);
 		super.create();

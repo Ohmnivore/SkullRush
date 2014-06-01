@@ -39,6 +39,7 @@ import networkobj.NEmitter;
 import networkobj.NReg;
 import networkobj.NTimer;
 import networkobj.NWeapon;
+//import pgr.gconsole.GC;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -122,6 +123,11 @@ class PlayState extends FlxState
 		Thread.create(thread);
 		
 		Admin.hookCommands();
+		
+		//GC.init();
+		//GC.log("This text will be logged.");
+		//GC.registerFunction(this.testFunction, "functionAlias");
+		//GC.registerObject(this, "objectAlias");
 	}
 	
 	public function sendChatMsg():Void
@@ -242,6 +248,7 @@ class PlayState extends FlxState
 	 */
 	override public function update():Void
 	{
+		//GC.beginProfile("SampleName");
 		if (!Reg.shutdown)
 		{
 		Masterserver.updateHeartBeat(FlxG.elapsed);
@@ -302,8 +309,8 @@ class PlayState extends FlxState
 			
 			Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
 			
-			if (framebuffer > 0.03)
-			{
+			//if (framebuffer > 0.03)
+			//{
 				for (p in Reg.server.playermap.iterator())
 				{
 					//Reg.server.sendMsg(p.ID,
@@ -317,7 +324,7 @@ class PlayState extends FlxState
 				{
 					s.sendUpdate();
 				}
-			}
+			//}
 		}
 		
 		catch (e:Dynamic)
@@ -331,5 +338,6 @@ class PlayState extends FlxState
 		
 		//Reg.server.updateS();
 		}
+		//GC.endProfile("SampleName");
 	}
 }

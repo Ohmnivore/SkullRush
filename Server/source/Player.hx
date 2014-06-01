@@ -30,6 +30,7 @@ class Player extends PlayerBase
 	{
 		super(Id, Name, X, Y);
 		setGun(1);
+		last_shot = cannon;
 	}
 	
 	override public function draw():Void
