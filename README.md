@@ -13,6 +13,8 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
 * [Server browser](http://ms.skullrush.elementfx.com/)
 
+![alt text](https://github.com/Ohmnivore/SkullRush/raw/master/SCREENSHOT.png "")
+
 # Powered by:
 * [Haxe](http://haxe.org/)
 * [HaxeNet](https://github.com/Ohmnivore/HaxeNet)
