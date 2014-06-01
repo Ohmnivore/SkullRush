@@ -3,6 +3,11 @@ SkullRush is an open-source (GPLv3) 2D online multiplayer shooter. Think of it a
 
 This is my attempt at making the game I have been envisioning for a long time. While there exist
 other games of the same type, I've found none to be particularly alike to the experience I wanted.
+Most importantly, SkullRush can be extensively modded (all assets can be replaced, new game modes can
+be made, custom maps, etc). The client is like a canvas. Most of what it renders is controlled by the server,
+so the server can run truly run game-changing mods.
+
+At the moment the source code is a mess. I'll take a couple of weeks to clean all of it up.
 
 ### Links:
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
