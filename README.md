@@ -1,5 +1,12 @@
 ***
 # SkullRush
+SkullRush is an open-source (GPLv3) 2D online multiplayer shooter. Think of it as Quake meets Mario.
+
+This is my attempt at making the game I have been envisioning for a long time. While there exist
+other games of the same type, I've found none to be particularly alike to the experience I wanted.
+
+### Links:
+* [Forums](http://skullrush.elementfx.com/smf/index.php) + Guides and tutorials
 
 
 # TODO:
