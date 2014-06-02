@@ -8,6 +8,7 @@ Most importantly, SkullRush can be extensively modded. In short, the client acts
 At the moment the source code is a mess. I'll take a couple of weeks to clean all of it up.
 
 ### Links:
+* [Website](http://ohmnivore.github.io/)
 * [Download](http://skullrush.elementfx.com/smf/index.php?topic=2.0)
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
 * [Server browser](http://ms.skullrush.elementfx.com/)
