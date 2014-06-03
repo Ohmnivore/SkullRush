@@ -25,6 +25,7 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 * [openfl](http://www.openfl.org/)
 * [msignal](https://github.com/massiveinteractive/msignal)
 * [mloader](https://github.com/massiveinteractive/mloader)
+* [crashdumper](https://github.com/larsiusprime/crashdumper)
 * [FlashDevelop](http://www.flashdevelop.org/)
 * [Ogmo Editor](http://www.ogmoeditor.com/)
 * [TileSetter](https://github.com/Ohmnivore/TileSetter)

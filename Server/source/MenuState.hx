@@ -1,5 +1,7 @@
 package;
 
+import crashdumper.CrashDumper;
+import crashdumper.SessionData;
 import enet.Message;
 import flixel.addons.display.FlxZoomCamera;
 import flixel.FlxG;
@@ -41,6 +43,16 @@ class MenuState extends FlxState
 		
 		if (!init)
 		{
+			//CrashDumper stuff:
+			if (Assets.config.get("crashdump") == "true")
+			{
+				var unique_id:String = SessionData.generateID("skullrush_server_");
+				var crashDumper = new CrashDumper(unique_id);
+				
+				var configFile:String = File.getContent("config.txt");
+				crashDumper.session.files.set("config.txt", configFile);
+			}
+			
 			//Setup zoom camera
 			if (FlxG.camera.zoom > 1)
 			{

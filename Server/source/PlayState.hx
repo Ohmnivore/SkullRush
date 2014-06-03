@@ -3,6 +3,8 @@ package;
 import cpp.vm.Lock;
 import cpp.vm.Mutex;
 import cpp.vm.Thread;
+import crashdumper.CrashDumper;
+import crashdumper.SessionData;
 import enet.ENet;
 import entities.Spawn;
 import flash.display.BitmapData;
@@ -31,6 +33,7 @@ import flixel.util.loaders.TextureRegion;
 import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
+import sys.io.File;
 //import gamemodes.CTF;
 import gevents.ConfigEvent;
 import haxe.Serializer;
@@ -123,11 +126,6 @@ class PlayState extends FlxState
 		Thread.create(thread);
 		
 		Admin.hookCommands();
-		
-		//GC.init();
-		//GC.log("This text will be logged.");
-		//GC.registerFunction(this.testFunction, "functionAlias");
-		//GC.registerObject(this, "objectAlias");
 	}
 	
 	public function sendChatMsg():Void

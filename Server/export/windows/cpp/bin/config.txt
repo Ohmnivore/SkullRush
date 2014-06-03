@@ -1,7 +1,9 @@
-version=0.1.4
+version=0.1.5
 
 ############################
 #basic variables
+
+crashdump=true
 
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json

@@ -14,7 +14,26 @@ import flixel.util.FlxSpriteUtil;
  */
 class ChatBox extends FlxSpriteGroup
 {
-	public var opened:Bool;
+	public var opened(get, set):Bool;
+	private var _opened:Bool;
+	
+	private function get_opened():Bool
+	{
+		return _opened;
+	}
+
+	private function set_opened(Value:Bool):Bool
+	{ 
+		if (Value)
+		{
+			open();
+		}
+		else
+		{
+			close();
+		}
+		return _opened;
+	} 
 	
 	public var text:FlxInputText;
 	public var background:FlxSprite;
@@ -29,7 +48,7 @@ class ChatBox extends FlxSpriteGroup
 		super(0, 0, 6);
 		scrollFactor.set();
 		
-		opened = true;
+		_opened = true;
 		
 		text = new FlxInputText(0, 0, FlxG.width, null, 8);
 		text.callback = _call;
@@ -113,6 +132,6 @@ class ChatBox extends FlxSpriteGroup
 			y -= text.height * 2;
 		}
 		
-		opened = !opened;
+		_opened = !_opened;
 	}
 }

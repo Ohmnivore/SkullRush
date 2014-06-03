@@ -11,11 +11,11 @@ import haxe.Unserializer;
 class Announcer extends FlxGroup
 {
 
-	public function new() 
+	public function new()
 	{
 		super();
 	}
-	
+
 	public function parseMsg(Text:String, MarkupString:String):Void
 	{
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, Text, 12, false);
@@ -24,7 +24,7 @@ class Announcer extends FlxGroup
 		
 		addText(t);
 	}
-	
+
 	public function addMsg(Text:String, MarkupArr:Array<FlxMarkup>):Void
 	{
 		var t:FlxTextExt = new FlxTextExt(0, 0, FlxG.width, Text, 12, false, MarkupArr);
@@ -36,7 +36,7 @@ class Announcer extends FlxGroup
 		
 		addText(t);
 	}
-	
+
 	public function addText(Text:FlxText):Void
 	{
 		Text.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);

@@ -1,5 +1,6 @@
 package;
 
+import crashdumper.CrashDumper;
 import enet.Message;
 import flixel.addons.display.FlxZoomCamera;
 import flixel.FlxG;
@@ -14,8 +15,10 @@ import enet.ENet;
 import enet.ENetEvent;
 import flixel.util.FlxTimer;
 import networkobj.NReg;
+import sys.io.File;
 import ui.Home;
 import ui.Settings;
+import crashdumper.SessionData;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -30,6 +33,16 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		//CrashDumper stuff:
+		if (Assets.config.get("crashdump") == "true")
+		{
+			var unique_id:String = SessionData.generateID("skullrush_client_");
+			var crashDumper = new CrashDumper(unique_id);
+			
+			var configFile:String = File.getContent("config.txt");
+			crashDumper.session.files.set("config.txt", configFile);
+		}
+		
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		// Show the mouse (in case it hasn't been disabled)
