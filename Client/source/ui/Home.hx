@@ -18,6 +18,7 @@ class Home extends FlxUIState
 	public var connect:FlxUIButton;
 	public var settings:FlxUIButton;
 	public var auto_launch:FlxUIButton;
+	public var open_update:FlxUIButton;
 	
 	override public function create() 
 	{
@@ -35,6 +36,7 @@ class Home extends FlxUIState
 		connect = new FlxUIButton(15, 90, "Connect to IP", directConnect);
 		settings = new FlxUIButton(15, 130, "Settings", playerSettings);
 		auto_launch = new FlxUIButton(15, 170, "Auto launch", autoLaunch);
+		open_update = new FlxUIButton(15, 210, "Update", openUpdate);
 		
 		browse_p.loadGraphicSlice9(null, 120, 30, null);
 		browse_p.autoCenterLabel();
@@ -43,12 +45,14 @@ class Home extends FlxUIState
 		connect.loadGraphicSlice9(null, 120, 30, null);
 		settings.loadGraphicSlice9(null, 120, 30, null);
 		auto_launch.loadGraphicSlice9(null, 120, 30, null);
+		open_update.loadGraphicSlice9(null, 120, 30, null);
 		
 		add(browse_p);
 		add(browse_l);
 		add(connect);
 		add(settings);
 		add(auto_launch);
+		add(open_update);
 	}
 	
 	public function browsePublic():Void
@@ -74,6 +78,11 @@ class Home extends FlxUIState
 	public function autoLaunch():Void
 	{
 		FlxG.switchState(new PlayState());
+	}
+	
+	public function openUpdate():Void
+	{
+		FlxG.switchState(new Update());
 	}
 	
 	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {

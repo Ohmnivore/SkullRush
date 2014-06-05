@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project version="2">
   <!-- Output SWF options -->
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="application.xml" />
+    <movie path="bin" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
-    <movie version="3" />
+    <movie version="1" />
     <movie minorVersion="0" />
-    <movie platform="NME" />
+    <movie platform="C++" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK=";3;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -22,25 +21,22 @@
   <build>
     <option directives="" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="Main" />
-    <option enabledebug="True" />
+    <option enabledebug="False" />
     <option additional="" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="nme" />
+    <!-- example: <library name="..." /> -->
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
     <compile path="src\Main.hx" />
   </compileTargets>
-  <!-- Assets to embed into the output SWF -->
-  <library>
-    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
-  </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
@@ -50,7 +46,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="" />
+    <option testMovieCommand="run.bat" />
   </options>
   <!-- Plugin storage -->
   <storage />

@@ -1,129 +1,22 @@
 package ;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.Lib;
-import haxe.io.Bytes;
-import haxe.io.BytesData;
-import haxe.io.BytesInput;
-import haxe.io.Eof;
+import cpp.Lib;
 import haxe.io.Path;
-import haxe.Json;
-import haxe.zip.Entry;
-import haxe.zip.Reader;
-import haxe.zip.Uncompress;
-import openfl.events.ProgressEvent;
-import openfl.net.URLLoader;
-import openfl.net.URLLoaderDataFormat;
-import openfl.net.URLRequest;
-import openfl.net.URLRequestMethod;
-import openfl.text.TextField;
-import openfl.utils.ByteArray;
-import sys.FileSystem;
-import sys.io.File;
-import sys.io.FileOutput;
 import sys.io.Process;
-import openfl.events.IOErrorEvent;
-import openfl.events.SecurityErrorEvent;
-import openfl.errors.IllegalOperationError;
-//import openfl.net.URLStream;
+import haxe.io.Eof;
+import sys.FileSystem;
 
 /**
  * ...
  * @author Ohmnivore
  */
 
-class Main extends Sprite 
+class Main 
 {
-	var inited:Bool;
-
-	/* ENTRY POINT */
 	
-	function resize(e) 
+	static function main() 
 	{
-		if (!inited) init();
-		// else (resize or orientation change)
-	}
-	
-	function init() 
-	{
-		if (inited) return;
-		inited = true;
-
-		// (your code here)
-		
-		// Stage:
-		// stage.stageWidth x stage.stageHeight @ stage.dpiScale
-		
-		// Assets:
-		// nme.Assets.getBitmapData("img/assetname.jpg");
-	}
-
-	/* SETUP */
-
-	public function new() 
-	{
-		super();	
-		addEventListener(Event.ADDED_TO_STAGE, added);
-	}
-
-	function added(e) 
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, added);
-		stage.addEventListener(Event.RESIZE, resize);
-		#if ios
-		haxe.Timer.delay(init, 100); // iOS 6
-		#else
-		init();
-		#end
-		
-		downloadZip();
-		//unzip();
-	}
-	
-	public static function myTrace(S:Dynamic):Void
-	{
-		cpp.Lib.println(S);
-	}
-	
-	static function getURL():String
-	{
-		var path:String = Path.join([Path.directory(Sys.executablePath()), "UpdaterURL.txt"]);
-		return File.getContent(path);
-	}
-	
-	public static function downloadZip():Void
-	{
-		var pageLoader:URLLoader = new URLLoader(); //make a loader that will load a page
-		var pageRequest:URLRequest = new URLRequest(getURL()); //make a request with a url to page
-		pageRequest.method = URLRequestMethod.GET; //set request's html request method to GET
-		
-		pageLoader.addEventListener(Event.COMPLETE, onPageLoaded); //listen for page load
-		pageLoader.load(pageRequest); //actually load the page
-		myTrace("Started version file download");
-	}
-	
-	static function onPageLoaded(e:Event):Void
-	{
-		var p:URLLoader = cast e.target;
-		
-		myTrace("Finished version file download");
-		interpretJSON(cast p.data);
-	}
-	
-	static function interpretJSON(S:String):Void
-	{
-		var config:String = File.getContent(Path.join([Path.directory(Sys.executablePath()), "config.txt"]));
-		var begin:Int = config.indexOf("version=") + 8;
-		var end:Int = config.indexOf("\n", begin);
-		
-		var info:Dynamic = Json.parse(S);
-		
-		if (isNewer(cast Reflect.field(info, "version"), config.substring(begin, end)))
-		{
-			myTrace("Started new version download");
-			downloadFile(cast Reflect.field(info, "url"));
-		}
+		downloadFile(Sys.args()[0]);
 	}
 	
 	static function downloadFile(URL:String):Void
@@ -144,7 +37,7 @@ class Main extends Sprite
 		{
 			try 
 			{ 
-				myTrace(p.stdout.readLine());
+				Lib.println(p.stdout.readLine());
 			}
 			catch(e:Eof)
 			{
@@ -152,50 +45,9 @@ class Main extends Sprite
 			}
 		}
 		
-		myTrace("unzipping");
+		Lib.println("Began unzipping.");
 		unzip();
-		//new Process(Path.join([Path.directory(Sys.executablePath()), "wget.exe"]), []);
-		
-		//var pageLoader:URLLoader = new URLLoader(); //make a loader that will load a page
-		//pageLoader.dataFormat = URLLoaderDataFormat.BINARY;
-		//var pageRequest:URLRequest = new URLRequest(URL); //make a request with a url to page
-		
-		//pageLoader.addEventListener(Event.COMPLETE, onFileLoaded); //listen for page load
-		//pageLoader.addEventListener(ProgressEvent.PROGRESS, onFileProgress); //listen for page load
-		//pageLoader.addEventListener(IOErrorEvent.IO_ERROR, onError);
-		//pageLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
-		//pageLoader.load(pageRequest); //actually load the page
-		//pageLoader.dataFormat = URLLoaderDataFormat.BINARY;
-	}
-	
-	static function onError(e:Dynamic)
-	{
-		myTrace(e);
-	}
-	
-	static function onFileProgress(e:ProgressEvent):Void
-	{
-		var percentLoaded:Float = e.bytesLoaded / e.bytesTotal;
-		percentLoaded = Math.round(percentLoaded * 100);
-		myTrace(percentLoaded);
-	}
-	
-	static function onFileLoaded(e:Event):Void
-	{
-		var p:URLLoader = cast e.target;
-		
-		myTrace("Finished new version download");
-		myTrace(p.bytesLoaded);
-		myTrace(p.bytesTotal);
-	}
-	
-	static function isNewer(Old:String, New:String):Bool
-	{
-		var old_v:Version = new Version(Old);
-		
-		var new_v:Version = new Version(New);
-		
-		return new_v.isMoreRecent(old_v);
+		Sys.exit(0);
 	}
 	
 	public static function unzip():Void
@@ -212,7 +64,7 @@ class Main extends Sprite
 		{
 			try 
 			{ 
-				myTrace(p.stdout.readLine());
+				Lib.println(p.stdout.readLine());
 			}
 			catch(e:Eof)
 			{
@@ -221,14 +73,10 @@ class Main extends Sprite
 		}
 		
 		FileSystem.deleteFile(Path.join([Path.directory(Sys.executablePath()), "SkullClient.zip"]));
-		myTrace("done");
-	}
-	
-	public static function main() 
-	{
-		// static entry point
-		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
-		Lib.current.addChild(new Main());
+		
+		Lib.println("");
+		Lib.println("Done updating!");
+		
+		new Process("SkullRush.exe", []);
 	}
 }
