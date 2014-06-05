@@ -29,6 +29,8 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 * [FlashDevelop](http://www.flashdevelop.org/)
 * [Ogmo Editor](http://www.ogmoeditor.com/)
 * [TileSetter](https://github.com/Ohmnivore/TileSetter)
+* [aria2](https://github.com/tatsuhiro-t/aria2)
+* [FBZip](http://www.freebyte.com/fbzip/)
 
 
 # TODO:
