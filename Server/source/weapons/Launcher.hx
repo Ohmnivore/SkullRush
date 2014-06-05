@@ -34,7 +34,7 @@ class Launcher extends NWeapon
 		bulletAcceleration = new FlxPoint(300, 300);
 		bulletMaxSpeed = new FlxPoint(400, 400);
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto();
+		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 17, 0.9, 360, 25, 0);
 		emit.setAlpha(1, 1, 0, 0);
@@ -45,7 +45,7 @@ class Launcher extends NWeapon
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 		
-		var t_emit:FlxEmitterAuto = new FlxEmitterAuto();
+		var t_emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
 		t_emit.setRotation(0, 0);
 		t_emit.setMotion(0, 17, 0.9, 360, 25, 0);
 		t_emit.setAlpha(1, 1, 0, 0);

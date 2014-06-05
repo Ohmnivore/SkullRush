@@ -117,7 +117,7 @@ class NEmitter
 	
 	static public function cloneFromEmitter(E:FlxEmitterAuto, X:Int, Y:Int):FlxEmitterAuto
 	{
-		var e:FlxEmitterAuto = new FlxEmitterAuto(X, Y);
+		var e:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters, X, Y);
 		
 		e.bounce = E.bounce;
 		e.frequency = E.frequency;

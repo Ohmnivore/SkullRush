@@ -512,7 +512,7 @@ class SkullClient extends Client
 			for (e in array)
 			{
 				var arr:Array<Dynamic> = cast e;
-				var em:FlxEmitterAuto = new FlxEmitterAuto();
+				var em:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
 				NReg.emitters.set(cast arr[0], em);
 				var acc:FlxPoint = cast arr[2];
 				em.acceleration.x = acc.x;
@@ -608,7 +608,7 @@ class SkullClient extends Client
 	
 	static public function cloneFromEmitter(E:FlxEmitterAuto, X:Int, Y:Int):FlxEmitterAuto
 	{
-		var e:FlxEmitterAuto = new FlxEmitterAuto(X, Y);
+		var e:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters, X, Y);
 		
 		e.bounce = E.bounce;
 		e.frequency = E.frequency;
