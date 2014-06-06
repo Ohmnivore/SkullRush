@@ -1,4 +1,4 @@
-package ;
+package ext;
 import flixel.addons.weapon.FlxBullet;
 import flixel.addons.weapon.FlxWeapon;
 import flixel.effects.particles.FlxEmitter;
@@ -8,12 +8,6 @@ import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
 import flixel.util.FlxVelocity;
 import networkobj.NReg;
-
-#if CLIENT
-
-#else
-import networkobj.NEmitter;
-#end
 
 /**
  * ...

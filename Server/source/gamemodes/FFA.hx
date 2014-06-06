@@ -76,11 +76,6 @@ class FFA extends BaseGamemode
 	{
 		super.update(elapsed);
 		
-		//if (FlxG.keys.justPressed.H)
-		//{
-			//NEmitter.stopEmitter(emit);
-		//}
-		
 		DefaultHooks.update(elapsed);
 		
 		if (time.count == 0 && !finished)
@@ -134,7 +129,6 @@ class FFA extends BaseGamemode
 	
 	public function changeMap(T:FlxTimer):Void
 	{
-		//FlxG.switchState(new PlayState());
 		Admin.nextMap();
 	}
 	

@@ -47,6 +47,8 @@
 	
 	<!--------------------------------HAXEDEFINES----------------------------------->
 	
+	<haxedef name="SERVER" />
+	
 	<haxedef name="HXCPP_STACK_TRACE" />
 	<haxedef name="HXCPP_STACK_LINE" />
 	<haxedef name="HXCPP_DEBUG_LINK" />

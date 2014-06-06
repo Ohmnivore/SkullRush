@@ -8,6 +8,7 @@ import flixel.util.FlxTimer;
 import haxe.Unserializer;
 import networkobj.NEmitter;
 import networkobj.NWeapon;
+import ext.FlxWeaponExt;
 
 /**
  * ...

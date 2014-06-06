@@ -13,14 +13,14 @@ import networkobj.NScoreManager;
 class BaseGamemode extends Sprite
 {
 	
-	public static inline var LAVA:Int = -1;
-	public static inline var FALL:Int = -2;
-	public static inline var LASER:Int = -3;
+	public static inline var ENV_LAVA:Int = -1;
+	public static inline var ENV_FALL:Int = -2;
+	public static inline var ENV_LASER:Int = -3;
 	
-	public static inline var DEFAULT:Int = 0;
-	public static inline var ENVIRONMENT:Int = 1;
-	public static inline var JUMPKILL:Int = 2;
-	public static inline var BULLET:Int = 3;
+	public static inline var TYPE_DEFAULT:Int = 0;
+	public static inline var TYPE_ENVIRONMENT:Int = 1;
+	public static inline var TYPE_JUMPKILL:Int = 2;
+	public static inline var TYPE_BULLET:Int = 3;
 	
 	public static var scores:NScoreManager;
 	public var teams:Array<Team>;

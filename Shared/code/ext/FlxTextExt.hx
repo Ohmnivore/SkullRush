@@ -1,4 +1,4 @@
-package ;
+package ext;
 import flash.text.TextFormat;
 import flixel.text.FlxText;
 import flixel.FlxG;

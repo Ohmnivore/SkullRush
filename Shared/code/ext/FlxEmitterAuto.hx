@@ -1,4 +1,4 @@
-package ;
+package ext;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.group.FlxGroup;
 

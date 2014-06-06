@@ -2,10 +2,12 @@ package gamemodes;
 
 import enet.ENet;
 import entities.Flag;
+import entities.HealthPack;
 import entities.Holder;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -14,12 +16,14 @@ import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
 import networkobj.NCounter;
+import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NScoreboard;
 import networkobj.NSprite;
 import networkobj.NTemplate;
 import networkobj.NTimer;
 import networkobj.NWeapon;
+import entities.Holder;
 
 /**
  * ...
@@ -27,8 +31,6 @@ import networkobj.NWeapon;
  */
 class CTF extends BaseGamemode
 {
-	public var flags:FlxGroup;
-	public var holders:FlxGroup;
 	public var greenCounter:NCounter;
 	public var blueCounter:NCounter;
 	public var timeLeft:NTimer;
@@ -48,9 +50,6 @@ class CTF extends BaseGamemode
 		DefaultHooks.hookEvents(this);
 		
 		Assets.loadConfig();
-		
-		flags = new FlxGroup();
-		holders = new FlxGroup();
 		
 		greenCounter = new NCounter("Blue captures", 0xff0086BF, 5, 5, 0, true);
 		greenCounter.setCount(0);
@@ -90,30 +89,65 @@ class CTF extends BaseGamemode
 		
 		DefaultHooks.update(elapsed);
 		
-		Flag.updateFlags();
-		
-		FlxG.overlap(Reg.state.players, flags, Flag.collideFlag);
-		FlxG.overlap(Reg.state.players, holders, Holder.collideStand);
-		
-		for (f in flags.members)
-		{
-			var fl:Flag = cast NReg.sprites.get(f.ID);
-			
-			if (fl.s.y >= Reg.state.collidemap.y + Reg.state.collidemap.height + FlxG.height / 2)
-			{
-				Flag.returnFlag(null, fl);
-			}
-		}
-		
 		if (Holder.captures[0] != greenCounter.count)
 		{
 			greenCounter.setCount(Holder.captures[0]);
+			checkCaps(0);
 		}
 		
 		if (Holder.captures[1] != blueCounter.count)
 		{
 			blueCounter.setCount(Holder.captures[1]);
+			checkCaps(1);
 		}
+		
+		if (timeLeft.count == 0)
+		{
+			if (Holder.captures[0] > Holder.captures[1])
+			{
+				endGame(0);
+			}
+			if (Holder.captures[1] > Holder.captures[0])
+			{
+				endGame(1);
+			}
+			if (Holder.captures[1] == Holder.captures[0])
+			{
+				endGame(-1);
+			}
+		}
+	}
+	
+	public function checkCaps(FlagTeam:Int):Void
+	{
+		var caps:Int = Holder.captures[FlagTeam];
+		
+		if (caps >= maxcaps)
+		{
+			endGame(FlagTeam);
+		}
+	}
+	
+	public function endGame(WinnerTeam:Int):Void
+	{
+		var winmsg:NLabel = new NLabel(120, 5, 0xffffffff, 0, true);
+		
+		if (WinnerTeam >= 0)
+		{
+			var team:Team = teams[WinnerTeam];
+			winmsg.setLabel(team.name + " team wins!", team.color);
+		}
+		else
+		{
+			winmsg.setLabel("Draw match!");
+		}
+		
+		new FlxTimer(10, changeMap);
+	}
+	
+	public function changeMap(T:FlxTimer):Void
+	{
+		Admin.nextMap();
 	}
 	
 	override public function onHurt(e:HurtEvent):Void

@@ -3,7 +3,7 @@ package networkobj;
 import flixel.addons.weapon.FlxBullet;
 import flixel.FlxG;
 import flixel.util.FlxRect;
-import FlxWeaponExt;
+import ext.FlxWeaponExt;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import enet.ENet;

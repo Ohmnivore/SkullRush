@@ -15,6 +15,8 @@ import haxe.io.BytesInput;
 import networkobj.NReg;
 import sys.io.File;
 import hxudp.UdpSocket;
+import ext.FlxMarkup;
+import ext.FlxTextExt;
 
 /**
  * ...

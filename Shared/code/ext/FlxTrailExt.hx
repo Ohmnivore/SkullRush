@@ -1,4 +1,4 @@
-package ;
+package ext;
 import flixel.addons.effects.FlxTrail;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;

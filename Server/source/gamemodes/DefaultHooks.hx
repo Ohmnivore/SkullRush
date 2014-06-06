@@ -20,6 +20,9 @@ import networkobj.NWeapon;
 import weapons.Eviscerator;
 import weapons.Launcher;
 import weapons.Splasher;
+import ext.FlxMarkup;
+import ext.FlxWeaponExt;
+import ext.FlxTextExt;
 
 import gevents.DeathEvent;
 import gevents.HurtEvent;
@@ -93,11 +96,11 @@ class DefaultHooks
 			if (p.y >= Reg.state.collidemap.y + Reg.state.collidemap.height + FlxG.width / 2 && p.alive)
 			{
 				var info:HurtInfo = new HurtInfo();
-				info.attacker = BaseGamemode.FALL;
+				info.attacker = BaseGamemode.ENV_FALL;
 				info.victim = p.ID;
 				info.dmg = 100;
 				info.dmgsource = p.getMidpoint();
-				info.type = BaseGamemode.ENVIRONMENT;
+				info.type = BaseGamemode.TYPE_ENVIRONMENT;
 				
 				Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
 			}
@@ -157,7 +160,7 @@ class DefaultHooks
 					info.dmg = 100;
 				}
 			}
-			info.type = BaseGamemode.JUMPKILL;
+			info.type = BaseGamemode.TYPE_JUMPKILL;
 			info.dmgsource = winner.getMidpoint();
 			
 			Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
@@ -189,16 +192,16 @@ class DefaultHooks
 		var t:Int = info.type;
 		var player:Player = Reg.server.playermap.get(info.victim);
 		
-		if (t == BaseGamemode.ENVIRONMENT)
+		if (t == BaseGamemode.TYPE_ENVIRONMENT)
 		{
 			DefaultHooks.respawn(player);
 			
 			var k:Int = info.attacker;
 			
-			if (k == BaseGamemode.FALL) DefaultHooks.announceFall(player);
+			if (k == BaseGamemode.ENV_FALL) DefaultHooks.announceFall(player);
 		}
 		
-		if (t == BaseGamemode.BULLET)
+		if (t == BaseGamemode.TYPE_BULLET)
 		{
 			var killer:Player = Reg.server.playermap.get(info.attacker);
 			var victim:Player = Reg.server.playermap.get(info.victim);
@@ -207,7 +210,7 @@ class DefaultHooks
 			DefaultHooks.announceGun(killer, victim, info.weapon.verb);
 		}
 		
-		if (t == BaseGamemode.JUMPKILL)
+		if (t == BaseGamemode.TYPE_JUMPKILL)
 		{
 			var killer:Player = Reg.server.playermap.get(info.attacker);
 			var victim:Player = Reg.server.playermap.get(info.victim);

@@ -1,5 +1,7 @@
 package ;
 import networkobj.NEmitter;
+import ext.FlxBulletExtBase;
+import ext.FlxWeaponExt;
 
 /**
  * ...

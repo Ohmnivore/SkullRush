@@ -3,6 +3,8 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import haxe.Unserializer;
+import ext.FlxTextExt;
+import ext.FlxMarkup;
 
 /**
  * ...

@@ -11,16 +11,16 @@ import flixel.system.layer.Region;
  * ...
  * @author Ohmnivore
  */
-class TestFeatures
+class ArtifactFix
 {
 
 	static public function artefactFix(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int):TextureRegion 
 	{
 		var cached:CachedGraphics = FlxG.bitmap.add(Graphic, false);
 		
-		var cont:BitmapData = TestFeatures.returnContainer(cached.bitmap.width, cached.bitmap.height, FrameWidth, FrameHeight);
-		TestFeatures.placeTiles(cached.bitmap, cont, FrameWidth, FrameHeight);
-		TestFeatures.placeSafePixelColumn(cached.bitmap, cont, FrameWidth, FrameHeight);
+		var cont:BitmapData = ArtifactFix.returnContainer(cached.bitmap.width, cached.bitmap.height, FrameWidth, FrameHeight);
+		ArtifactFix.placeTiles(cached.bitmap, cont, FrameWidth, FrameHeight);
+		ArtifactFix.placeSafePixelColumn(cached.bitmap, cont, FrameWidth, FrameHeight);
 		
 		var newcached:CachedGraphics = FlxG.bitmap.add(cont, true);
 		

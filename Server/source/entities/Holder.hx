@@ -1,13 +1,15 @@
 package entities;
+import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
+import flixel.util.FlxTimer;
 import gamemodes.CTF;
 import haxe.xml.Fast;
-import networkobj.NCounter;
 import networkobj.NFlxSprite;
 import networkobj.NReg;
 import networkobj.NSprite;
 import networkobj.NTemplate;
+import flixel.FlxSprite;
+import ext.FlxMarkup;
 
 /**
  * ...
@@ -15,37 +17,81 @@ import networkobj.NTemplate;
  */
 class Holder extends NSprite
 {
+	static public var TEMPL:NTemplate;
 	static public var captures:Array<Int>;
-	
-	public var data:Fast;
 	
 	public var flag:Flag;
 	public var team:Int;
+	public var graphic:String;
 	
-	public function new(Data:Fast, Fl:Flag) 
+	public function new(X:Float, Y:Float, TeamFlag:Int, Fl:Flag, Graphic:String) 
 	{
-		data = Data;
+		team = TeamFlag;
 		flag = Fl;
+		graphic = Graphic;
 		
-		team = Std.parseInt(data.att.team);
-		
-		var g:String = Std.string(data.att.graphic);
+		var g:String = graphic;
 		g = g.substr(0, g.length - 4);
 		g += "h.png";
-		var templ:NTemplate = new NTemplate(g, 0);
-		NReg.registerTemplate(templ);
+		graphic = g;
 		
-		super(Std.parseInt(data.att.x), Std.parseInt(data.att.y), templ, NFlxSprite);
-		
-		var gm:CTF = cast(Reg.gm, CTF);
-		gm.holders.add(s);
-		
-		s.y += 33 - s.height;
-		
-		s.immovable = true;
+		super(X, Y, TEMPL, Stand);
 	}
 	
-	static public function captureFlag(P:Player, F:Flag):Void
+	override public function announce(PlayerID:Int):Void
+	{
+		super.announce(PlayerID);
+		
+		setImage(PlayerID, graphic);
+	}
+	
+	static public function makeFromXML(D:Fast):Dynamic
+	{
+		return null;
+	}
+	
+	static public function init():Void
+	{
+		TEMPL = new NTemplate("assets/images/flag_gh.png", 0);
+		NReg.registerTemplate(TEMPL);
+		
+		captures = [0, 0, 0, 0];
+	}
+}
+
+class Stand extends NFlxSprite
+{
+	public var holder:Holder;
+	
+	public function new(X:Float, Y:Float, GraphicString:String, Parent:Holder)
+	{
+		super(X, Y, GraphicString, Parent);
+		immovable = true;
+		holder = Parent;
+	}
+	
+	override public function update():Void 
+	{
+		FlxG.overlap(Reg.state.players, this, collideStand);
+		super.update();
+	}
+	
+	public function collideStand(P:Player, H:Stand):Void
+	{
+		if (P.team == H.holder.team)
+		{
+			if (!H.holder.flag.taken)
+			{
+				if (Flag.taken_flags.exists(P))
+				{
+					captureFlag(P, Flag.taken_flags.get(P));
+				}
+			}
+		}
+		
+	}
+	
+	public function captureFlag(P:Player, F:Flag):Void
 	{
 		F.s.x = F.holder.s.x + 4;
 		F.s.y = F.holder.s.y - (33 - F.holder.s.height);
@@ -57,7 +103,7 @@ class Holder extends NSprite
 			F.owner = null;
 		}
 		
-		captures[P.team]++;
+		Holder.captures[P.team]++;
 		
 		if (P != null)
 		{
@@ -66,29 +112,9 @@ class Holder extends NSprite
 			
 			P.score += 400;
 			var gm:CTF = cast Reg.gm;
+			var cur:Int = gm.captures.get(P.ID);
+			gm.captures.set(P.ID, cur + 1);
 			gm.setPlayerScoreboard(P);
 		}
-	}
-	
-	static public function collideStand(P:Player, H:FlxSprite):Void
-	{
-		var h:Holder = cast(NReg.sprites.get(H.ID), Holder);
-		
-		if (P.team == h.team)
-		{
-			if (!h.flag.taken)
-			{
-				if (Flag.taken_flags.exists(P))
-				{
-					captureFlag(P, Flag.taken_flags.get(P));
-				}
-			}
-		}
-		
-	}
-	
-	static public function init():Void
-	{
-		captures = [0, 0, 0, 0];
 	}
 }

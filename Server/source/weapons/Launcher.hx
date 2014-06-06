@@ -11,6 +11,7 @@ import gevents.HurtEvent;
 import gevents.HurtInfo;
 import networkobj.NEmitter;
 import networkobj.NWeapon;
+import ext.FlxEmitterAuto;
 
 /**
  * ...
@@ -93,7 +94,7 @@ class Launcher extends NWeapon
 						info.dmg = Std.int(dmg);
 						info.dmgsource = Bullet.getMidpoint();
 						info.weapon = this;
-						info.type = BaseGamemode.BULLET;
+						info.type = BaseGamemode.TYPE_BULLET;
 						
 						Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
 					}

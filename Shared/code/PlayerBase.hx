@@ -17,6 +17,9 @@ import flixel.util.FlxVelocity;
 import haxe.Serializer;
 import haxe.Unserializer;
 import networkobj.NWeapon;
+import ext.FlxWeaponExt;
+import ext.FlxTrailExt;
+import ext.FlxTextExt;
 
 /**
  * ...

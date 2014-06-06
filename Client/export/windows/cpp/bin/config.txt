@@ -1,4 +1,5 @@
-version=0.2.1name=Ohmnivore
+version=0.2.1
+name=Ohmnivore
 team=1
 ip=
 masterserver=http://skullrush.elementfx.com/laravel/public/

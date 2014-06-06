@@ -5,9 +5,8 @@ import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.util.FlxTimer;
 import networkobj.NReg;
-#if CLIENT
 
-#else
+#if SERVER
 import gamemodes.BaseGamemode;
 #end
 
@@ -23,7 +22,9 @@ class Reg
 	 * Static client reference
 	 */
 	static public var client:SkullClient;
-	#else
+	#end
+	
+	#if SERVER
 	/**
 	 * Static server reference
 	 */

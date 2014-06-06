@@ -13,9 +13,7 @@ import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 import haxe.xml.Fast;
 
-#if CLIENT
-
-#else
+#if SERVER
 import entities.Flag;
 import entities.HealthPack;
 import entities.Spawn;
@@ -34,9 +32,7 @@ class OgmoLoader
 	static public function initTilemaps():Void
 	{
 		//Initializing entities
-		#if CLIENT
-		
-		#else
+		#if SERVER
 		Spawn;
 		Flag;
 		HealthPack;
@@ -55,17 +51,6 @@ class OgmoLoader
 		
 		var fast = new Fast(xml.firstElement());
 		
-		//if (FlxG.plugins.get(FlxSpecialFX) == null) FlxG.plugins.add(new FlxSpecialFX());
-		//State.starfx = FlxSpecialFX.starfield();
-		//State.add(State.starfx.create(0, 0, FlxG.width, FlxG.height, 50, StarfieldFX.STARFIELD_TYPE_2D));
-		//State.starfield = State.starfx.sprite;
-		//State.starfield.scrollFactor.set();
-		//State.background.add(State.starfield);
-		//
-		//State.starfx.setBackgroundColor(0xff);
-		//State.starfx.setStarDepthColors(3, 0xff585858, 0xffABABAB);
-		//State.starfx.setStarSpeed( -1, 1);
-		
 		for (x in fast.elements)
 		{
 			if (x.has.tileset) //Tilemap
@@ -79,9 +64,7 @@ class OgmoLoader
 			{
 				if (!x.has.exportMode) //Entity layer
 				{
-					#if CLIENT
-					
-					#else
+					#if SERVER
 					for (ent in x.elements)
 					{
 						var c:Class<Dynamic> = Type.resolveClass("entities." + ent.name);
@@ -107,7 +90,7 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, TestFeatures.artefactFix(Assets.getImg("assets/images/gridtiles2.png"), 16, 16),
+					map.loadMap(mapdata.arr, ArtifactFix.artefactFix(Assets.getImg("assets/images/gridtiles2.png"), 16, 16),
 						16, 16, 0, 0, 1, 1);
 					makeTileCollisions(map);
 					State.maps.add(map);
@@ -118,8 +101,6 @@ class OgmoLoader
 					if (x.name.indexOf("Tiles") > -1)
 					{
 						FlxG.worldBounds.set(map.x - 100, map.y - 100, map.width + 200, map.height + 200);
-						//State.b = new FlxRect(map.x - 100, map.y - 100, map.width + 200, map.height + 200);
-						//FlxControl.player1.removeBounds();
 					}
 				}
 			}
@@ -128,8 +109,8 @@ class OgmoLoader
 	
 	static public function makeTileCollisions(M:FlxTilemap):Void
 	{
-		M.setTileProperties(17, FlxObject.NONE, 4);
-		M.setTileProperties(21, FlxObject.NONE, 2);
+		M.setTileProperties(16, FlxObject.NONE, 4);
+		M.setTileProperties(20, FlxObject.NONE, 2);
 	}
 	
 	static public function findGridWidth(GridStrArr:Array<String>):Int

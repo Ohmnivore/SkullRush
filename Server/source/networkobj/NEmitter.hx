@@ -3,6 +3,7 @@ package networkobj;
 import enet.ENet;
 import flixel.effects.particles.FlxEmitterExt;
 import haxe.Serializer;
+import ext.FlxEmitterAuto;
 
 /**
  * ...

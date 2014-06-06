@@ -1,4 +1,4 @@
-package ;
+package ext;
 import flixel.addons.weapon.FlxBullet;
 import flixel.addons.weapon.FlxWeapon;
 import flixel.FlxSprite;
@@ -21,19 +21,19 @@ class FlxWeaponExt extends FlxWeapon
 	public var shotsToFire:Int = 1;
 	public var spread:Int = 0;
 	
-	private var _inheritance:FlxPoint;
+	public var inheritance:FlxPoint;
 	
 	public function new(Name:String, ?ParentRef:FlxSprite, ?BulletType:Class<FlxBullet>, ?BulletID:Int = 0) 
 	{
 		super(Name, ParentRef, BulletType, BulletID);
 		
-		_inheritance = new FlxPoint(0, 0);
+		inheritance = new FlxPoint(0, 0);
 	}
 	
 	public function setBulletInheritance(X:Float, Y:Float):Void
 	{
-		_inheritance.x = X;
-		_inheritance.y = Y;
+		inheritance.x = X;
+		inheritance.y = Y;
 	}
 	
 	override private function runFire(Method:Int, X:Int = 0, Y:Int = 0, ?Target:FlxSprite, Angle:Int = 0):Bool 
@@ -158,8 +158,8 @@ class FlxWeaponExt extends FlxWeapon
 		_bulletsFired++;
 		
 		//Set projectile speed inheritance
-		currentBullet.velocity.x += parent.velocity.x * _inheritance.x;
-		currentBullet.velocity.y += parent.velocity.y * _inheritance.x;
+		currentBullet.velocity.x += parent.velocity.x * inheritance.x;
+		currentBullet.velocity.y += parent.velocity.y * inheritance.x;
 		
 		currentBullet.angle = FlxAngle.getPolarCoords(currentBullet.velocity.x, currentBullet.velocity.y).y;
 		
