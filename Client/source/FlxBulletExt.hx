@@ -1,6 +1,8 @@
 package ;
 
 import networkobj.NReg;
+import ext.FlxBulletExtBase;
+import ext.FlxWeaponExt;
 
 /**
  * ...

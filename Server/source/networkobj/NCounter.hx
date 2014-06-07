@@ -58,11 +58,8 @@ class NCounter extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.NewCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-				Reg.server.sendMsg(p, Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.NewCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsgToAll(Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -88,10 +85,7 @@ class NCounter extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.SetCounter.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -113,10 +107,7 @@ class NCounter extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else

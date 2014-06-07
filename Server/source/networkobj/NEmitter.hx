@@ -71,10 +71,7 @@ class NEmitter
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.EmitterAnnounce.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.EmitterAnnounce.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -108,10 +105,7 @@ class NEmitter
 		Msg.EmitterNew.data.set("explode", Explode);
 		Msg.EmitterNew.data.set("quantity", Quantity);
 		
-		for (p in Reg.server.playermap.keys())
-		{
-			Reg.server.sendMsg(p, Msg.EmitterNew.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-		}
+		Reg.server.sendMsgToAll(Msg.EmitterNew.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		return ID_R;
 	}
@@ -153,10 +147,7 @@ class NEmitter
 		{
 			Msg.EmitterDelete.data.set("id", Handle);
 			
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.EmitterDelete.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.EmitterDelete.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 			
 			Reg.state.emitters.remove(e, true);
 			e.kill();

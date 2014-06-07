@@ -9,11 +9,14 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
+import gevents.GenEvent;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
+import gevents.InitEvent;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import gevents.SetTeamEvent;
 import networkobj.NEmitter;
 import networkobj.NLabel;
 import networkobj.NReg;
@@ -54,20 +57,25 @@ class FFA extends BaseGamemode
 		teams.push(new Team("Red", 0xffD14900, "assets/images/playerred.png"));
 		
 		name = "FFA";
-		DefaultHooks.hookEvents(this);
 		
 		score = new NScoreboard("Scores", ["Score", "Kills", "Deaths"], ["0", "0", "0"], 0xffffffff);
 		Reg.state.hud.add(score.group);
 	}
 	
-	override public function onSpawn(P:Player):Void 
+	override public function hookEvents():Void 
 	{
-		DefaultHooks.onSpawn(P);
+		super.hookEvents();
+		DefaultHooks.hookEvents(this);
 	}
 	
-	override public function makeWeapons():Void 
+	override public function onSpawn(E:GenEvent):Void 
 	{
-		super.makeWeapons();
+		DefaultHooks.onSpawn(E.info);
+	}
+	
+	override public function makeWeapons(E:GenEvent):Void 
+	{
+		super.makeWeapons(E);
 		
 		DefaultHooks.makeWeapons();
 	}
@@ -170,19 +178,20 @@ class FFA extends BaseGamemode
 		DefaultHooks.onPeerConnect(e);
 	}
 	
-	override public function initPlayer(P:Player):Void 
+	override public function initPlayer(E:InitEvent):Void 
 	{
-		super.initPlayer(P);
+		var P:Player = E.player;
+		super.initPlayer(E);
 		DefaultHooks.initPlayer(P);
 		
 		score.addPlayer(Reg.server.playermap.get(P.ID));
 	}
 	
-	override public function setTeam(P:Player, T:Team):Void 
+	override public function setTeam(E:SetTeamEvent):Void 
 	{
-		super.setTeam(P, T);
+		super.setTeam(E);
 		
-		DefaultHooks.setTeam(P, T);
+		DefaultHooks.setTeam(E.player, E.team);
 	}
 	
 	override public function onLeave(e:LeaveEvent):Void

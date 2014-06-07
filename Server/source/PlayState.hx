@@ -33,6 +33,11 @@ import flixel.util.loaders.TextureRegion;
 import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
 import gamemodes.FFA;
+import gevents.GenEvent;
+import gevents.InitEvent;
+import gevents.SetTeamEvent;
+import mtwin.mail.Part;
+import mtwin.mail.Smtp;
 import sys.io.File;
 //import gamemodes.CTF;
 import gevents.ConfigEvent;
@@ -160,7 +165,7 @@ class PlayState extends FlxState
 	{
 		if (Reg.gm != null)
 		{
-			Reg.gm.shutdown();
+			Reg.gm.dispatchEvent(new GenEvent(GenEvent.SHUTDOWN));
 		}
 		
 		current_map = Name;
@@ -190,7 +195,7 @@ class PlayState extends FlxState
 			
 			var p_new:Player;
 			p_new = new Player(p.ID, p.name, 50, 50);
-			Reg.gm.setTeam(p_new, Reg.gm.teams[0]);
+			Reg.gm.dispatchEvent(new SetTeamEvent(SetTeamEvent.SETTEAM_EVENT, p_new, Reg.gm.teams[0]));
 			
 			Reg.server.playermap.set(i, p_new);
 			
@@ -200,7 +205,7 @@ class PlayState extends FlxState
 			Msg.SpawnConfirm.data.set("graphic", p_new.graphicKey);
 			Reg.server.sendMsg(p_new.ID, Msg.SpawnConfirm.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 			
-			Reg.gm.initPlayer(p_new);
+			Reg.gm.dispatchEvent(new InitEvent(InitEvent.INIT_EVENT, p_new));
 		}
 		
 		trace('Loaded map $current_map and gamemode $gm.');

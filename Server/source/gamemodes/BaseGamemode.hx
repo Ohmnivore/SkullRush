@@ -4,10 +4,13 @@ import enet.ENetEvent;
 import flash.display.Sprite;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
+import gevents.GenEvent;
 import gevents.HurtEvent;
+import gevents.InitEvent;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import gevents.SetTeamEvent;
 import networkobj.NScoreManager;
 
 class BaseGamemode extends Sprite
@@ -34,11 +37,13 @@ class BaseGamemode extends Sprite
 		scores = new NScoreManager();
 		teams = [];
 		
-		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig, false, 0);
 		Assets.loadConfig();
+		addEventListener(ConfigEvent.CONFIG_EVENT, onConfig);
 		dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		
-		makeWeapons();
+		hookEvents();
+		
+		dispatchEvent(new GenEvent(GenEvent.MAKE_WEAPONS));
 		
 		//for each (var plug:BasePlugin in ServerInfo.pl)
 		//{
@@ -46,57 +51,62 @@ class BaseGamemode extends Sprite
 		//}
 	}
 	
-	public function update(elapsed:Float):Void
+	public function hookEvents():Void
 	{
 		
 	}
 	
-	public function shutdown():Void
+	public function update(elapsed:Float):Void
+	{
+		dispatchEvent(new GenEvent(GenEvent.UPDATE_EVENT, elapsed));
+	}
+	
+	public function shutdown(E:GenEvent = null):Void
 	{
 		BaseGamemode.scores.delete();
 	}
 	
-	public function onSpawn(P:Player):Void
+	public function onSpawn(E:GenEvent):Void
 	{
 		
 	}
 	
-	public function onHurt(e:HurtEvent):Void
+	public function onHurt(E:HurtEvent):Void
 	{
 		
 	}
 	
-	public function onDeath(e:DeathEvent):Void
+	public function onDeath(E:DeathEvent):Void
 	{
 		
 	}
 	
-	public function onJoin(e:JoinEvent):Void
+	public function onJoin(E:JoinEvent):Void
 	{
 		
 	}
 	
-	public function initPlayer(P:Player):Void
+	public function initPlayer(E:InitEvent):Void
 	{
 		
 	}
 	
-	public function setTeam(P:Player, T:Team):Void
+	public function setTeam(E:SetTeamEvent):Void
 	{
 		
 	}
 	
-	public function onLeave(e:LeaveEvent):Void
+	public function onLeave(E:LeaveEvent):Void
 	{
 		
 	}
 	
-	public function onReceive(e:ReceiveEvent):Void
+	public function onReceive(E:ReceiveEvent):Void
 	{
 		
 	}
 	
-	public function makeWeapons():Void
+	public function makeWeapons(E:GenEvent):Void
 	{
 		
 	}

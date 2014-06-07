@@ -191,10 +191,7 @@ class NScoreboard
 		//group.kill();
 		//group.destroy();
 		
-		for (p in Reg.server.playermap.keys())
-		{
-			Reg.server.sendMsg(p, Msg.DeleteBoard.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-		}
+		Reg.server.sendMsgToAll(Msg.DeleteBoard.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	public function make():Void

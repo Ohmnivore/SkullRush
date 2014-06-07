@@ -26,6 +26,7 @@ import mloader.Loader.LoaderErrorType;
 import networkobj.NReg;
 import networkobj.NScoreManager;
 import ui.Spawn;
+import ext.FlxWeaponExt;
 
 /**
  * A FlxState which can be used for the actual gameplay.

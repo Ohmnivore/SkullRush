@@ -23,6 +23,7 @@ import haxe.io.Bytes;
 import networkobj.NWeapon;
 import ui.DirectConnect;
 import ui.Spawn;
+import ext.FlxEmitterAuto;
 
 /**
  * ...

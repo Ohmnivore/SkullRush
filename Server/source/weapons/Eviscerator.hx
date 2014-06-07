@@ -90,7 +90,7 @@ class Eviscerator extends NWeapon
 				
 				if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
 				{
-					var dmg:Float = 25;
+					var dmg:Float = 35;
 					
 					var info:HurtInfo = new HurtInfo();
 					info.attacker = Reflect.field(Bullet._weapon.parent, "ID");

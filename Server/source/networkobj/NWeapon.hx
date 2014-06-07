@@ -206,10 +206,7 @@ class NWeapon
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.AnnounceGuns.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.AnnounceGuns.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else

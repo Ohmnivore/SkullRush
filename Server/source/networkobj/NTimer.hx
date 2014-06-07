@@ -103,11 +103,8 @@ class NTimer extends FlxObject
 		{
 			NReg.timers.push(this);
 			
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-				Reg.server.sendMsg(p, Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.NewTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsgToAll(Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -135,10 +132,7 @@ class NTimer extends FlxObject
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.SetTimer.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -161,10 +155,7 @@ class NTimer extends FlxObject
 		{
 			NReg.timers.remove(this);
 			
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else

@@ -1,5 +1,6 @@
 package ;
 import flixel.util.FlxSpriteUtil;
+import ext.FlxWeaponExt;
 
 /**
  * ...

@@ -1,4 +1,5 @@
 package ;
+import enet.ENet;
 import flixel.FlxG;
 import gevents.ConfigEvent;
 import networkobj.NReg;
@@ -16,13 +17,19 @@ class Admin
 		FlxG.console.registerFunction("reloadmap", reloadMap);
 		FlxG.console.registerFunction("reloadconfig", reloadConfig);
 		FlxG.console.registerFunction("getversion", getVersion);
+		FlxG.console.registerFunction("localip", getIP);
 		
 		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "", 1, -1);
 	}
 	
+	static public function getIP():Void
+	{
+		trace("Local IP: " + ENet.getLocalIP());
+	}
+	
 	static public function getVersion():Void
 	{
-		FlxG.log.add("Version: " + Assets.config.get("version"));
+		trace("Version: " + Assets.config.get("version"));
 	}
 	
 	static public function nextMap():Void

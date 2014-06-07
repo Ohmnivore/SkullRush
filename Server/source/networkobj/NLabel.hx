@@ -52,11 +52,8 @@ class NLabel extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.NewLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-				Reg.server.sendMsg(p, Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.NewLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			Reg.server.sendMsgToAll(Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -77,10 +74,7 @@ class NLabel extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.SetLabel.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else
@@ -102,10 +96,7 @@ class NLabel extends NHUD
 		
 		if (player == 0)
 		{
-			for (p in Reg.server.playermap.keys())
-			{
-				Reg.server.sendMsg(p, Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
+			Reg.server.sendMsgToAll(Msg.DeleteHUD.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 		
 		else

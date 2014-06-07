@@ -37,7 +37,10 @@ class MenuState extends FlxState
 		if (Assets.config.get("crashdump") == "true")
 		{
 			var unique_id:String = SessionData.generateID("skullrush_client_");
-			var crashDumper = new CrashDumper(unique_id);
+			var crashDumper = new CrashDumperMail(unique_id);
+			crashDumper.setMail("ohmnivore@skullrush.elementfx.com",
+				"mail.skullrush.elementfx.com",
+				"mail.skullrush.elementfx.com");
 			
 			var configFile:String = File.getContent("config.txt");
 			crashDumper.session.files.set("config.txt", configFile);

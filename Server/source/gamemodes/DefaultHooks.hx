@@ -9,7 +9,11 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
+import gevents.GenEvent;
+import gevents.InitEvent;
 import gevents.ReceiveEvent;
+import gevents.RespawnEvent;
+import gevents.SetTeamEvent;
 import haxe.Serializer;
 import networkobj.NCounter;
 import networkobj.NEmitter;
@@ -52,6 +56,11 @@ class DefaultHooks
 		gm.addEventListener(JoinEvent.JOIN_EVENT, gm.onJoin, false, 10);
 		gm.addEventListener(LeaveEvent.LEAVE_EVENT, gm.onLeave, false, 10);
 		gm.addEventListener(ReceiveEvent.RECEIVE_EVENT, gm.onReceive, false, 10);
+		gm.addEventListener(RespawnEvent.RESPAWN_EVENT, gm.onSpawn, false, 10);
+		gm.addEventListener(GenEvent.SHUTDOWN, gm.shutdown, false, 10);
+		gm.addEventListener(InitEvent.INIT_EVENT, gm.initPlayer, false, 10);
+		gm.addEventListener(SetTeamEvent.SETTEAM_EVENT, gm.setTeam, false, 10);
+		gm.addEventListener(GenEvent.MAKE_WEAPONS, gm.makeWeapons, false, 10);
 	}
 	
 	static public function makeWeapons():Void
@@ -396,7 +405,7 @@ class DefaultHooks
 			}
 		}
 		
-		Reg.gm.initPlayer(p);
+		Reg.gm.dispatchEvent(new InitEvent(InitEvent.INIT_EVENT, p));
 	}
 	
 	static public function update(elapsed:Float):Void

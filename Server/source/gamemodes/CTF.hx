@@ -10,11 +10,14 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import gevents.DeathEvent;
+import gevents.GenEvent;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
+import gevents.InitEvent;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import gevents.SetTeamEvent;
 import networkobj.NCounter;
 import networkobj.NLabel;
 import networkobj.NReg;
@@ -47,7 +50,6 @@ class CTF extends BaseGamemode
 		teams.push(new Team("Yellow", 0xffE0DD00, "assets/images/playeryellow.png"));
 		
 		name = "CTF";
-		DefaultHooks.hookEvents(this);
 		
 		Assets.loadConfig();
 		
@@ -65,14 +67,20 @@ class CTF extends BaseGamemode
 		captures = new Map<Int, Int>();
 	}
 	
-	override public function onSpawn(P:Player):Void 
+	override public function hookEvents():Void 
 	{
-		DefaultHooks.onSpawn(P);
+		super.hookEvents();
+		DefaultHooks.hookEvents(this);
 	}
 	
-	override public function makeWeapons():Void 
+	override public function onSpawn(E:GenEvent):Void 
 	{
-		super.makeWeapons();
+		DefaultHooks.onSpawn(E.info);
+	}
+	
+	override public function makeWeapons(E:GenEvent):Void 
+	{
+		super.makeWeapons(E);
 		
 		DefaultHooks.makeWeapons();
 	}
@@ -130,7 +138,7 @@ class CTF extends BaseGamemode
 	
 	public function endGame(WinnerTeam:Int):Void
 	{
-		var winmsg:NLabel = new NLabel(120, 5, 0xffffffff, 0, true);
+		var winmsg:NLabel = new NLabel(200, 5, 0xffffffff, 0, true);
 		
 		if (WinnerTeam >= 0)
 		{
@@ -195,9 +203,10 @@ class CTF extends BaseGamemode
 		DefaultHooks.onPeerConnect(e);
 	}
 	
-	override public function initPlayer(P:Player):Void 
+	override public function initPlayer(E:InitEvent):Void 
 	{
-		super.initPlayer(P);
+		var P:Player = E.player;
+		super.initPlayer(E);
 		
 		DefaultHooks.initPlayer(P);
 		
@@ -205,11 +214,11 @@ class CTF extends BaseGamemode
 		captures.set(P.ID, 0);
 	}
 	
-	override public function setTeam(P:Player, T:Team):Void 
+	override public function setTeam(E:SetTeamEvent):Void 
 	{
-		super.setTeam(P, T);
+		super.setTeam(E);
 		
-		DefaultHooks.setTeam(P, T);
+		DefaultHooks.setTeam(E.player, E.team);
 	}
 	
 	override public function onLeave(e:LeaveEvent):Void

@@ -6,9 +6,12 @@ import entities.Spawn;
 import flixel.FlxG;
 import gamemodes.BaseGamemode;
 import gamemodes.DefaultHooks;
+import gevents.GenEvent;
 import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
+import gevents.RespawnEvent;
+import gevents.SetTeamEvent;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
@@ -89,6 +92,14 @@ class SkullServer extends Server
 			trace("Info: ", info);
 			
 			s.sendAll(Bytes.ofString(info));
+		}
+	}
+	
+	public function sendMsgToAll(MsgID:Int, Channel:Int = 0, Flags:Int = 0):Void
+	{
+		for (p in playermap.keys())
+		{
+			sendMsg(p, MsgID, Channel, Flags);
 		}
 	}
 	
@@ -226,12 +237,14 @@ class SkullServer extends Server
 					if (p.graphicKey != team.graphicKey || p.team != t)
 					{
 						p.team = t;
-						Reg.gm.setTeam(p, Reg.gm.teams[t]);
+						Reg.gm.dispatchEvent(new SetTeamEvent(SetTeamEvent.SETTEAM_EVENT,
+							p, Reg.gm.teams[t]));
 					}
 				}
 				
 				p.respawn();
-				Reg.gm.onSpawn(p);
+				
+				Reg.gm.dispatchEvent(new GenEvent(RespawnEvent.RESPAWN_EVENT, p));
 			}
 		}
 		

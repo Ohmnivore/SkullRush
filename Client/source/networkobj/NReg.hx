@@ -3,6 +3,7 @@ package networkobj;
 import flixel.text.FlxText;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitterExt;
+import ext.FlxEmitterAuto;
 
 /**
  * ...
