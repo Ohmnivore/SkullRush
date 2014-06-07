@@ -53,7 +53,7 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 ## Gameplay:
 * New maps
 * footstool jumping
-* rework splasher + shotgun
+* rework splasher
 * custom tiles
 
 

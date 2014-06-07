@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 class NTimer extends FlxText
 {
 	public var count:Float = 0;
+	private var old_count:Float = 0;
 	public var base:String;
 	public var status:Int;
 	
@@ -24,6 +25,27 @@ class NTimer extends FlxText
 		super(X, Y, FlxG.width, '$base:  0:00', 12);
 		
 		setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+	}
+	
+	private function countToText(Count:Float):String
+	{
+		var ret:String = "";
+		
+		var m:Int = Math.floor(Count / 60);
+		
+		var s:Int = Std.int(Count - 60 * m);
+		
+		if (s < 10)
+		{
+			ret = '$base:  $m:0$s';
+		}
+		
+		else
+		{
+			ret = '$base:  $m:$s';
+		}
+		
+		return ret;
 	}
 	
 	override public function update():Void 
@@ -43,21 +65,11 @@ class NTimer extends FlxText
 				count = 0;
 		}
 		
-		if (status != STOPPED)
+		if (old_count != count)
 		{
-			var m:Int = Math.floor(count / 60);
-			
-			var s:Int = Std.int(count - 60 * m);
-			
-			if (s < 10)
-			{
-				text = '$base:  $m:0$s';
-			}
-			
-			else
-			{
-				text = '$base:  $m:$s';
-			}
+			text = countToText(count);
 		}
+		
+		old_count = count;
 	}
 }

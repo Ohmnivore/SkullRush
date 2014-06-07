@@ -27,7 +27,7 @@ import ext.FlxTextExt;
  */
 class SkullServer extends Server
 {
-	public var s:UdpSocket;
+	//public var s:UdpSocket;
 	public var internal_ip:String;
 	
 	public var config:Map<String, String>;
@@ -61,37 +61,63 @@ class SkullServer extends Server
 		Masterserver.init();
 		Masterserver.register(s_name);
 		
-		s = new UdpSocket();
-		s.create();
-		s.bind(1945);
-		s.setNonBlocking(true);
-		s.setEnableBroadcast(true);
-		s.connect(ENet.BROADCAST_ADDRESS, 1990);
+		//s = new UdpSocket();
+		//s.create();
+		//s.bind(1945);
+		//s.setNonBlocking(true);
+		//s.setEnableBroadcast(true);
+		//s.connect(ENet.BROADCAST_ADDRESS, 1990);
 	}
 	
-	public function updateS():Void
+	//public function updateS():Void
+	//{
+		//var b = Bytes.alloc(80);
+		//s.receive(b);
+		//var msg:String = new BytesInput(b).readUntil(0);
+		//if (msg.length > 0) trace("Msg: ", msg);
+		//
+		//if (msg == "get_info")
+		//{
+			//var info:String = '';
+			//info += '[';
+			//info += '"$s_name", ';
+			//var mapname:String = Reg.mapname;
+			//info += '"$mapname", ';
+			//var gm_name:String = Reg.gm.name;
+			//info += '"$gm_name", ';
+			//info += '$players, ';
+			//info += '$players_max, ';
+			//info += '"$internal_ip"';
+			//info += ']';
+			//trace("Info: ", info);
+			//
+			//s.sendAll(Bytes.ofString(info));
+		//}
+	//}
+	
+	public function sendChatMsg():Void
 	{
-		var b = Bytes.alloc(80);
-		s.receive(b);
-		var msg:String = new BytesInput(b).readUntil(0);
-		if (msg.length > 0) trace("Msg: ", msg);
+		var t:String = Reg.chatbox.text.text;
+		Reg.chatbox.text.text = "";
 		
-		if (msg == "get_info")
+		t = StringTools.trim(t);
+		
+		if (t.length > 0)
 		{
-			var info:String = '';
-			info += '[';
-			info += '"$s_name", ';
-			var mapname:String = Reg.mapname;
-			info += '"$mapname", ';
-			var gm_name:String = Reg.gm.name;
-			info += '"$gm_name", ';
-			info += '$players, ';
-			info += '$players_max, ';
-			info += '"$internal_ip"';
-			info += ']';
-			trace("Info: ", info);
+			t = "Server: " + t;
 			
-			s.sendAll(Bytes.ofString(info));
+			//Send to all
+			Msg.ChatToClient.data.set("id", 0);
+			Msg.ChatToClient.data.set("message", t);
+			Msg.ChatToClient.data.set("color", 0xffff0000);
+			
+			for (ID in Reg.server.peermap.iterator())
+			{
+				Reg.server.sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			}
+			
+			//Add to local chatbox
+			Reg.chatbox.addMsg(t, Msg.ChatToClient.data.get("color"));
 		}
 	}
 	
@@ -149,25 +175,6 @@ class SkullServer extends Server
 			sendMsg(ID, Msg.Announce.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		}
 	}
-	
-	//static public function spawnTeam(p:Player, t:Int):Void
-	//{
-		//if (p.canSpawn)
-		//{
-			//if (Reg.gm.teams.length >= t)
-			//{
-				//var team:Team = Reg.gm.teams[t];
-				//
-				//if (p.graphicKey != team.graphicKey || p.team != t)
-				//{
-					//p.team = t;
-					//Reg.gm.setTeam(p, Reg.gm.teams[t]);
-				//}
-			//}
-			//
-			//p.respawn();
-		//}
-	//}
 	
 	override public function onReceive(MsgID:Int, E:ENetEvent):Void 
 	{
@@ -251,28 +258,6 @@ class SkullServer extends Server
 		super.onReceive(MsgID, E);
 		
 		Reg.gm.dispatchEvent(new ReceiveEvent(ReceiveEvent.RECEIVE_EVENT, MsgID, E));
-		
-		if (MsgID == Msg.PlayerInfo.ID)
-		{
-			//Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
-			//
-			//sendMsg(E.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-			//
-			//for (s in NReg.sprites)
-			//{
-				//s.announce(E.ID);
-			//}
-			//
-			//for (h in NReg.huds)
-			//{
-				//h.announce(E.ID);
-			//}
-			//
-			//for (t in NReg.timers)
-			//{
-				//t.announce(E.ID);
-			//}
-		}
 		
 		E = null;
 	}

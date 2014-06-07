@@ -25,6 +25,13 @@ class HealthPack extends NSprite
 		super(X, Y, TEMPL, Pack);
 	}
 	
+	override public function announce(PlayerID:Int):Void
+	{
+		super.announce(PlayerID);
+		
+		setFields(PlayerID, ["visible", "active", "alive"], [s.visible, s.active, s.alive]);
+	}
+	
 	static public function makeFromXML(D:Fast):HealthPack
 	{
 		return new HealthPack(Std.parseInt(D.att.x), Std.parseInt(D.att.y));

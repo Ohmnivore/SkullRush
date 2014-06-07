@@ -17,6 +17,7 @@ import haxe.xml.Fast;
 import entities.Flag;
 import entities.HealthPack;
 import entities.Spawn;
+import entities.CapturePoint;
 #end
 
 /**
@@ -36,6 +37,7 @@ class OgmoLoader
 		Spawn;
 		Flag;
 		HealthPack;
+		CapturePoint;
 		#end
 		
 		inits = new Map<String, Bool>();

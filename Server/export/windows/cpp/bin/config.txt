@@ -8,7 +8,7 @@ crashdump=true
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
 
-maps=TwinCapture, Test
+maps=CaptureHell, TwinCapture, Test
 
 masterserver=http://skullrush.elementfx.com/laravel/public/
 
@@ -29,3 +29,6 @@ ffa_maxkills=30
 #ctf config
 ctf_maxtime=5
 ctf_maxcaps=3
+
+#koth congig
+koth_captime=3

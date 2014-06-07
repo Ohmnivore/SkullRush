@@ -2,6 +2,7 @@ package ;
 
 import gamemodes.CTF;
 import gamemodes.FFA;
+import gamemodes.KOTH;
 import sys.io.File;
 
 /**
@@ -17,6 +18,7 @@ class Lvls
 		//Otherwise gamemodes won't be compiled.
 		FFA;
 		CTF;
+		KOTH;
 		
 		return File.getContent("assets/maps/" + Name + ".oel");
 	}

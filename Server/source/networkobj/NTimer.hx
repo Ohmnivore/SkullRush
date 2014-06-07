@@ -57,7 +57,6 @@ class NTimer extends FlxObject
 		if (status == TICKING)
 		{
 			count += FlxG.elapsed;
-			//trace(count);
 		}
 		
 		if (status == UNTICKING)
@@ -70,20 +69,29 @@ class NTimer extends FlxObject
 		
 		if (local && status != STOPPED)
 		{
-			var m:Int = Math.floor(count / 60);
-			
-			var s:Int = Std.int(count - 60 * m);
-			
-			if (s < 10)
-			{
-				t.text = '$base:  $m:0$s';
-			}
-			
-			else
-			{
-				t.text = '$base:  $m:$s';
-			}
+			t.text = countToText(count);
 		}
+	}
+	
+	private function countToText(Count:Float):String
+	{
+		var ret:String = "";
+		
+		var m:Int = Math.floor(Count / 60);
+		
+		var s:Int = Std.int(Count - 60 * m);
+		
+		if (s < 10)
+		{
+			ret = '$base:  $m:0$s';
+		}
+		
+		else
+		{
+			ret = '$base:  $m:$s';
+		}
+		
+		return ret;
 	}
 	
 	public function announce(P:Int = 0):Void
@@ -144,6 +152,7 @@ class NTimer extends FlxObject
 		{
 			t.text = '$base: $count';
 			t.color = color;
+			t.text = countToText(count);
 		}
 	}
 	

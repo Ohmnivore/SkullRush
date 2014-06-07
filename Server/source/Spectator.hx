@@ -9,15 +9,19 @@ import flixel.util.FlxPoint;
  */
 class Spectator extends FlxSprite
 {
+	static public inline var speed:Int = 100;
+	static public inline var cam_lerp:Int = 20;
+	static public inline var max_velocity:Int = 230;
+	
 	public function new() 
 	{
 		super(FlxG.width / 2, FlxG.height / 2);
 		
 		FlxG.camera.follow(this);
-		FlxG.camera.followLerp = 20;
+		FlxG.camera.followLerp = cam_lerp;
 		
-		maxVelocity = new FlxPoint(230, 230);
-		drag = new FlxPoint(230, 230);
+		maxVelocity = new FlxPoint(max_velocity, max_velocity);
+		drag = new FlxPoint(max_velocity, max_velocity);
 		
 		visible = false;
 	}
@@ -32,22 +36,22 @@ class Spectator extends FlxSprite
 		
 		if (FlxG.keys.anyPressed(["W", "UP"]))
 		{
-			velocity.y -= 70;
+			velocity.y -= speed;
 		}
 		
 		if (FlxG.keys.anyPressed(["S", "DOWN"]))
 		{
-			velocity.y += 70;
+			velocity.y += speed;
 		}
 		
 		if (FlxG.keys.anyPressed(["D", "RIGHT"]))
 		{
-			velocity.x += 70;
+			velocity.x += speed;
 		}
 		
 		if (FlxG.keys.anyPressed(["A", "LEFT"]))
 		{
-			velocity.x -= 70;
+			velocity.x -= speed;
 		}
 		
 		if (x < Reg.state.collidemap.x)

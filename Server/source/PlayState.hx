@@ -36,10 +36,7 @@ import gamemodes.FFA;
 import gevents.GenEvent;
 import gevents.InitEvent;
 import gevents.SetTeamEvent;
-import mtwin.mail.Part;
-import mtwin.mail.Smtp;
 import sys.io.File;
-//import gamemodes.CTF;
 import gevents.ConfigEvent;
 import haxe.Serializer;
 import haxe.xml.Fast;
@@ -94,12 +91,11 @@ class PlayState extends FlxState
 		NEmitter.init();
 		NWeapon.init();
 		
+		//Init and add groups
 		maps = new FlxGroup();
 		add(maps);
 		under_players = new FlxGroup();
 		add(under_players);
-		//bullets = new FlxGroup();
-		//add(bullets);
 		tocollide = new FlxGroup();
 		add(tocollide);
 		players = new FlxGroup();
@@ -118,7 +114,7 @@ class PlayState extends FlxState
 		
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
-		Reg.chatbox.callback = sendChatMsg;
+		Reg.chatbox.callback = Reg.server.sendChatMsg;
 		
 		Reg.announcer = new Announcer();
 		hud.add(Reg.announcer);
@@ -131,34 +127,6 @@ class PlayState extends FlxState
 		Thread.create(thread);
 		
 		Admin.hookCommands();
-	}
-	
-	public function sendChatMsg():Void
-	{
-		//var res:FlxPoint = new FlxPoint();
-		//trace(collidemap.ray(new FlxPoint(10, 10), new FlxPoint(50, 50)));
-		var t:String = Reg.chatbox.text.text;
-		Reg.chatbox.text.text = "";
-		
-		t = StringTools.trim(t);
-		
-		if (t.length > 0)
-		{
-			t = "Server: " + t;
-			
-			//Send to all
-			Msg.ChatToClient.data.set("id", 0);
-			Msg.ChatToClient.data.set("message", t);
-			Msg.ChatToClient.data.set("color", 0xffff0000);
-			
-			for (ID in Reg.server.peermap.iterator())
-			{
-				Reg.server.sendMsg(ID, Msg.ChatToClient.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
-			}
-			
-			//Add to local chatbox
-			Reg.chatbox.addMsg(t, Msg.ChatToClient.data.get("color"));
-		}
 	}
 	
 	public function loadMap(Name:String):Void
@@ -254,71 +222,64 @@ class PlayState extends FlxState
 		//GC.beginProfile("SampleName");
 		if (!Reg.shutdown)
 		{
-		Masterserver.updateHeartBeat(FlxG.elapsed);
-		
-		m.acquire();
-		
-		super.update();
-		
-		if (Reg.gm != null)
-		{
-			if (FlxG.keys.justPressed.C)
-			{
-				Assets.loadConfig();
-				
-				Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
-			}
+			Masterserver.updateHeartBeat(FlxG.elapsed);
 			
-			if (FlxG.keys.justPressed.R)
-			{
-				Admin.reloadMap();
-			}
+			m.acquire();
 			
-			//Reg.gm.scores.checkToggle();
-			BaseGamemode.scores.update();
-			Reg.gm.update(FlxG.elapsed);
-		}
-		
-		if (FlxG.keys.justPressed.ENTER)
-		{
-			Reg.chatbox.toggle();
+			super.update();
 			
-			if (Reg.chatbox.opened)
+			if (Reg.gm != null)
 			{
-				spect.active = false;
-			}
-			
-			else
-			{
-				spect.active = true;
-			}
-		}
-		
-		var arr:Array<String> = [];
-		
-		try
-		{
-			//Reg.server.poll();
-			for (p in Reg.server.playermap.iterator())
-			{
-				if (p != null)
+				if (FlxG.keys.justPressed.C)
 				{
-					if (p.velocity != null)
-					{
-						arr.push(p.s_serialize());
-					}
+					Assets.loadConfig();
+					
+					Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+				}
+				
+				if (FlxG.keys.justPressed.R)
+				{
+					Admin.reloadMap();
+				}
+				
+				BaseGamemode.scores.update();
+				Reg.gm.update(FlxG.elapsed);
+			}
+			
+			if (FlxG.keys.justPressed.ENTER)
+			{
+				Reg.chatbox.toggle();
+				
+				if (Reg.chatbox.opened)
+				{
+					spect.active = false;
+				}
+				
+				else
+				{
+					spect.active = true;
 				}
 			}
 			
-			Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
+			var arr:Array<String> = [];
 			
-			//if (framebuffer > 0.03)
-			//{
+			try
+			{
 				for (p in Reg.server.playermap.iterator())
 				{
-					//Reg.server.sendMsg(p.ID,
-										//Msg.PlayerOutput.ID, 0);
-					
+					if (p != null)
+					{
+						if (p.velocity != null)
+						{
+							arr.push(p.s_serialize());
+						}
+					}
+				}
+				
+				Msg.PlayerOutput.data.set("serialized", Serializer.run(arr));
+				
+				for (p in Reg.server.playermap.iterator())
+				{
 					Reg.server.sendMsg(p.ID,
 										Msg.PlayerOutput.ID, 0, ENet.ENET_PACKET_FLAG_UNSEQUENCED);
 				}
@@ -327,18 +288,17 @@ class PlayState extends FlxState
 				{
 					s.sendUpdate();
 				}
-			//}
-		}
-		
-		catch (e:Dynamic)
-		{
+			}
 			
-		}
-		
-		framebuffer += FlxG.elapsed;
-		
-		m.release();
-		
+			catch (e:Dynamic)
+			{
+				
+			}
+			
+			framebuffer += FlxG.elapsed;
+			
+			m.release();
+			
 		//Reg.server.updateS();
 		}
 		//GC.endProfile("SampleName");

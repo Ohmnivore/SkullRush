@@ -142,7 +142,6 @@ class PlayerBase extends FlxSprite
 	private function setChange(T:FlxTimer):Void
 	{
 		canChange = true;
-		//T.reset(0.3);
 	}
 	
 	override public function draw():Void
