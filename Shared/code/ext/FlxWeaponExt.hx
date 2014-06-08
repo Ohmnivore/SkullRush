@@ -23,6 +23,8 @@ class FlxWeaponExt extends FlxWeapon
 	
 	public var inheritance:FlxPoint;
 	
+	public var mock_fireRate:Int;
+	
 	public function new(Name:String, ?ParentRef:FlxSprite, ?BulletType:Class<FlxBullet>, ?BulletID:Int = 0) 
 	{
 		super(Name, ParentRef, BulletType, BulletID);

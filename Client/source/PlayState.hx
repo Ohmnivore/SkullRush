@@ -59,6 +59,7 @@ class PlayState extends FlxState
 	public var m:Mutex;
 	
 	public var wepHUD:WeaponHUD;
+	public var wepBar:WeaponBar;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -123,7 +124,9 @@ class PlayState extends FlxState
 		}
 		
 		wepHUD = new WeaponHUD(2);
-		add(wepHUD);
+		hud.add(wepHUD);
+		//wepBar = new WeaponBar(2);
+		//hud.add(wepBar);
 		
 		Assets.initAssets();
 		Thread.create(thread);

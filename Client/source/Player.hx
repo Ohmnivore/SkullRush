@@ -1,6 +1,7 @@
 package ;
 import flixel.util.FlxSpriteUtil;
 import ext.FlxWeaponExt;
+import flixel.util.FlxTimer;
 
 /**
  * ...
@@ -8,12 +9,20 @@ import ext.FlxWeaponExt;
  */
 class Player extends PlayerBase
 {
-	//public var requestShoot:Bool = false;
-	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
 		setGun(1);
+	}
+	
+	override public function fire():Void 
+	{
+		super.fire();
+		
+		var reload:FlxTimer = new FlxTimer(last_shot.mock_fireRate / 1000);
+		Reg.state.wepBar.setRange(0, 1);
+		Reg.state.wepBar.setParent(reload, "progress", false);
+		trace(last_shot.mock_fireRate);
 	}
 	
 	override public function setGun(GunID:Int, Force:Bool = false):Void

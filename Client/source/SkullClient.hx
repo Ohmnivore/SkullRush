@@ -609,6 +609,11 @@ class SkullClient extends Client
 				NWeapon.setUpWeapons(p);
 				p.setGun(1);
 			}
+			
+			Reg.state.wepBar = new WeaponBar(0, Std.int(Reg.state.wepHUD.height - WeaponHUD.PADDING));
+			Reg.state.hud.add(Reg.state.wepBar);
+			Reg.state.wepBar.y = Reg.state.wepHUD.y - 1;
+			Reg.state.wepBar.x = Reg.state.wepHUD.x + Reg.state.wepHUD.width;
 		}
 		
 		if (MsgID == Msg.GrantGun.ID)

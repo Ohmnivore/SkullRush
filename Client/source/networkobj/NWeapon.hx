@@ -36,6 +36,7 @@ class NWeapon
 	public var shotsToFire:Int = 1;
 	public var spread:Int = 0;
 	public var ignoreCollisions:Bool = false;
+	public var mock_fireRate:Int = 0;
 	
 	public var TRAIL_EMITTER:Int;
 	public var TRAIL_EMITTER_GRAPHIC:String;
@@ -46,7 +47,7 @@ class NWeapon
 		bulletLifeSpan = Arr[1];
 		bulletSpeed = Arr[2];
 		fireRate = Std.int(Arr[3] / 2);
-		//trace(fireRate);
+		mock_fireRate = Arr[3];
 		name = Arr[4];
 		bulletGraphic = Arr[5];
 		gunGraphic = Arr[6];
@@ -109,6 +110,7 @@ class NWeapon
 		w.shotsToFire = shotsToFire;
 		w.spread = spread;
 		w.setFireRate(fireRate);
+		w.mock_fireRate = mock_fireRate;
 		
 		w.makeImageBullet(10, Assets.images.get(bulletGraphic),
 				Std.int(bulletOffset.x), Std.int(bulletOffset.y), false, 180);

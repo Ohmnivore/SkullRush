@@ -3,6 +3,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
+import flixel.ui.FlxBar;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -19,7 +20,7 @@ class WeaponHUD extends FlxSpriteGroup
 	
 	private var selector:FlxSprite;
 	
-	public function new(X:Float) 
+	public function new(X:Float = 0) 
 	{
 		super(X, 0);
 		scrollFactor.set();
@@ -61,7 +62,6 @@ class WeaponHUD extends FlxSpriteGroup
 		hiders.set(Slot, hider);
 		
 		background.makeGraphic(Std.int(width), Std.int(height - PADDING), 0x99000000);
-		
 		FlxSpriteUtil.screenCenter(this, false, true);
 	}
 	
