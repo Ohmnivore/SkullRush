@@ -18,6 +18,7 @@ import entities.Flag;
 import entities.HealthPack;
 import entities.Spawn;
 import entities.CapturePoint;
+import entities.Crate;
 #end
 
 /**
@@ -38,6 +39,7 @@ class OgmoLoader
 		Flag;
 		HealthPack;
 		CapturePoint;
+		Crate;
 		#end
 		
 		inits = new Map<String, Bool>();

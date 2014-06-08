@@ -28,7 +28,7 @@ class Splasher extends NWeapon
 	{
 		super();
 		
-		name = "splasher";
+		name = "Splasher";
 		verb = "splashed";
 		bulletSpeed = 195;
 		bulletLifeSpan = 1.4;

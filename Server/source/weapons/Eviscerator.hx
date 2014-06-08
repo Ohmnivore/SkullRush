@@ -25,7 +25,7 @@ class Eviscerator extends NWeapon
 	{
 		super();
 		
-		name = "eviscerator";
+		name = "Eviscerator";
 		verb = "eviscerated";
 		bulletSpeed = 400;
 		bulletLifeSpan = 0.5;

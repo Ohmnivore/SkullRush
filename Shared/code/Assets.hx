@@ -22,6 +22,8 @@ class Assets
 		images.set("assets/images/gridtiles3.png", "shared/images/gridtiles3.png");
 		images.set("assets/images/gridtiles4.png", "shared/images/gridtiles4.png");
 		images.set("assets/images/gun.png", "shared/images/gun.png");
+		images.set("assets/images/gun_peacekeeper_bullet.png", "shared/images/gun_peacekeeper_bullet.png");
+		images.set("assets/images/gun_peacekeeper.png", "shared/images/gun_peacekeeper.png");
 		images.set("assets/images/gun_launcher_bullet.png", "shared/images/gun_launcher_bullet.png");
 		images.set("assets/images/gun_splasher.png", "shared/images/gun_splasher.png");
 		images.set("assets/images/gun_splasher_bullet.png", "shared/images/gun_splasher_bullet.png");
@@ -43,6 +45,7 @@ class Assets
 		images.set("assets/images/flag_yh.png", "shared/images/flag_yh.png");
 		images.set("assets/images/flag_rh.png", "shared/images/flag_rh.png");
 		images.set("assets/images/powerup_health.png", "shared/images/powerup_health.png");
+		images.set("assets/images/crate.png", "shared/images/crate.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

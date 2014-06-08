@@ -37,8 +37,6 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 
 ## Engine:
 * Weapon hud
-* KOTH game mode
-* Super crate box game mode
 * Order scoreboard by score
 * Plugins
 * Spectate

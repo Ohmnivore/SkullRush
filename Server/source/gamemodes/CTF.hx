@@ -42,6 +42,8 @@ class CTF extends BaseGamemode
 	public var score:NScoreboard;
 	public var captures:Map<Int, Int>;
 	
+	public var finished:Bool = false;
+	
 	public function new() 
 	{
 		super();
@@ -97,19 +99,19 @@ class CTF extends BaseGamemode
 		
 		DefaultHooks.update(elapsed);
 		
-		if (Holder.captures[0] != greenCounter.count)
+		if (Holder.captures[0] != greenCounter.count && !finished)
 		{
 			greenCounter.setCount(Holder.captures[0]);
 			checkCaps(0);
 		}
 		
-		if (Holder.captures[1] != blueCounter.count)
+		if (Holder.captures[1] != blueCounter.count && !finished)
 		{
 			blueCounter.setCount(Holder.captures[1]);
 			checkCaps(1);
 		}
 		
-		if (timeLeft.count == 0)
+		if (timeLeft.count == 0 && !finished)
 		{
 			if (Holder.captures[0] > Holder.captures[1])
 			{
@@ -150,6 +152,7 @@ class CTF extends BaseGamemode
 			winmsg.setLabel("Draw match!");
 		}
 		
+		finished = true;
 		new FlxTimer(10, changeMap);
 	}
 	
@@ -240,5 +243,6 @@ class CTF extends BaseGamemode
 		
 		maxtime = Std.parseInt(Assets.config.get("ctf_maxtime"));
 		maxcaps = Std.parseInt(Assets.config.get("ctf_maxcaps"));
+		spawn_time = Std.parseInt(Assets.config.get("ctf_spawntime"));
 	}
 }

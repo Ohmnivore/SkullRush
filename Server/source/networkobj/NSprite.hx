@@ -162,7 +162,7 @@ class NSprite
 		
 		Reg.state.ent.remove(s, true);
 		s.kill();
-		s.destroy();
+		//s.destroy();
 		
 		NReg.sprites.remove(ID);
 	}

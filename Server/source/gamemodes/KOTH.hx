@@ -44,6 +44,8 @@ class KOTH extends BaseGamemode
 	
 	public var captime:Int = 3;
 	
+	public var finished:Bool = false;
+	
 	public function new() 
 	{
 		super();
@@ -102,7 +104,7 @@ class KOTH extends BaseGamemode
 		
 		DefaultHooks.update(elapsed);
 		
-		if (time_1.count == 0)
+		if (time_1.count == 0 && !finished)
 		{
 			grantWin(0);
 		}
@@ -119,6 +121,7 @@ class KOTH extends BaseGamemode
 		var team:Team = teams[WinnerTeam];
 		winmsg.setLabel(team.name + " team wins!", team.color);
 		
+		finished = true;
 		new FlxTimer(10, changeMap);
 	}
 	
@@ -126,41 +129,6 @@ class KOTH extends BaseGamemode
 	{
 		Admin.nextMap();
 	}
-	
-	//public function timeElapsed():Void
-	//{
-		//var arr:Array<Player> = Lambda.array(Reg.server.playermap);
-		//
-		//arr.sort(function(a:Player,b:Player):Int {
-			//if (a.kills == b.kills)
-				//return 0;
-			//if (a.kills > b.kills)
-				//return 1;
-			//else
-				//return -1;
-		//});
-		//
-		//if (arr.length > 0)
-		//{
-			//var player:Player = cast arr[0];
-			//var winner:NLabel = new NLabel(20, 40, 0xffffffff, 0, true);
-			//winner.setLabel(player.name + " wins!", player.header.color);
-		//}
-		//
-		//endMatch();
-	//}
-	
-	//public function endMatch():Void
-	//{
-		//finished = true;
-		//
-		//new FlxTimer(10, changeMap);
-	//}
-	
-	//public function changeMap(T:FlxTimer):Void
-	//{
-		//Admin.nextMap();
-	//}
 	
 	//public function setPlayerScoreboard(P:Player):Void
 	//{
@@ -233,5 +201,6 @@ class KOTH extends BaseGamemode
 		super.onConfig(e);
 		
 		captime = Std.parseInt(Assets.config.get("koth_captime"));
+		spawn_time = Std.parseInt(Assets.config.get("koth_spawntime"));
 	}
 }

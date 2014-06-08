@@ -23,7 +23,7 @@ class Launcher extends NWeapon
 	{
 		super();
 		
-		name = "launcher";
+		name = "Launcher";
 		verb = "exploded";
 		bulletSpeed = 255;
 		fireRate = 1200;

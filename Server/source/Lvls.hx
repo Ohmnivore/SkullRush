@@ -1,5 +1,6 @@
 package ;
 
+import gamemodes.BOX;
 import gamemodes.CTF;
 import gamemodes.FFA;
 import gamemodes.KOTH;
@@ -19,6 +20,7 @@ class Lvls
 		FFA;
 		CTF;
 		KOTH;
+		BOX;
 		
 		return File.getContent("assets/maps/" + Name + ".oel");
 	}

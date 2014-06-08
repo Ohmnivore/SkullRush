@@ -212,5 +212,6 @@ class FFA extends BaseGamemode
 		
 		maxkills = Std.parseInt(Assets.config.get("ffa_maxkills"));
 		maxtime = Std.parseInt(Assets.config.get("ffa_maxtime"));
+		spawn_time = Std.parseInt(Assets.config.get("ffa_spawntime"));
 	}
 }

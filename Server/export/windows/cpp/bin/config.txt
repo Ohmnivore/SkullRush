@@ -1,6 +1,7 @@
 version=0.2.2
 
 ############################
+
 #basic variables
 
 crashdump=true
@@ -8,7 +9,7 @@ crashdump=true
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
 
-maps=CaptureHell, TwinCapture, Test
+maps=CrateWorld, CaptureHell, TwinCapture, Test
 
 masterserver=http://skullrush.elementfx.com/laravel/public/
 
@@ -23,12 +24,20 @@ startingweaps=Launcher, Splasher
 ############################
 
 #ffa config
-ffa_maxtime=10
-ffa_maxkills=30
+ffa_maxtime=5
+ffa_maxkills=15
+ffa_spawntime=4
 
 #ctf config
 ctf_maxtime=5
 ctf_maxcaps=3
+ffa_spawntime=6
 
 #koth congig
 koth_captime=3
+ffa_spawntime=4
+
+#box config
+box_maxtime=5
+box_maxkills=15
+box_spawntime=3
