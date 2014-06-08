@@ -31,11 +31,11 @@ ffa_spawntime=4
 #ctf config
 ctf_maxtime=5
 ctf_maxcaps=3
-ffa_spawntime=6
+ctf_spawntime=6
 
 #koth congig
 koth_captime=3
-ffa_spawntime=4
+koth_spawntime=4
 
 #box config
 box_maxtime=5

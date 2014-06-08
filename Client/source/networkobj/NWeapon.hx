@@ -1,4 +1,5 @@
 package networkobj;
+
 import flixel.util.FlxPoint;
 import flixel.addons.weapon.FlxBullet;
 import flixel.FlxG;
@@ -11,6 +12,7 @@ import flixel.util.FlxPoint;
  * ...
  * @author Ohmnivore
  */
+
 class NWeapon
 {
 	//static public var weapons:Array<NWeapon>;
@@ -163,6 +165,8 @@ class NWeapon
 		var s:Int = Slot - 1;
 		NWeapon.weapons.set(s, W);
 		W.slot = Slot;
+		
+		Reg.state.wepHUD.addIcon(Slot, W.gunIcon);
 	}
 	
 	static public function deleteWeapon(Slot:Int):Void

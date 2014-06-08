@@ -1,4 +1,5 @@
 package ;
+
 import enet.Client;
 import enet.ENet;
 import enet.ENetEvent;
@@ -29,6 +30,7 @@ import ext.FlxEmitterAuto;
  * ...
  * @author Ohmnivore
  */
+
 class SkullClient extends Client
 {
 	public var s:UdpSocket;
@@ -483,6 +485,7 @@ class SkullClient extends Client
 		if (MsgID == Msg.DeathInfo.ID)
 		{
 			Reg.state.openSubState(new Spawn(Reg.state.teams, Msg.DeathInfo.data.get("timer")));
+			Reg.state.wepHUD.hideAllIcons();
 		}
 		
 		if (MsgID == Msg.SpawnConfirm.ID)
@@ -585,8 +588,17 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.AnnounceGuns.ID)
 		{
+			if (Reg.state.wepHUD != null)
+			{
+				Reg.state.wepHUD.kill();
+				Reg.state.wepHUD.destroy();
+				Reg.state.hud.remove(Reg.state.wepHUD, true);
+				Reg.state.wepHUD = new WeaponHUD(2);
+				Reg.state.hud.add(Reg.state.wepHUD);
+			}
+			
 			var map:Map<Int, Dynamic> = cast Unserializer.run(Msg.AnnounceGuns.data.get("serialized"));
-			//trace(map);
+			
 			for (slot in map.keys())
 			{
 				NWeapon.addWeapon(new NWeapon(map.get(slot)), slot + 1);
@@ -601,7 +613,20 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.GrantGun.ID)
 		{
-			Reg.state.player.grantedWeps = Unserializer.run(Msg.GrantGun.data.get("slot"));
+			var map:Map<Int, Bool> = Unserializer.run(Msg.GrantGun.data.get("slot"));
+			Reg.state.player.grantedWeps = map;
+			
+			for (x in map.keys())
+			{
+				if (map.get(x) == true)
+				{
+					Reg.state.wepHUD.unhideIcon(x);
+				}
+				else
+				{
+					Reg.state.wepHUD.hideIcon(x);
+				}
+			}
 		}
 		
 		E = null;

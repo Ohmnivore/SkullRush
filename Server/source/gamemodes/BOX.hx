@@ -78,7 +78,7 @@ class BOX extends BaseGamemode
 	
 	override public function onSpawn(E:GenEvent):Void 
 	{
-		//DefaultHooks.onSpawn(E.info);
+		NWeapon.grantWeapon(E.info.ID, [1]);
 	}
 	
 	override public function makeWeapons(E:GenEvent):Void 

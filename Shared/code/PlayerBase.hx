@@ -108,6 +108,7 @@ class PlayerBase extends FlxSprite
 		//teamcolor = 0xff00A8C2;
 		
 		header = new FlxTextExt(0, 0, 200, name, 8, false);
+		//header.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 		Reg.state.over_players.add(header);
 		header.color = 0xff00A8C2;
 		

@@ -23,13 +23,15 @@ class Player extends PlayerBase
 			var g:FlxWeaponExt = guns_arr[GunID - 1];
 			if (g != null)
 			{
-					if (gun != null)
-						gun.visible = false;
-					g.gun.visible = true;
-					gun = g.gun;
-					cannon = g;
-					
-					current_weap = GunID;
+				if (gun != null)
+					gun.visible = false;
+				g.gun.visible = true;
+				gun = g.gun;
+				cannon = g;
+				
+				current_weap = GunID;
+				
+				Reg.state.wepHUD.selectIcon(current_weap);
 			}
 		}
 	}

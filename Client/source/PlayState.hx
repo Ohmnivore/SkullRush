@@ -58,6 +58,8 @@ class PlayState extends FlxState
 	
 	public var m:Mutex;
 	
+	public var wepHUD:WeaponHUD;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -119,6 +121,9 @@ class PlayState extends FlxState
 			case "false":
 				ping_text.visible = false;
 		}
+		
+		wepHUD = new WeaponHUD(2);
+		add(wepHUD);
 		
 		Assets.initAssets();
 		Thread.create(thread);

@@ -66,6 +66,7 @@ class DefaultHooks
 	static public function makeWeapons():Void
 	{
 		NWeapon.addWeapon(new Launcher(), 1);
+		NWeapon.addWeapon(new Launcher(), 1);
 		NWeapon.addWeapon(new Splasher(), 2);
 		NWeapon.addWeapon(new Eviscerator(), 3);
 	}

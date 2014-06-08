@@ -36,7 +36,6 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 # TODO:
 
 ## Engine:
-* Weapon hud
 * Order scoreboard by score
 * Plugins
 * Spectate

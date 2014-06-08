@@ -108,7 +108,7 @@ class NLabel extends NHUD
 		{
 			Reg.state.hud.remove(t, true);
 			t.kill();
-			t.destroy();
+			//t.destroy();
 		}
 	}
 	

@@ -24,10 +24,14 @@ class Assets
 		images.set("assets/images/gun.png", "shared/images/gun.png");
 		images.set("assets/images/gun_peacekeeper_bullet.png", "shared/images/gun_peacekeeper_bullet.png");
 		images.set("assets/images/gun_peacekeeper.png", "shared/images/gun_peacekeeper.png");
+		images.set("assets/images/gun_peacekeeper_icon.png", "shared/images/gun_peacekeeper_icon.png");
+		images.set("assets/images/gun_launcher_icon.png", "shared/images/gun_launcher_icon.png");
 		images.set("assets/images/gun_launcher_bullet.png", "shared/images/gun_launcher_bullet.png");
 		images.set("assets/images/gun_splasher.png", "shared/images/gun_splasher.png");
+		images.set("assets/images/gun_splasher_icon.png", "shared/images/gun_splasher_icon.png");
 		images.set("assets/images/gun_splasher_bullet.png", "shared/images/gun_splasher_bullet.png");
 		images.set("assets/images/gun_eviscerator.png", "shared/images/gun_eviscerator.png");
+		images.set("assets/images/gun_eviscerator_icon.png", "shared/images/gun_eviscerator_icon.png");
 		images.set("assets/images/gun_eviscerator_bullet.png", "shared/images/gun_eviscerator_bullet.png");
 		images.set("assets/images/playerblue.png", "shared/images/playerblue.png");
 		images.set("assets/images/playergreen.png", "shared/images/playergreen.png");
