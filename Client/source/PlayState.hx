@@ -196,11 +196,12 @@ class PlayState extends FlxState
 		{
 			for (i in NReg.HUDS.keys())
 			{
-				trace("Delete ", i);
+				//trace("Delete ", i);
 				var h:FlxText = NReg.HUDS.get(i);
 				hud.remove(h, true);
 				//h.kill();
-				NReg.HUDS.remove(i);
+				if (NReg.HUDS.exists(i))
+					NReg.HUDS.remove(i);
 				//h.destroy();
 			}
 			for (k in NReg.sprites.keys())

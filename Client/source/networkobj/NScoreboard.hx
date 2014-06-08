@@ -29,16 +29,19 @@ class NScoreboard
 	public var group:FlxSpriteGroup;
 	private var t_group:FlxSpriteGroup;
 	private var texts:Map<Int, Dynamic>;
+	public var sortBy:Int;
 	
 	public var back:FlxSprite;
 	public var ID:Int;
 	
-	public function new(id:Int, Title:String, Headers:Array<String>, Color:Int = 0xff000000) 
+	public function new(id:Int, Title:String, Headers:Array<String>,
+		SortBy:Int = 0, Color:Int = 0xffffffff)
 	{
 		title = Title;
 		headers = Headers;
 		//headers.unshift("Player");
 		color = Color;
+		sortBy = SortBy;
 		
 		scores = new Map<Int, Dynamic>();
 		texts = new Map<Int, Dynamic>();
@@ -124,12 +127,12 @@ class NScoreboard
 	{
 		var arr:Array<Dynamic> = cast Unserializer.run(S);
 		
-		//for (t in t_group.members)
-		//{
-			//t_group.remove(t, true);
-			//t.kill();
+		for (t in t_group.members)
+		{
+			t_group.remove(t, true);
+			t.kill();
 			//t.destroy();
-		//}
+		}
 		
 		Y = X_BORDER + 2 * Y_SPACING;
 		
@@ -176,13 +179,17 @@ class NScoreboard
 		X = X_BORDER;
 		Y = X_BORDER;
 		
-		group.add(new FlxText(X, Y, FlxG.width, title));
+		var tt:FlxText = new FlxText(X, Y, FlxG.width, title);
+		tt.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+		group.add(tt);
 		
 		Y += Y_SPACING;
 		
 		for (h in headers)
 		{
-			group.add(new FlxText(X, Y, FlxG.width, Std.string(h)));
+			var ht:FlxText = new FlxText(X, Y, FlxG.width, Std.string(h));
+			ht.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+			group.add(ht);
 			X += X_SPACING;
 		}
 		

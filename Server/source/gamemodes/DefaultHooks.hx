@@ -125,6 +125,7 @@ class DefaultHooks
 	static public function playerCollide(P:Player, P2:Player):Void
 	{
 		var iskill:Bool = false;
+		var isjump:Bool = false;
 		var winner:Player = P;
 		var loser:Player = P2;
 		
@@ -135,11 +136,17 @@ class DefaultHooks
 				winner = P;
 				loser = P2;
 				
-				//P2.health = 0;
-				
-				//announceSquish(winner, loser);
-				
 				iskill = true;
+			}
+		}
+		else
+		{
+			if (P.y < P2.y)
+			{
+				winner = P;
+				loser = P2;
+				
+				isjump = true;
 			}
 		}
 		
@@ -150,11 +157,17 @@ class DefaultHooks
 				winner = P2;
 				loser = P;
 				
-				//P.health = 0;
-				
-				//announceSquish(winner, loser);
-				
 				iskill = true;
+			}
+		}
+		else
+		{
+			if (P2.y < P.y)
+			{
+				winner = P2;
+				loser = P;
+				
+				isjump = true;
 			}
 		}
 		
@@ -174,6 +187,12 @@ class DefaultHooks
 			info.dmgsource = winner.getMidpoint();
 			
 			Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
+		}
+		
+		if (isjump)
+		{
+			winner.velocity.y -= 280;
+			loser.velocity.y += 100;
 		}
 	}
 	

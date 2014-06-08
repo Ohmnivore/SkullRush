@@ -7,6 +7,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxSpriteUtil;
 import gamemodes.BaseGamemode;
+import haxe.ds.ArraySort;
 import haxe.Serializer;
 
 /**
@@ -31,18 +32,21 @@ class NScoreboard
 	public var group:FlxSpriteGroup;
 	private var texts:Map<Int, Dynamic>;
 	
+	public var sortBy:Int;
+	
 	public var back:FlxSprite;
 	
 	public var ID:Int;
 	
 	public function new(Title:String, Headers:Array<String>, DefaultHeaders:Array<String>,
-						Color:Int = 0xff000000) 
+		SortBy:Int = 0, Color:Int = 0xffffffff) 
 	{
 		title = Title;
 		headers = Headers;
 		headers.unshift("Player");
 		default_headers = DefaultHeaders;
 		color = Color;
+		sortBy = SortBy;
 		
 		scores = new Map<Int, Dynamic>();
 		texts = new Map<Int, Dynamic>();
@@ -106,6 +110,7 @@ class NScoreboard
 	{
 		var arr:Array<FlxText> = cast texts.get(P.ID);
 		var i:Int = 0;
+		var old_check:Float = Std.parseFloat(arr[sortBy + 2].text);
 		for (t in arr)
 		{
 			if (i > 0)
@@ -114,6 +119,36 @@ class NScoreboard
 				text.text = Std.string(ToSet[i-1]);
 			}
 			i++;
+		}
+		var new_check:Float = Std.parseFloat(arr[sortBy + 2].text);
+		if (new_check > old_check)
+		{
+		for (ID in texts.keys())
+		{
+			if (ID != P.ID)
+			{
+				var arr2:Array<FlxText> = cast texts.get(ID);
+				if (Std.parseFloat(arr[sortBy + 2].text) > Std.parseFloat(arr2[sortBy + 2].text))
+				{
+					var oldpos:Float = arr[0].y;
+					var newpos:Float = arr2[0].y;
+					
+					if (newpos < oldpos)
+					{
+						for (t1 in arr)
+						{
+							t1.y = newpos;
+							t1.update();
+						}
+						for (t2 in arr2)
+						{
+							t2.y = oldpos;
+							t2.update();
+						}
+					}
+				}
+			}
+		}
 		}
 	}
 	
@@ -178,7 +213,24 @@ class NScoreboard
 			arr.push(arr2);
 		}
 		
+		arr.sort(compareDatas);
+		arr.reverse();
+		
 		return Serializer.run(arr);
+	}
+	
+	private function compareDatas(T1:Array<String>, T2:Array<String>):Int
+	{
+		var toCompare1:Float = Std.parseFloat(T1[sortBy + 2]);
+		var toCompare2:Float = Std.parseFloat(T2[sortBy + 2]);
+		
+		if (toCompare1 == toCompare2)
+			return 0;
+		if (toCompare1 > toCompare2)
+			return 1;
+		if (toCompare1 < toCompare2)
+			return -1;
+		return 0;
 	}
 	
 	public function destroy():Void
@@ -203,13 +255,17 @@ class NScoreboard
 		X = X_BORDER;
 		Y = X_BORDER;
 		
-		group.add(new FlxText(X, Y, FlxG.width, title));
+		var tt:FlxText = new FlxText(X, Y, FlxG.width, title);
+		tt.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+		group.add(tt);
 		
 		Y += Y_SPACING;
 		
 		for (h in headers)
 		{
-			group.add(new FlxText(X, Y, FlxG.width, Std.string(h)));
+			var ht:FlxText = new FlxText(X, Y, FlxG.width, Std.string(h));
+			ht.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+			group.add(ht);
 			X += X_SPACING;
 		}
 		

@@ -39,7 +39,7 @@ class Splasher extends NWeapon
 		gunIcon = "assets/images/gun_splasher.png";
 		bulletGraphic = "assets/images/gun_splasher_bullet.png";
 		bulletGravity = new FlxPoint(0, 300);
-		ignoreCollisions = true;
+		ignoreCollisions = false;
 		
 		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
@@ -128,48 +128,13 @@ class Splasher extends NWeapon
 				Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
 			}
 		}
-		
-		//Bullet.kill();
 	}
 	
-	//override public function collide(Bullet:FlxBullet, Other:Dynamic):Void 
-	//{
-		//if (Other != Bullet._weapon.parent)
-		//{
-			//NEmitter.playEmitter(EMITTER, true, Std.int(Bullet.x + Bullet.width / 2),
-				//Std.int(Bullet.y + Bullet.height / 2), "assets/images/explosionparticle.png", 0, 0, true, 50);
-			//
-			//for (p in Reg.state.players.members)
-			//{
-				//var pl:Player = cast (p, Player);
-				//
-				//var v:FlxVector = new FlxVector(1, 0);
-				//
-				//v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
-				//
-				//var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
-				//if (dist_coeff < 0) dist_coeff = 0;
-				//
-				//pl.velocity.x += v.x * 300 * dist_coeff;
-				//pl.velocity.y += v.y * 300 * dist_coeff;
-				//
-				//if (pl.ID != Reflect.field(Bullet._weapon.parent, "ID"))
-				//{
-					//var dmg:Float = dist_coeff * 75;
-					//
-					//var info:HurtInfo = new HurtInfo();
-					//info.attacker = Reflect.field(Bullet._weapon.parent, "ID");
-					//info.victim = pl.ID;
-					//info.dmg = Std.int(dmg);
-					//info.dmgsource = Bullet.getMidpoint();
-					//info.weapon = this;
-					//info.type = BaseGamemode.BULLET;
-					//
-					//Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
-				//}
-			//}
-			//
-			//Bullet.kill();
-		//}
-	//}
+	override public function collide(Bullet:FlxBullet, Other:Dynamic):Void 
+	{
+		if (Other != Bullet._weapon.parent)
+		{
+			Bullet.kill();
+		}
+	}
 }

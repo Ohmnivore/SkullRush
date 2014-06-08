@@ -1,4 +1,4 @@
-version=0.2.2
+version=0.2.3
 
 ############################
 
@@ -9,7 +9,7 @@ crashdump=true
 manifesturl=null
 #https://dl.dropboxusercontent.com/u/229424261/skullrush/manifest.json
 
-maps=CrateWorld, CaptureHell, TwinCapture, Test
+maps=Test, CrateWorld, CaptureHell, TwinCapture
 
 masterserver=http://skullrush.elementfx.com/laravel/public/
 

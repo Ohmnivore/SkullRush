@@ -71,7 +71,7 @@ class InitState extends FlxState
 		
 		//Make trace also write to flixel's debugger's log
 		old_trace = Log.trace;
-		Log.trace = new_trace;
+		//Log.trace = new_trace;
 		
 		//Setup networking
 		Reg.maps = Reg.parseMaps();
@@ -87,7 +87,7 @@ class InitState extends FlxState
 	
 	private static function new_trace(v:Dynamic, ?inf:haxe.PosInfos)
 	{
-        old_trace(v);
+        old_trace(v, inf);
 		FlxG.log.add(v);
     }
 	

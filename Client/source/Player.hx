@@ -22,7 +22,6 @@ class Player extends PlayerBase
 		var reload:FlxTimer = new FlxTimer(last_shot.mock_fireRate / 1000);
 		Reg.state.wepBar.setRange(0, 1);
 		Reg.state.wepBar.setParent(reload, "progress", false);
-		trace(last_shot.mock_fireRate);
 	}
 	
 	override public function setGun(GunID:Int, Force:Bool = false):Void

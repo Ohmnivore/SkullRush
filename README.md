@@ -36,7 +36,6 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 # TODO:
 
 ## Engine:
-* Order scoreboard by score
 * Plugins
 * Spectate
 * Interactive events:
@@ -49,13 +48,12 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 
 ## Gameplay:
 * New maps
-* footstool jumping
-* rework splasher
 * custom tiles
 
 
 ## Bugs:
 * Fix annoying LAN server discovery bug
+* Fix client-side crashes on map change
 
 
 ## Assets:

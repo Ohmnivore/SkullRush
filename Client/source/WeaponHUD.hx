@@ -12,7 +12,7 @@ import flixel.util.FlxSpriteUtil;
  */
 class WeaponHUD extends FlxSpriteGroup
 {
-	static public inline var PADDING:Int = 3;
+	static public inline var PADDING:Int = 2;
 	
 	private var icons:Map<Int, FlxSprite>;
 	private var hiders:Map<Int, FlxSprite>;
@@ -61,7 +61,7 @@ class WeaponHUD extends FlxSpriteGroup
 		icons.set(Slot, icon);
 		hiders.set(Slot, hider);
 		
-		background.makeGraphic(Std.int(width), Std.int(height - PADDING), 0x99000000);
+		background.makeGraphic(Std.int(width), Std.int(height - PADDING * 2), 0x99000000);
 		FlxSpriteUtil.screenCenter(this, false, true);
 	}
 	
