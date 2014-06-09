@@ -1,8 +1,10 @@
 package ;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.tile.FlxTile;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxBitmapUtil;
 import flixel.util.FlxMath;
@@ -11,7 +13,11 @@ import flixel.util.FlxRect;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
+import haxe.io.Path;
+import haxe.Json;
 import haxe.xml.Fast;
+import sys.FileSystem;
+import sys.io.File;
 
 #if SERVER
 import entities.Flag;
@@ -51,6 +57,10 @@ class OgmoLoader
 	
 	static public function loadXML(XML:String, State:PlayState):Void
 	{
+		var drop:FlxBackdrop = new FlxBackdrop("shared/images/background.png", 0.4, 0, true, false);
+		State.background.add(drop);
+		
+		
 		var xml = Xml.parse(XML);
 		
 		var fast = new Fast(xml.firstElement());
@@ -59,9 +69,13 @@ class OgmoLoader
 		{
 			if (x.has.tileset) //Tilemap
 			{
+				var td:TileDef = loadFile(Assets.getImg(tilemaps.get(x.att.tileset)));
+				
 				var map:FlxTilemap = new FlxTilemap();
-				map.loadMap(x.innerData, Assets.getImg("assets/images/scifitiles.png"), 16, 16, 0, 0, 0, 0);
+				map.loadMap(x.innerData, Assets.getImg(tilemaps.get(x.att.tileset)), 16, 16, 0, 0, 0, 0);
 				State.maps.add(map);
+				
+				interpretData(td, map);
 			}
 			
 			else
@@ -94,12 +108,12 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, ArtifactFix.artefactFix(Assets.getImg("assets/images/gridtiles2.png"), 16, 16),
+					map.loadMap(mapdata.arr, ArtifactFix.artefactFix(Assets.getImg(tilemaps.get("grid")), 16, 16),
 						16, 16, 0, 0, 1, 1);
+					
 					makeTileCollisions(map);
 					State.maps.add(map);
 					map.setDirty(true);
-					
 					State.collidemap = map;
 					
 					if (x.name.indexOf("Tiles") > -1)
@@ -111,6 +125,41 @@ class OgmoLoader
 		}
 	}
 	
+	//Tiledef parsing code
+	static public function loadFile(P:String):TileDef
+	{
+		var cutoff:Int = P.lastIndexOf("/");
+		var cutoff2:Int = P.lastIndexOf(".");
+		
+		var filepath:String = "shared/tiledefs/" + P.substring(cutoff + 1, cutoff2) + ".json";
+		
+		return new TileDef(cast Json.parse(File.getContent(filepath)));
+	}
+	
+	static public function interpretData(T:TileDef, M:FlxTilemap):Void
+	{
+		var tileObjects:Array<FlxTile> = cast Reflect.field(M, "_tileObjects");
+		for (tile in tileObjects)
+		{
+			M.setTileProperties(tile.index, FlxObject.NONE);
+		}
+		
+		for (t in T.tiles.keys())
+		{
+			var collisions:Int = FlxObject.NONE;
+			
+			var props:Map<String, Dynamic> = T.getTileProps(t);
+			
+			if (props.get("Solid") == true)
+			{
+				collisions = FlxObject.ANY;
+			}
+			
+			M.setTileProperties(t, collisions);
+		}
+	}
+	
+	//Neighbour-sensitive tile grid parsing code
 	static public function makeTileCollisions(M:FlxTilemap):Void
 	{
 		M.setTileProperties(16, FlxObject.NONE, 4);
@@ -299,6 +348,64 @@ class OgmoLoader
 	static public function getXY(X:Int, Y:Int, Arr:Array<Dynamic>):Bool
 	{
 		return Arr[Y][X];
+	}
+}
+
+class TileDef
+{
+	public var width:Int;
+	public var height:Int;
+	
+	public var fields:Array<String>;
+	public var brushes:Map<Int, Array<Dynamic>>;
+	public var tiles:Map<Int, Int>;
+	
+	public function new(Data:Array<Dynamic>)
+	{
+		var arr_info:Array<Dynamic> = Data[0];
+		var arr_fields:Array<String> = Data[1];
+		var arr_brush_key:Array<Int> = Data[2];
+		var arr_brush_value:Array<Dynamic> = Data[3];
+		var arr_tile_key:Array<Int> = Data[4];
+		var arr_tile_value:Array<Int> = Data[5];
+		
+		width = cast arr_info[1];
+		height = cast arr_info[2];
+		
+		fields = arr_fields;
+		
+		brushes = new Map<Int, Array<Dynamic>>();
+		var i:Int = 0;
+		while (i < arr_brush_key.length)
+		{
+			brushes.set(arr_brush_key[i], arr_brush_value[i][0]);
+			i++;
+		}
+		
+		tiles = new Map<Int, Int>();
+		i = 0;
+		while (i < arr_tile_key.length)
+		{
+			tiles.set(arr_tile_key[i], arr_tile_value[i]);
+			i++;
+		}
+	}
+	
+	public function getTileProps(Index:Int):Map<String, Dynamic>
+	{
+		var brush:Int = tiles.get(Index);
+		var brush_arr:Array<Dynamic> = brushes.get(brush);
+		
+		var ret:Map<String, Dynamic> = new Map<String, Dynamic>();
+		
+		var i:Int = 0;
+		while (i < fields.length)
+		{
+			ret.set(fields[i], brush_arr[i]);
+			i++;
+		}
+		
+		return ret;
 	}
 }
 

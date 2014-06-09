@@ -37,6 +37,7 @@ class PlayState extends FlxState
 	public var current_map:String;
 	
 	public var collidemap:FlxTilemap;
+	public var background:FlxGroup;
 	public var maps:FlxGroup;
 	public var under_players:FlxGroup;
 	public var bullets:FlxGroup;
@@ -82,6 +83,8 @@ class PlayState extends FlxState
 		Reg.state = this;
 		playermap = new Map<Int, Player>();
 		
+		background = new FlxGroup();
+		add(background);
 		maps = new FlxGroup();
 		add(maps);
 		under_players = new FlxGroup();
@@ -219,6 +222,7 @@ class PlayState extends FlxState
 		
 		current_map = MapName;
 		
+		OgmoLoader.initTilemaps();
 		OgmoLoader.loadXML(MapString, this);
 		//SkullClient.initClient();
 		
@@ -304,10 +308,10 @@ class PlayState extends FlxState
 		
 		Reg.client.updatePingText();
 		
-		FlxG.collide(tocollide, collidemap);
-		FlxG.collide(bullets, collidemap, bulletCollide);
+		FlxG.collide(tocollide, maps); //collidemap
+		FlxG.collide(bullets, maps, bulletCollide); //collidemap
 		FlxG.overlap(bullets, players, bulletCollidePl);
-		FlxG.collide(emitters, collidemap);
+		FlxG.collide(emitters, maps); //collidemap
 		
 		if (player != null)
 			updatePlayer();

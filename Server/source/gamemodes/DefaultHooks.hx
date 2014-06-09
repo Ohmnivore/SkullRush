@@ -430,12 +430,12 @@ class DefaultHooks
 	
 	static public function update(elapsed:Float):Void
 	{
-		FlxG.collide(Reg.state.tocollide, Reg.state.collidemap);
-		FlxG.collide(Reg.state.bullets, Reg.state.collidemap, DefaultHooks.bulletCollide);
+		FlxG.collide(Reg.state.tocollide, Reg.state.maps); //collidemap
+		FlxG.collide(Reg.state.bullets, Reg.state.maps, DefaultHooks.bulletCollide); //collidemap
 		FlxG.overlap(Reg.state.bullets, Reg.state.players, DefaultHooks.bulletCollide);
 		FlxG.collide(Reg.state.players, DefaultHooks.playerCollide);
 		FlxG.collide(Reg.state.players);
-		FlxG.collide(Reg.state.emitters, Reg.state.collidemap);
+		FlxG.collide(Reg.state.emitters, Reg.state.maps); //collidemap
 		
 		DefaultHooks.checkIfFall();
 	}

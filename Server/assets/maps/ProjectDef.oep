@@ -42,7 +42,31 @@
       <ExportMode>Bitstring</ExportMode>
     </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>TilesSciFiBack</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>TilesSciFi</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>TilesSciFiFore</Name>
       <Grid>
         <Width>16</Width>
         <Height>16</Height>

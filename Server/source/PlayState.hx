@@ -57,6 +57,7 @@ class PlayState extends FlxState
 	public var current_map_string:String;
 	
 	public var collidemap:FlxTilemap;
+	public var background:FlxGroup;
 	public var maps:FlxGroup;
 	public var under_players:FlxGroup;
 	public var bullets:FlxGroup;
@@ -92,6 +93,8 @@ class PlayState extends FlxState
 		NWeapon.init();
 		
 		//Init and add groups
+		background = new FlxGroup();
+		add(background);
 		maps = new FlxGroup();
 		add(maps);
 		under_players = new FlxGroup();

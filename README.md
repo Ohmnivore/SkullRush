@@ -48,7 +48,7 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 
 ## Gameplay:
 * New maps
-* custom tiles
+* custom tiles (spikes and such things)
 
 
 ## Bugs:
@@ -57,7 +57,8 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 
 
 ## Assets:
-* Replace place-holder art by actual art
+* Make crosshairs
+* Make background more dynamic
 * Make custom flixel-ui theme
 * Find music and sounds
 
