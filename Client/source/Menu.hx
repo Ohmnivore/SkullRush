@@ -16,6 +16,7 @@ class Menu extends FlxSubState
 	override public function create():Void 
 	{
 		super.create();
+		FlxG.mouse.unload();
 		
 		OPENED = true;
 		
@@ -44,6 +45,7 @@ class Menu extends FlxSubState
 	override public function destroy():Void 
 	{
 		OPENED = false;
+		FlxG.mouse.load("shared/images/blank.png");
 		
 		super.destroy();
 	}

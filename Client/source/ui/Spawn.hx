@@ -42,6 +42,7 @@ class Spawn extends FlxUISubState
 	override public function create():Void 
 	{
 		super.create();
+		FlxG.mouse.unload();
 		
 		group = new FlxSpriteGroup();
 		group.scrollFactor.set();
@@ -89,6 +90,12 @@ class Spawn extends FlxUISubState
 		
 		if (!deathTimer.finished)
 			timerLabel.text = "Respawn in: " + Std.string(Std.int(deathTimer.timeLeft));
+	}
+	
+	override public function destroy():Void 
+	{
+		FlxG.mouse.load("shared/images/blank.png");
+		super.destroy();
 	}
 	
 	private function spawn():Void

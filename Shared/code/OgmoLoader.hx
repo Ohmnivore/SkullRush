@@ -51,7 +51,7 @@ class OgmoLoader
 		inits = new Map<String, Bool>();
 		
 		tilemaps = new Map<String, String>();
-		tilemaps.set("grid", "assets/images/gridtiles2.png");
+		tilemaps.set("grid", "assets/images/gridtiles4.png");
 		tilemaps.set("tiles", "assets/images/scifitiles.png");
 	}
 	

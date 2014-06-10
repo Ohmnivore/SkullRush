@@ -5,7 +5,7 @@ This is my attempt at making the game I have been envisioning for a long time. W
 other games of the same type, I've found none to be particularly alike to the experience I wanted.
 Most importantly, SkullRush can be extensively modded. In short, the client acts as a canvas of sorts, and the server has almost complete control over the game's graphics, sounds, and logic. This means that there's out of the box support for custom game modes, custom game entities, custom graphics (that can even override the default game graphics if you want) and much more. Mod it enough and you can make into a completely different game, which is a good thing of course.
 
-At the moment the source code is a mess. I'll take a couple of weeks to clean all of it up.
+At the moment the client source code is a mess. I'll clean it up one day.
 
 ### Links:
 * [Website](http://ohmnivore.github.io/)
@@ -57,7 +57,6 @@ At the moment the source code is a mess. I'll take a couple of weeks to clean al
 
 
 ## Assets:
-* Make crosshairs
 * Make background more dynamic
 * Make custom flixel-ui theme
 * Find music and sounds

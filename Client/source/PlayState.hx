@@ -4,6 +4,7 @@ import cpp.vm.Mutex;
 import cpp.vm.Thread;
 import enet.ENet;
 import flash.utils.ByteArray;
+import flixel.addons.effects.FlxTrailArea;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxCamera;
@@ -25,6 +26,7 @@ import haxe.macro.Expr.Function;
 import mloader.Loader.LoaderErrorType;
 import networkobj.NReg;
 import networkobj.NScoreManager;
+import openfl.Vector.Vector;
 import ui.Spawn;
 import ext.FlxWeaponExt;
 
@@ -61,6 +63,9 @@ class PlayState extends FlxState
 	
 	public var wepHUD:WeaponHUD;
 	public var wepBar:WeaponBar;
+	public var mouseSprite:FlxCrosshairs;
+	
+	public var trailArea:FlxTrailArea;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -77,6 +82,8 @@ class PlayState extends FlxState
 		// Show the mouse (in case it hasn't been disabled)
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = true;
+		FlxG.mouse.load("shared/images/blank.png");
+		//FlxG.mouse.load("shared/images/crosshairs.png", 0.5, 0, 0);
 		#end
 		
 		super.create();
@@ -107,6 +114,11 @@ class PlayState extends FlxState
 		hud = new FlxGroup();
 		add(hud);
 		scores = new NScoreManager();
+		
+		//trailArea = new FlxTrailArea(0, 0, FlxG.width, FlxG.height);
+		//under_players.add(trailArea);
+		//
+		//hud.add(new FlxCrosshairs());
 		
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
@@ -225,6 +237,21 @@ class PlayState extends FlxState
 		OgmoLoader.initTilemaps();
 		OgmoLoader.loadXML(MapString, this);
 		//SkullClient.initClient();
+		
+		//if (trailArea != null)
+		//{
+			//under_players.clear();
+			//trailArea.kill();
+		//}
+		//trailArea = new FlxTrailArea(0, 0, FlxG.width, FlxG.height, 0.5, 2, false, true);
+		//under_players.add(trailArea);
+		hud.clear();
+		//hud.add(new FlxCrosshairs());
+		new FlxCrosshairs().addToGroup(hud);
+		
+		trailArea.x = collidemap.x - FlxG.width / 2;
+		trailArea.y = collidemap.y - FlxG.height / 2;
+		trailArea.setSize(collidemap.width + FlxG.width, collidemap.height + FlxG.height);
 		
 		for (p in playermap.iterator())
 		{
