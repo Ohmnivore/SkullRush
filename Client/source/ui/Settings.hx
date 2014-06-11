@@ -40,6 +40,7 @@ class Settings extends FlxUIState
 		
 		var save:FlxUIButton = new FlxUIButton(10, 0, "Save", saveSettings);
 		save.y = FlxG.height - save.height - 5;
+		UIAssets.setBtnGraphic(save);
 		add(save);
 		
 		var t:FlxUIText = new FlxUIText();
@@ -64,7 +65,7 @@ class Settings extends FlxUIState
 										new StrIdLabel("b", "Blue"),
 										new StrIdLabel("r", "Red"),
 										new StrIdLabel("y", "Yellow")];
-		color = new FlxUIDropDownMenu(90, 50, data);
+		color = new FlxUIDropDownMenu(90, 50, data, UIAssets.createHeader());
 		switch (Assets.config.get("team"))
 		{
 			case "0":

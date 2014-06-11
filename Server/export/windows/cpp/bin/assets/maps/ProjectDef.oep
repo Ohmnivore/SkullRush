@@ -28,19 +28,6 @@
     <ValueDefinition xsi:type="StringValueDefinition" Name="Gamemode" Default="FFA" MaxChars="-1" MultiLine="false" />
   </LevelValueDefinitions>
   <LayerDefinitions>
-    <LayerDefinition xsi:type="GridLayerDefinition">
-      <Name>TilesGrid</Name>
-      <Grid>
-        <Width>16</Width>
-        <Height>16</Height>
-      </Grid>
-      <ScrollFactor>
-        <X>1</X>
-        <Y>1</Y>
-      </ScrollFactor>
-      <Color A="255" R="0" G="0" B="0" />
-      <ExportMode>Bitstring</ExportMode>
-    </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>TilesSciFiBack</Name>
       <Grid>
@@ -52,6 +39,19 @@
         <Y>1</Y>
       </ScrollFactor>
       <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="GridLayerDefinition">
+      <Name>outdoor_tileset.png</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <Color A="255" R="0" G="0" B="0" />
+      <ExportMode>Bitstring</ExportMode>
     </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
       <Name>TilesSciFi</Name>
@@ -91,7 +91,7 @@
   </LayerDefinitions>
   <Tilesets>
     <Tileset>
-      <Name>tiles</Name>
+      <Name>assets/images/indoor_tileset.png</Name>
       <FilePath>..\..\..\Shared\assets\images\scifitiles.png</FilePath>
       <TileSize>
         <Width>16</Width>

@@ -48,7 +48,7 @@ class Spawn extends FlxUISubState
 		group.scrollFactor.set();
 		add(group);
 		
-		var chrome = new FlxUI9SliceSprite(X_BORDER / 2, Y_BORDER / 2, null, new Rectangle(0, 0, 140, 5));
+		var chrome = new FlxUI9SliceSprite(X_BORDER / 2, Y_BORDER / 2, UIAssets.CHROME, new Rectangle(0, 0, 140, 5));
 		chrome.scrollFactor.set();
 		group.add(chrome);
 		
@@ -70,6 +70,7 @@ class Spawn extends FlxUISubState
 		
 		spawnBtn = new FlxUIButton(X_BORDER, Y_BORDER + radio_g.height, "Spawn", spawn);
 		spawnBtn.scrollFactor.set();
+		UIAssets.setBtnGraphic(spawnBtn);
 		group.add(spawnBtn);
 		
 		timerLabel = new FlxText(X_BORDER + radio_g.width, Y_BORDER, 100);

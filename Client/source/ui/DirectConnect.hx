@@ -32,6 +32,7 @@ class DirectConnect extends FlxUIState
 		add(inp);
 		
 		var go:FlxUIButton = new FlxUIButton(240, 10, "Connect", connect);
+		UIAssets.setBtnGraphic(go);
 		add(go);
 	}
 	

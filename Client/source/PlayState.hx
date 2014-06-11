@@ -65,7 +65,7 @@ class PlayState extends FlxState
 	public var wepBar:WeaponBar;
 	public var mouseSprite:FlxCrosshairs;
 	
-	public var trailArea:FlxTrailArea;
+	public var cross:FlxCrosshairs;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -247,11 +247,23 @@ class PlayState extends FlxState
 		//under_players.add(trailArea);
 		hud.clear();
 		//hud.add(new FlxCrosshairs());
-		new FlxCrosshairs().addToGroup(hud);
+		cross = new FlxCrosshairs();
+		cross.addToGroup(hud);
 		
-		trailArea.x = collidemap.x - FlxG.width / 2;
-		trailArea.y = collidemap.y - FlxG.height / 2;
-		trailArea.setSize(collidemap.width + FlxG.width, collidemap.height + FlxG.height);
+		ping_text = new FlxText(0, 0, 70, "0");
+		ping_text.scrollFactor.set();
+		hud.add(ping_text);
+		switch (Assets.config.get("showping"))
+		{
+			case "true":
+				ping_text.visible = true;
+			case "false":
+				ping_text.visible = false;
+		}
+		
+		//trailArea.x = collidemap.x - FlxG.width / 2;
+		//trailArea.y = collidemap.y - FlxG.height / 2;
+		//trailArea.setSize(collidemap.width + FlxG.width, collidemap.height + FlxG.height);
 		
 		for (p in playermap.iterator())
 		{
@@ -479,7 +491,10 @@ class PlayState extends FlxState
 				player.isRight = false;
 			}
 			
-			player.a = FlxAngle.angleBetweenMouse(player, true);
+			//player.a = FlxAngle.angleBetweenMouse(player, true);
+			var pos:FlxPoint = new FlxPoint(FlxG.mouse.x - cross.width/2, FlxG.mouse.y - cross.height/2);
+			player.a = FlxAngle.angleBetweenPoint(player, pos, true);
+			//player.a = FlxAngle.angleBetween(player, cross, true);
 			
 			//if (framebuffer > 0.03)
 			//{

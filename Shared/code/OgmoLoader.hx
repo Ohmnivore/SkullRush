@@ -69,11 +69,12 @@ class OgmoLoader
 		{
 			if (x.has.tileset) //Tilemap
 			{
-				var td:TileDef = loadFile(Assets.getImg(tilemaps.get(x.att.tileset)));
+				var td:TileDef = loadFile(Assets.getImg(x.att.tileset));
 				
 				var map:FlxTilemap = new FlxTilemap();
-				map.loadMap(x.innerData, Assets.getImg(tilemaps.get(x.att.tileset)), 16, 16, 0, 0, 0, 0);
+				map.loadMap(x.innerData, ArtifactFix.artefactFix(Assets.getImg(x.att.tileset), 16, 16), 16, 16, 0, 0, 0, 0);
 				State.maps.add(map);
+				//map.pixelPerfectRender = false;
 				
 				interpretData(td, map);
 			}
@@ -108,18 +109,19 @@ class OgmoLoader
 					map.widthInTiles = mapdata.widthInTiles;
 					map.heightInTiles = mapdata.heightInTiles;
 					
-					map.loadMap(mapdata.arr, ArtifactFix.artefactFix(Assets.getImg(tilemaps.get("grid")), 16, 16),
+					map.loadMap(mapdata.arr, ArtifactFix.artefactFix(Assets.getImg("assets/images/" + x.name), 16, 16),
 						16, 16, 0, 0, 1, 1);
 					
 					makeTileCollisions(map);
 					State.maps.add(map);
 					map.setDirty(true);
 					State.collidemap = map;
+					//map.pixelPerfectRender = false;
 					
-					if (x.name.indexOf("Tiles") > -1)
-					{
-						FlxG.worldBounds.set(map.x - 100, map.y - 100, map.width + 200, map.height + 200);
-					}
+					//if (x.name.indexOf("Tiles") > -1)
+					//{
+					FlxG.worldBounds.set(map.x - 100, map.y - 100, map.width + 200, map.height + 200);
+					//}
 				}
 			}
 		}
@@ -162,8 +164,8 @@ class OgmoLoader
 	//Neighbour-sensitive tile grid parsing code
 	static public function makeTileCollisions(M:FlxTilemap):Void
 	{
-		M.setTileProperties(16, FlxObject.NONE, 4);
-		M.setTileProperties(20, FlxObject.NONE, 2);
+		M.setTileProperties(16, FlxObject.NONE, 7);
+		//M.setTileProperties(20, FlxObject.NONE, 3);
 	}
 	
 	static public function findGridWidth(GridStrArr:Array<String>):Int
@@ -297,7 +299,7 @@ class OgmoLoader
 			if (FlxRandom.chanceRoll(30))
 			{
 				if (Y + 1 < Buffer.length / Width)
-					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(20, 23), Buffer);
+					setBuffer(X, Y + 1, Width, FlxRandom.intRanged(20, 21), Buffer);
 			}
 		}
 	}

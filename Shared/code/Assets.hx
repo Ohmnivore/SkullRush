@@ -39,6 +39,8 @@ class Assets
 		images.set("assets/images/playeryellow.png", "shared/images/playeryellow.png");
 		images.set("assets/images/trail.png", "shared/images/trail.png");
 		images.set("assets/images/scifitiles.png", "shared/images/scifitiles.png");
+		images.set("assets/images/indoor_tileset.png", "shared/images/indoor_tileset.png");
+		images.set("assets/images/outdoor_tileset.png", "shared/images/outdoor_tileset.png");
 		images.set("assets/images/flag_n.png", "shared/images/flag_n.png");
 		images.set("assets/images/flag_g.png", "shared/images/flag_g.png");
 		images.set("assets/images/flag_b.png", "shared/images/flag_b.png");

@@ -58,7 +58,6 @@ At the moment the client source code is a mess. I'll clean it up one day.
 
 ## Assets:
 * Make background more dynamic
-* Make custom flixel-ui theme
 * Find music and sounds
 
 

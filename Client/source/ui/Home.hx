@@ -27,7 +27,7 @@ class Home extends FlxUIState
 		Util.initXML(this);
 		super.create();
 		
-		var chrome = new FlxUI9SliceSprite(5, 5, null, new Rectangle(0, 0, 140, 470));
+		var chrome = new FlxUI9SliceSprite(5, 5, UIAssets.CHROME, new Rectangle(0, 0, 140, 470));
 		chrome.scrollFactor.set();
 		add(chrome);
 		
@@ -46,6 +46,20 @@ class Home extends FlxUIState
 		settings.loadGraphicSlice9(null, 120, 30, null);
 		auto_launch.loadGraphicSlice9(null, 120, 30, null);
 		open_update.loadGraphicSlice9(null, 120, 30, null);
+		
+		UIAssets.setBtnGraphic(browse_p);
+		UIAssets.setBtnGraphic(browse_l);
+		UIAssets.setBtnGraphic(connect);
+		UIAssets.setBtnGraphic(settings);
+		UIAssets.setBtnGraphic(auto_launch);
+		UIAssets.setBtnGraphic(open_update);
+		
+		browse_p.resize(120, 30);
+		browse_l.resize(120, 30);
+		connect.resize(120, 30);
+		settings.resize(120, 30);
+		auto_launch.resize(120, 30);
+		open_update.resize(120, 30);
 		
 		add(browse_p);
 		add(browse_l);

@@ -231,6 +231,11 @@ class Downloader
 					fo.close();
 				}
 				
+				if (event.target.info[0] == "json")
+				{
+					//var key:String = event.target.data;
+				}
+				
 				if (event.target.progress >= 1)
 				{
 					subm_loaded++;

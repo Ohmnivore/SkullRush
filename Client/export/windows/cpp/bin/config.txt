@@ -1,4 +1,4 @@
-version=0.2.3
+version=0.3.2
 name=Ohmnivore
 team=1
 ip=

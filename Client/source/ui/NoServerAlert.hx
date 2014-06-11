@@ -16,14 +16,14 @@ class NoServerAlert extends FlxUIPopup
 	
 	override public function create():Void 
 	{
-		_xml_id = "empty_popup";
+		_xml_id = "message_popup";
 		super.create();
 		
 		var x:Float = 150;
 		var y:Float = 150;
 		var width:Float = FlxG.width - 2 * x;
 		var height:Float = FlxG.height - 2 * y;
-		var chrome = new FlxUI9SliceSprite(x, y, null, new Rectangle(0, 0, width, height));
+		var chrome = new FlxUI9SliceSprite(x, y, UIAssets.CHROME, new Rectangle(0, 0, width, height));
 		chrome.scrollFactor.set();
 		add(chrome);
 		
@@ -35,16 +35,10 @@ class NoServerAlert extends FlxUIPopup
 		t.y = y + 5;
 		add(t);
 		
-		var b:FlxUIButton = new FlxUIButton(0, 0, "Back", exitPopup);
+		var b:FlxUIButton = new FlxUIButton(0, 0, "Back", Util.goBack);
+		UIAssets.setBtnGraphic(b);
 		b.x = x + width - 5 - b.width;
 		b.y = y + height - 5 - b.height;
 		add(b);
-	}
-	
-	public function exitPopup():Void
-	{
-		//_parentState.closeSubState();
-		//FlxG.switchState(new Home());
-		close();
 	}
 }

@@ -27,6 +27,7 @@ class Update extends FlxUIState
 		add(texts);
 		
 		var go:FlxUIButton = new FlxUIButton(10, 10, "Update", fetchUpdate);
+		UIAssets.setBtnGraphic(go);
 		add(go);
 		
 		texts.y += 10 + go.height;

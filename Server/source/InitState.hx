@@ -82,6 +82,8 @@ class InitState extends FlxState
 		Reg.server = new SkullServer(null, 6666, 3, 32);
 		Reg.host = Reg.server;
 		
+		//FlxG.fixedTimestep = false;
+		//FlxG.maxElapsed = 0.25;
 		FlxG.switchState(new PlayState());
 	}
 	

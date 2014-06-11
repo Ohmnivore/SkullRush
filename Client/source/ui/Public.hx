@@ -75,6 +75,8 @@ class Public extends FlxUIState
 				var t:FlxUIButton = new FlxUIButton(10, 10, server.getString());
 				t.params = [server.ip];
 				t.loadGraphicSlice9(null, FlxG.width - 60, 30, null);
+				UIAssets.setBtnGraphic(t);
+				t.resize(FlxG.width - 60, 30);
 				t.setCenterLabelOffset(0, 15);
 				l.add(cast t);
 				l.refreshList();

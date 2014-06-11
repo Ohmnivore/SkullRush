@@ -23,6 +23,7 @@ class Util
 	static public function addBackBtn(S:FlxUIState) :Void
 	{
 		var b:FlxUIButton = new FlxUIButton(0, 0, "Back", goBack);
+		UIAssets.setBtnGraphic(b);
 		b.x = FlxG.width - b.width - 5;
 		b.y = FlxG.height - b.height - 5;
 		
