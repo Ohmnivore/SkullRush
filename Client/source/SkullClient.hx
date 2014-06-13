@@ -151,8 +151,8 @@ class SkullClient extends Client
 		{
 			//if (Reg.state.collidemap != null)
 				//FlxG.switchState(new PlayState());
-			//Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
-			FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
+			Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
+			//FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
 		}
 		
 		if (MsgID == Msg.PlayerInfoBack.ID)
