@@ -142,7 +142,7 @@ class NEmitter
 	static public function stopEmitter(Handle:Int):Void
 	{
 		var e:FlxEmitterAuto = live_emitters.get(Handle);
-		//trace(e);
+		
 		if (e != null)
 		{
 			Msg.EmitterDelete.data.set("id", Handle);

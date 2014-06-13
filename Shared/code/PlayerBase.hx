@@ -350,7 +350,6 @@ class PlayerBase extends FlxSprite
 		{
 			if (grantedWeps.exists(GunID))
 			{
-				//trace(GunID);
 				if (grantedWeps.get(GunID) == true)
 				{
 					var g:FlxWeaponExt = guns_arr[GunID - 1];
@@ -371,7 +370,6 @@ class PlayerBase extends FlxSprite
 							canChange = false;
 							weap_change_timer.reset(0.3);
 							
-							//trace(current_weap);
 						}
 					}
 				}
@@ -397,9 +395,7 @@ class PlayerBase extends FlxSprite
 		_arr.push(dash_left);
 		_arr.push(dash_right);
 		_arr.push(current_weap);
-		//trace(current_weap);
 		
-		//trace(cannon.nextFire - FlxG.game.ticks);
 		_arr.push(cannon.nextFire - FlxG.game.ticks);
 		_arr.push(last_shot.template.slot - 1);
 		
@@ -505,16 +501,13 @@ class PlayerBase extends FlxSprite
 			
 			if (move_jump) //jump
 			{
-				//trace("jumping");
 				if (isTouching(FlxObject.ANY))
 				{
-					//trace(_arr[2]);
 					velocity.y = -280;
 				}
 				
 				else
 				{
-					//trace("not jumping");
 					move_jump = false;
 				}
 			}

@@ -53,7 +53,7 @@ At the moment the client source code is a mess. I'll clean it up one day.
 
 ## Bugs:
 * Fix annoying LAN server discovery bug
-* Fix client-side crashes on map change
+* Map change crash
 
 
 ## Assets:

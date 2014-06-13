@@ -74,7 +74,6 @@ class SkullServer extends Server
 		//var b = Bytes.alloc(80);
 		//s.receive(b);
 		//var msg:String = new BytesInput(b).readUntil(0);
-		//if (msg.length > 0) trace("Msg: ", msg);
 		//
 		//if (msg == "get_info")
 		//{
@@ -89,7 +88,6 @@ class SkullServer extends Server
 			//info += '$players_max, ';
 			//info += '"$internal_ip"';
 			//info += ']';
-			//trace("Info: ", info);
 			//
 			//s.sendAll(Bytes.ofString(info));
 		//}

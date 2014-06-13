@@ -73,7 +73,6 @@ class Message
 		}
 		
 		res += Serializer.run(_arr);
-		//trace(res);
 		return res;
 	}
 	
@@ -91,7 +90,7 @@ class Message
 		for (f in fields)
 		{
 			data.set(f, _arr[x]);
-			//trace(_arr[x]);
+			
 			x++;
 		}
 	}

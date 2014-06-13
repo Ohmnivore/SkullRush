@@ -36,6 +36,7 @@ import gamemodes.FFA;
 import gevents.GenEvent;
 import gevents.InitEvent;
 import gevents.SetTeamEvent;
+import insomnia.Insomnia;
 import sys.io.File;
 import gevents.ConfigEvent;
 import haxe.Serializer;
@@ -130,6 +131,9 @@ class PlayState extends FlxState
 		Thread.create(thread);
 		
 		Admin.hookCommands();
+		
+		Insomnia.preventSleep();
+		Insomnia.setProcessPriority(Insomnia.P_REALTIME_PRIORITY_CLASS);
 	}
 	
 	public function loadMap(Name:String):Void
@@ -215,6 +219,11 @@ class PlayState extends FlxState
 				
 			}
 		}
+	}
+	
+	override public function draw():Void 
+	{
+		//super.draw();
 	}
 	
 	/**

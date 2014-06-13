@@ -171,13 +171,11 @@ class NWeapon
 	static public function announceWeapons(player:Int = 0):Void
 	{
 		var map:Map<Int, Dynamic> = new Map<Int, Dynamic>();
-		//trace(array);
+		
 		for (slot in NWeapon.weapons.keys())
 		{
-			//trace("trace");
 			var arr:Array<Dynamic> = [];
 			var w:NWeapon = cast NWeapon.weapons.get(slot);
-			//trace("Wep:", w);
 			
 			arr.push(w.bulletElasticity);
 			arr.push(w.bulletLifeSpan);
@@ -201,7 +199,7 @@ class NWeapon
 			
 			map.set(slot, arr);
 		}
-		//trace(array);
+		
 		Msg.AnnounceGuns.data.set("serialized", Serializer.run(map));
 		
 		if (player == 0)

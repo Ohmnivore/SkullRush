@@ -71,7 +71,7 @@ class InitState extends FlxState
 		
 		//Make trace also write to flixel's debugger's log
 		old_trace = Log.trace;
-		//Log.trace = new_trace;
+		Log.trace = new_trace;
 		
 		//Setup networking
 		Reg.maps = Reg.parseMaps();

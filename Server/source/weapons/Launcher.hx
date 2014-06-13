@@ -2,6 +2,7 @@ package weapons;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -76,7 +77,25 @@ class Launcher extends NWeapon
 				
 				v.rotateByRadians(FlxAngle.angleBetween(Bullet, pl));
 				
-				if (Reg.state.collidemap.ray(Bullet.getMidpoint(), pl.getMidpoint()))
+				var no_collision:Bool = true;
+				for (m in Reg.state.maps.members.iterator())
+				{
+					var map:FlxTilemap = cast m;
+					
+					try
+					{
+						if (!map.ray(Bullet.getMidpoint(), pl.getMidpoint()))
+						{
+							no_collision = false;
+						}
+					}
+					catch (e:Dynamic)
+					{
+						
+					}
+				}
+				
+				if (no_collision)
 				{
 					var dist_coeff:Float = (100 - FlxMath.distanceBetween(pl, Bullet)) / 100;
 					if (dist_coeff < 0) dist_coeff = 0;

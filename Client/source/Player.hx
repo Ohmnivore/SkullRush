@@ -19,9 +19,12 @@ class Player extends PlayerBase
 	{
 		super.fire();
 		
-		var reload:FlxTimer = new FlxTimer(last_shot.mock_fireRate / 1000);
-		Reg.state.wepBar.setRange(0, 1);
-		Reg.state.wepBar.setParent(reload, "progress", false);
+		if (ID == Reg.state.player.ID)
+		{
+			var reload:FlxTimer = new FlxTimer(last_shot.mock_fireRate / 1000);
+			Reg.state.wepBar.setRange(0, 1);
+			Reg.state.wepBar.setParent(reload, "progress", false);
+		}
 	}
 	
 	override public function setGun(GunID:Int, Force:Bool = false):Void

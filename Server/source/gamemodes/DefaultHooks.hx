@@ -263,7 +263,7 @@ class DefaultHooks
 	{
 		var e:ENetEvent = E.leaveinfo;
 		
-		trace("Peer disconnected! ID: ", e.ID);
+		trace("Peer disconnected! ID: " + Std.string(e.ID));
 		
 		var p:Player = Reg.server.playermap.get(e.ID);
 		
@@ -359,7 +359,7 @@ class DefaultHooks
 	static public function onPeerConnect(e:JoinEvent):Void
 	{
 		var E:ENetEvent = e.joininfo;
-		trace("Peer connected. ID: ", E.ID);
+		trace("Peer connected. ID: " + Std.string(E.ID));
 		var name:String = Msg.PlayerInfo.data.get("name");
 		name = StringTools.trim(name);
 		if (name.length > 15) name = name.substr(0, 15);

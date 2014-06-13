@@ -1,6 +1,7 @@
 package ;
 import enet.ENet;
 import flixel.FlxG;
+import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import networkobj.NReg;
 
@@ -77,6 +78,7 @@ class Admin
 	
 	public static function reloadMap():Void
 	{
+		FlxTimer.manager.clear();
 		Reg.reLaunch();
 	}
 	

@@ -269,10 +269,8 @@ class Player extends PlayerBase
 			
 			if (move_jump) //jump
 			{
-				//trace("jumping");
 				if (isTouching(FlxObject.ANY) && canJump)
 				{
-					//trace(_arr[2]);
 					velocity.y = -280;
 					canJump = false;
 				}

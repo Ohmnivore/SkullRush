@@ -48,6 +48,7 @@ class PlayState extends FlxState
 	public var players:FlxGroup;
 	public var emitters:FlxGroup;
 	public var ent:FlxGroup;
+	public var perma_hud:FlxGroup;
 	public var hud:FlxGroup;
 	public var scores:NScoreManager;
 	
@@ -111,6 +112,8 @@ class PlayState extends FlxState
 		ent = new FlxGroup();
 		add(ent);
 		tocollide.add(ent);
+		perma_hud = new FlxGroup();
+		add(perma_hud);
 		hud = new FlxGroup();
 		add(hud);
 		scores = new NScoreManager();
@@ -121,11 +124,11 @@ class PlayState extends FlxState
 		//hud.add(new FlxCrosshairs());
 		
 		Reg.chatbox = new ChatBox();
-		hud.add(Reg.chatbox);
+		perma_hud.add(Reg.chatbox);
 		Reg.chatbox.callback = sendChatMsg;
 		
 		Reg.announcer = new Announcer();
-		hud.add(Reg.announcer);
+		perma_hud.add(Reg.announcer);
 		
 		ping_text = new FlxText(0, 0, 70, "0");
 		ping_text.scrollFactor.set();
@@ -313,13 +316,28 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 	}
-
+	
+	override public function draw():Void
+	{
+		m.acquire();
+		if (collidemap != null)
+		{
+			if (collidemap.cachedGraphics != null)
+			{
+				if (collidemap.cachedGraphics.tilesheet != null)
+					super.draw();
+			}
+		}
+		m.release();
+	}
+	
 	/**
 	 * Function that is called once every frame.
 	 */
 	override public function update():Void
 	{
 		//Reg.client.updateS();
+		m.acquire();
 		
 		if (FlxG.keys.justPressed.ESCAPE && !Menu.OPENED)
 		{
@@ -341,7 +359,7 @@ class PlayState extends FlxState
 		
 		scores.update();
 		
-		m.acquire();
+		//m.acquire();
 		
 		super.update();
 		
@@ -360,6 +378,7 @@ class PlayState extends FlxState
 			Reg.chatbox.toggle();
 		}
 		
+		Reg.client.poll();
 		m.release();
 	}
 	
