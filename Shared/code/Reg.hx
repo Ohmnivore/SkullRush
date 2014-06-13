@@ -93,6 +93,8 @@ class Reg
 		
 		return r;
 	}
+	
+	static public var should_render:Bool = false;
 	#end
 	
 	/**

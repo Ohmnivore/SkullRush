@@ -1,8 +1,12 @@
-version=0.3.4
+version=0.3.5
 
 ############################
 
 #basic variables
+
+render=true
+
+highpriority=true
 
 crashdump=true
 

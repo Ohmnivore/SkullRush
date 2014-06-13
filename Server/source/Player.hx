@@ -84,13 +84,13 @@ class Player extends PlayerBase
 		}
 	}
 	
-	public function respawnIn(Seconds:Float):Void
+	public function respawnIn(Seconds:Float, Channel:Int = 1):Void
 	{
 		//FlxTimer.start(Seconds, respawnCall, 1);
 		canSpawn = false;
 		new FlxTimer(Seconds, respawnCall, 1);
 		Msg.DeathInfo.data.set("timer", Std.int(Seconds));
-		Reg.server.sendMsg(ID, Msg.DeathInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		Reg.server.sendMsg(ID, Msg.DeathInfo.ID, Channel, ENet.ENET_PACKET_FLAG_RELIABLE);
 	}
 	
 	public function respawnCall(T:FlxTimer):Void

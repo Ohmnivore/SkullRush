@@ -55,12 +55,15 @@ class Spawn extends FlxUISubState
 		var index_arr:Array<String> = [];
 		var name_arr:Array<String> = [];
 		var i:Int = 0;
-		for (t in teams)
+		if (teams != null)
 		{
-			var team:Team = t;
-			index_arr.push(Std.string(i));
-			name_arr.push(team.name);
-			i++;
+			for (t in teams)
+			{
+				var team:Team = t;
+				index_arr.push(Std.string(i));
+				name_arr.push(team.name);
+				i++;
+			}
 		}
 		
 		radio_g = new FlxUIRadioGroup(X_BORDER, Y_BORDER, index_arr, name_arr, radioCallback);

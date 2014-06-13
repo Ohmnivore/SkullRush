@@ -11,6 +11,7 @@ import gevents.JoinEvent;
 import gevents.LeaveEvent;
 import gevents.ReceiveEvent;
 import gevents.SetTeamEvent;
+import insomnia.Insomnia;
 import networkobj.NScoreManager;
 
 class BaseGamemode extends Sprite
@@ -118,6 +119,24 @@ class BaseGamemode extends Sprite
 		Masterserver.url = Assets.config.get("masterserver");
 		Reg.server.s_name = Assets.config.get("name");
 		spawn_time = Std.parseInt(Assets.config.get("spawntime"));
+		
+		if (Assets.config.get("render") == "true")
+		{
+			Reg.should_render = true;
+		}
+		else
+		{
+			Reg.should_render = false;
+		}
+		
+		if (Assets.config.get("highpriority") == "true")
+		{
+			Insomnia.setProcessPriority(Insomnia.P_REALTIME_PRIORITY_CLASS);
+		}
+		else
+		{
+			Insomnia.setProcessPriority(Insomnia.P_NORMAL_PRIORITY_CLASS);
+		}
 		
 		Reg.maps = Reg.parseMaps();
 	}

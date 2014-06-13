@@ -26,6 +26,7 @@ class Home extends FlxUIState
 		
 		Util.initXML(this);
 		super.create();
+		FlxG.mouse.unload();
 		
 		var chrome = new FlxUI9SliceSprite(5, 5, UIAssets.CHROME, new Rectangle(0, 0, 140, 470));
 		chrome.scrollFactor.set();

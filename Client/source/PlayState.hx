@@ -68,6 +68,15 @@ class PlayState extends FlxState
 	
 	public var cross:FlxCrosshairs;
 	
+	public var buffer_string:String;
+	
+	public function new(BufferString:String = null)
+	{
+		super();
+		
+		buffer_string = BufferString;
+	}
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -150,6 +159,11 @@ class PlayState extends FlxState
 		Thread.create(thread);
 		
 		m = new Mutex();
+		
+		if (buffer_string != null)
+		{
+			loadMap("Test", buffer_string);
+		}
 	}
 	
 	public function sendChatMsg():Void
@@ -188,11 +202,13 @@ class PlayState extends FlxState
 	public function onLoaded():Void
 	{
 		trace("Loaded external assets.");
-		
-		Msg.PlayerInfo.data.set("name", Assets.config.get("name"));
-		Msg.PlayerInfo.data.set("team", Assets.config.get("team"));
-		
-		Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		if (buffer_string == null)
+		{
+			Msg.PlayerInfo.data.set("name", Assets.config.get("name"));
+			Msg.PlayerInfo.data.set("team", Assets.config.get("team"));
+			
+			Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+		}
 	}
 	
 	public function loadMap(MapName:String, MapString:String):Void

@@ -19,8 +19,26 @@ class Admin
 		FlxG.console.registerFunction("reloadconfig", reloadConfig);
 		FlxG.console.registerFunction("getversion", getVersion);
 		FlxG.console.registerFunction("localip", getIP);
+		FlxG.console.registerFunction("portforward", portForward);
+		FlxG.console.registerFunction("portremove", portRemove);
+		FlxG.console.registerFunction("curmap", curMap);
 		
 		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "", 1, -1);
+	}
+	
+	static public function curMap():Void
+	{
+		trace("Current map is: " + Reg.state.current_map);
+	}
+	
+	static public function portRemove():Void
+	{
+		PortForward.portRemove(Reg.server.port, true);
+	}
+	
+	static public function portForward():Void
+	{
+		PortForward.portForward(Reg.server.port, true);
 	}
 	
 	static public function getIP():Void

@@ -315,7 +315,7 @@ class DefaultHooks
 	
 	static public function initPlayer(P:Player):Void
 	{
-		Reg.server.sendMsg(P.ID, Msg.MapMsg.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+		//Reg.server.sendMsg(P.ID, Msg.MapMsg.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		NEmitter.announceEmitters(P.ID);
 		NWeapon.announceWeapons(P.ID);
@@ -353,7 +353,7 @@ class DefaultHooks
 		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		P.health = 0;
-		P.respawnIn(Reg.gm.spawn_time);
+		P.respawnIn(Reg.gm.spawn_time, 2);
 	}
 	
 	static public function onPeerConnect(e:JoinEvent):Void
@@ -378,6 +378,8 @@ class DefaultHooks
 		
 		Reg.server.peermap.set(p, p.ID);
 		Reg.server.playermap.set(p.ID, p);
+		
+		Reg.server.sendMsg(p.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		Msg.PlayerInfoBack.data.set("id", p.ID);
 		Msg.PlayerInfoBack.data.set("name", p.name);

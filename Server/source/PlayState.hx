@@ -223,7 +223,10 @@ class PlayState extends FlxState
 	
 	override public function draw():Void 
 	{
-		//super.draw();
+		if (Reg.should_render)
+		{
+			super.draw();
+		}
 	}
 	
 	/**
