@@ -1,4 +1,5 @@
 package ;
+import enet.ENet;
 import flash.utils.Timer;
 import flixel.addons.effects.FlxTrail;
 import flixel.addons.weapon.FlxBullet;
@@ -402,19 +403,28 @@ class PlayerBase extends FlxSprite
 		return Serializer.run(_arr);
 	}
 	
+	public function lerp(v0:Float, v1:Float, t:Float):Float
+	{
+		return (1 - t) * v0 + t * v1;
+	}
+	
 	public function c_unserialize(Arr:Array<Dynamic>):Void
 	{
 		_arr = Arr;
 		
 		if (_arr.length == 14) //used to be 7
 		{
-			x = _arr[1];
-			y = _arr[2];
+			//velocity.x = ((_arr[1] - x) * 0.3 + _arr[7] * 0.5 + velocity.x * 0.2);
+			//velocity.y = ((_arr[2] - y) * 0.3 + _arr[8] * 0.4 + velocity.y * 0.3);
 			
-			//velocity.x = (_arr[1] - x);
-			//velocity.y = (_arr[2] - y);
-			velocity.x = _arr[7];
-			velocity.y = _arr[8];
+			velocity.x = lerp(velocity.x, _arr[7], 0.4);
+			velocity.y = lerp(velocity.y, _arr[8], 0.4);
+			
+			x = lerp(x, _arr[1], 0.8);
+			y = lerp(y, _arr[2], 0.8);
+			
+			//x = _arr[1];
+			//y = _arr[2];
 			
 			a = _arr[3];
 			isRight = _arr[4];

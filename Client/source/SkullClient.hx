@@ -168,7 +168,7 @@ class SkullClient extends Client
 			Reg.state.playermap.set(Reg.state.player.ID, Reg.state.player);
 			
 			FlxG.camera.follow(Reg.state.player);
-			FlxG.camera.followLerp = 15.0;
+			FlxG.camera.followLerp = 30.0;
 		}
 		
 		if (MsgID == Msg.PlayerInfoAnnounce.ID)
