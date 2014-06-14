@@ -12,6 +12,7 @@ class Player extends PlayerBase
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
+		trace("newplayer");
 		setGun(1);
 	}
 	

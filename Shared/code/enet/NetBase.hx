@@ -1,4 +1,5 @@
 package enet;
+import haxe.CallStack;
 
 /**
  * ...
@@ -87,12 +88,22 @@ class NetBase
 					m.unserialize(res[1]);
 				}
 				
-				onReceive(res[0], e);
+				try
+				{
+					onReceive(res[0], e);
+				}
+				catch (E2:Dynamic)
+				{
+					trace("Error processing message, error message: ", E2);
+					trace(CallStack.toString(CallStack.exceptionStack()));
+					trace(CallStack.toString(CallStack.callStack()));
+					
+				}
 			}
 			
-			catch (e:Dynamic)
+			catch (E:Dynamic)
 			{
-				trace("Error receiving message, content: ", e.message);
+				trace("Error receiving message, content: ", e.message, "Error message: ", E);
 			}
 		}
 		

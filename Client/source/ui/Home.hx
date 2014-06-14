@@ -92,7 +92,7 @@ class Home extends FlxUIState
 	
 	public function autoLaunch():Void
 	{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new PreGame());
 	}
 	
 	public function openUpdate():Void

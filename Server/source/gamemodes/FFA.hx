@@ -182,7 +182,7 @@ class FFA extends BaseGamemode
 	{
 		var P:Player = E.player;
 		super.initPlayer(E);
-		DefaultHooks.initPlayer(P);
+		DefaultHooks.initPlayer(P, E.firstInit);
 		
 		score.addPlayer(Reg.server.playermap.get(P.ID));
 	}

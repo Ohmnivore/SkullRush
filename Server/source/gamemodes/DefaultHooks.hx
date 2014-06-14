@@ -310,16 +310,6 @@ class DefaultHooks
 	
 	static public function preInitPlayer(P:Player):Void
 	{
-		//NWeapon.announceWeapons(P.ID);
-	}
-	
-	static public function initPlayer(P:Player):Void
-	{
-		//Reg.server.sendMsg(P.ID, Msg.MapMsg.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
-		
-		NEmitter.announceEmitters(P.ID);
-		NWeapon.announceWeapons(P.ID);
-		
 		Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
 		
 		Reg.server.sendMsg(P.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
@@ -351,6 +341,50 @@ class DefaultHooks
 		}
 		Msg.Teams.data.set("serialized", Serializer.run(t_arr));
 		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+		
+		NEmitter.announceEmitters(P.ID);
+		NWeapon.announceWeapons(P.ID);
+	}
+	
+	static public function initPlayer(P:Player, firstInit:Bool = false):Void
+	{
+		if (!firstInit)
+		{
+			Msg.AnnounceTemplates.data.set("serialized", NReg.exportTemplates());
+			
+			Reg.server.sendMsg(P.ID, Msg.AnnounceTemplates.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			for (s in NReg.sprites)
+			{
+				s.announce(P.ID);
+			}
+			
+			for (h in NReg.huds)
+			{
+				h.announce(P.ID);
+			}
+			
+			for (t in NReg.timers.iterator())
+			{
+				t.announce(P.ID);
+			}
+			
+			for (s in BaseGamemode.scores.scores.iterator())
+			{
+				s.announce(P.ID);
+			}
+			
+			var t_arr:Array<String> = [];
+			for (t in Reg.gm.teams)
+			{
+				t_arr.push(t.serialize());
+			}
+			Msg.Teams.data.set("serialized", Serializer.run(t_arr));
+			Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
+			
+			NEmitter.announceEmitters(P.ID);
+			NWeapon.announceWeapons(P.ID);
+		}
 		
 		P.health = 0;
 		P.respawnIn(Reg.gm.spawn_time, 2);
@@ -386,7 +420,6 @@ class DefaultHooks
 		Msg.PlayerInfoBack.data.set("color", p.header.color);
 		Msg.PlayerInfoBack.data.set("graphic", p.graphicKey);
 		
-		Reg.server.sendMsg(E.ID, Msg.MapMsg.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		preInitPlayer(p);
 		Reg.server.sendMsg(E.ID, Msg.PlayerInfoBack.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
@@ -427,7 +460,7 @@ class DefaultHooks
 			}
 		}
 		
-		Reg.gm.dispatchEvent(new InitEvent(InitEvent.INIT_EVENT, p));
+		Reg.gm.dispatchEvent(new InitEvent(InitEvent.INIT_EVENT, p, true));
 	}
 	
 	static public function update(elapsed:Float):Void

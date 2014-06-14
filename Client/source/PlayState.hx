@@ -20,6 +20,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.FlxTimer;
 import flixel.util.FlxVector;
 import haxe.io.Bytes;
 import haxe.macro.Expr.Function;
@@ -53,7 +54,6 @@ class PlayState extends FlxState
 	public var scores:NScoreManager;
 	
 	public var player:Player;
-	public var playermap:Map<Int, Player>;
 	
 	public var ping_text:FlxText;
 	public var teams:Array<Team>;
@@ -68,13 +68,13 @@ class PlayState extends FlxState
 	
 	public var cross:FlxCrosshairs;
 	
-	//public var buffer_string:String;
+	public var buffer_string:String;
 	
 	public function new(BufferString:String = null)
 	{
 		super();
 		
-		//buffer_string = BufferString;
+		buffer_string = BufferString;
 	}
 	
 	/**
@@ -82,7 +82,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		SkullClient.initClient();
+		//SkullClient.initClient();
 		
 		persistentDraw = true;
 		persistentUpdate = true;
@@ -98,7 +98,7 @@ class PlayState extends FlxState
 		
 		super.create();
 		Reg.state = this;
-		playermap = new Map<Int, Player>();
+		//playermap = new Map<Int, Player>();
 		
 		background = new FlxGroup();
 		add(background);
@@ -155,15 +155,42 @@ class PlayState extends FlxState
 		//wepBar = new WeaponBar(2);
 		//hud.add(wepBar);
 		
-		Assets.initAssets();
-		Thread.create(thread);
+		SkullClient.execute = true;
+		//Assets.initAssets();
+		//Thread.create(thread);
+		//new FlxTimer(10, delayedThread);
 		
 		m = new Mutex();
 		
 		//if (buffer_string != null)
 		//{
-			//loadMap("Test", buffer_string);
+		loadMap("Test", buffer_string);
 		//}
+		
+		for (i in Reg.playermap.keys())
+		{
+			var p:Player = Reg.playermap.get(i);
+			
+			var p_new:Player;
+			p_new = new Player(p.ID, p.name, 50, 50);
+			
+			Reg.playermap.set(i, p_new);
+			
+			if (p_new.ID == Reg.playerID)
+			{
+				Reg.state.player = p_new;
+				
+				FlxG.camera.follow(Reg.state.player);
+				FlxG.camera.followLerp = 30.0;
+			}
+		}
+		
+		new FlxTimer(5, delayedThread);
+	}
+	
+	public function delayedThread(T:FlxTimer):Void
+	{
+		Thread.create(thread);
 	}
 	
 	public function sendChatMsg():Void
@@ -199,17 +226,17 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function onLoaded():Void
-	{
-		trace("Loaded external assets.");
+	//public function onLoaded():Void
+	//{
+		//trace("Loaded external assets.");
 		//if (buffer_string == null)
 		//{
-			Msg.PlayerInfo.data.set("name", Assets.config.get("name"));
-			Msg.PlayerInfo.data.set("team", Assets.config.get("team"));
-			
-			Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+			//Msg.PlayerInfo.data.set("name", Assets.config.get("name"));
+			//Msg.PlayerInfo.data.set("team", Assets.config.get("team"));
+			//
+			//Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		//}
-	}
+	//}
 	
 	public function loadMap(MapName:String, MapString:String):Void
 	{
@@ -284,7 +311,7 @@ class PlayState extends FlxState
 		//trailArea.y = collidemap.y - FlxG.height / 2;
 		//trailArea.setSize(collidemap.width + FlxG.width, collidemap.height + FlxG.height);
 		
-		for (p in playermap.iterator())
+		for (p in Reg.playermap.iterator())
 		{
 			var pl:Player = p;
 			
@@ -306,23 +333,23 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function downloadError(e:LoaderErrorType):Void
-	{
-		switch (e)
-		{
-			case LoaderErrorType.Data:
-				
-			
-			case LoaderErrorType.Format:
-				
-			
-			case LoaderErrorType.IO:
-				
-			
-			case LoaderErrorType.Security:
-				
-		}
-	}
+	//public function downloadError(e:LoaderErrorType):Void
+	//{
+		//switch (e)
+		//{
+			//case LoaderErrorType.Data:
+				//
+			//
+			//case LoaderErrorType.Format:
+				//
+			//
+			//case LoaderErrorType.IO:
+				//
+			//
+			//case LoaderErrorType.Security:
+				//
+		//}
+	//}
 	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 

@@ -42,6 +42,8 @@ class SkullClient extends Client
 	public static var execute:Bool = false;
 	public static var init:Bool = false;
 	
+	private var old_msg:Int = -1;
+	
 	public static function initClient():Void
 	{
 		if (!init)
@@ -134,16 +136,20 @@ class SkullClient extends Client
 	{
 		super.onReceive(MsgID, E);
 		
+		//if (old_msg != MsgID)
+			//trace(MsgID);
+		//old_msg = MsgID;
+		
 		if (MsgID == Msg.Manifest.ID)
 		{
 			if (Msg.Manifest.data.get("url") == "null")
 			{
-				Reg.state.onLoaded();
+				Reg.pre_state.onLoaded();
 			}
 			else
 			{
 				var d:Downloader = new Downloader(Msg.Manifest.data.get("url"));
-				d.whenfinished = Reg.state.onLoaded;
+				d.whenfinished = Reg.pre_state.onLoaded;
 			}
 		}
 		
@@ -151,8 +157,10 @@ class SkullClient extends Client
 		{
 			//if (Reg.state.collidemap != null)
 				//FlxG.switchState(new PlayState());
-			Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
-			//FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
+			//Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
+			//trace(Msg.MapMsg.data.get("mapstring"));
+			SkullClient.execute = false;
+			FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
 		}
 		
 		if (MsgID == Msg.PlayerInfoBack.ID)
@@ -162,10 +170,13 @@ class SkullClient extends Client
 								50,
 								50);
 			
+			Reg.playerID = Reg.state.player.ID;
+			
 			Reg.state.player.setColor(Msg.PlayerInfoBack.data.get("color"),
 										Msg.PlayerInfoBack.data.get("graphic"));
 			
-			Reg.state.playermap.set(Reg.state.player.ID, Reg.state.player);
+			//Reg.state.playermap.set(Reg.state.player.ID, Reg.state.player);
+			Reg.playermap.set(Reg.state.player.ID, Reg.state.player);
 			
 			FlxG.camera.follow(Reg.state.player);
 			FlxG.camera.followLerp = 30.0;
@@ -181,16 +192,19 @@ class SkullClient extends Client
 			p.setColor(Msg.PlayerInfoAnnounce.data.get("color"),
 						Msg.PlayerInfoAnnounce.data.get("graphic"));
 			
-			Reg.state.playermap.set(p.ID, p);
+			//Reg.state.playermap.set(p.ID, p);
+			Reg.playermap.set(p.ID, p);
 		}
 		
 		if (MsgID == Msg.PlayerDisco.ID)
 		{
-			var p:Player = Reg.state.playermap.get(Msg.PlayerDisco.data.get("id"));
+			//var p:Player = Reg.state.playermap.get(Msg.PlayerDisco.data.get("id"));
+			var p:Player = Reg.playermap.get(Msg.PlayerDisco.data.get("id"));
 			
 			if (p != null)
 			{
-				Reg.state.playermap.remove(Msg.PlayerDisco.data.get("id"));
+				//Reg.state.playermap.remove(Msg.PlayerDisco.data.get("id"));
+				Reg.playermap.remove(Msg.PlayerDisco.data.get("id"));
 				
 				p.kill();
 			}
@@ -210,7 +224,8 @@ class SkullClient extends Client
 					{
 						if (parr[0] != null)
 						{
-							var p:Player = Reg.state.playermap.get(parr[0]);
+							//var p:Player = Reg.state.playermap.get(parr[0]);
+							var p:Player = Reg.playermap.get(parr[0]);
 							
 							if (p != null)
 							{
@@ -502,7 +517,8 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.SetAppearance.ID)
 		{
-			var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
+			//var p:Player = Reg.state.playermap.get(Msg.SetAppearance.data.get("id"));
+			var p:Player = Reg.playermap.get(Msg.SetAppearance.data.get("id"));
 			
 			if (p != null)
 			{
@@ -604,7 +620,8 @@ class SkullClient extends Client
 			{
 				NWeapon.addWeapon(new NWeapon(map.get(slot)), slot + 1);
 			}
-			for (p in Reg.state.playermap.iterator())
+			//for (p in Reg.state.playermap.iterator())
+			for (p in Reg.playermap.iterator())
 			{
 				p.guns_arr = [];
 				NWeapon.setUpWeapons(p);

@@ -96,7 +96,7 @@ class Public extends FlxUIState
 				var i:String = cast params[0];
 				Assets.config.set("ip", i);
 				Assets.saveConfig();
-				FlxG.switchState(new PlayState());
+				FlxG.switchState(new PreGame());
 			}
 		}
 	}

@@ -142,7 +142,8 @@ class NScoreboard
 			
 			X = X_BORDER;
 			
-			var t:FlxText = new FlxText(X, Y, FlxG.width, Reg.state.playermap.get(arrt[0]).name);
+			//var t:FlxText = new FlxText(X, Y, FlxG.width, Reg.state.playermap.get(arrt[0]).name);
+			var t:FlxText = new FlxText(X, Y, FlxG.width, Reg.playermap.get(arrt[0]).name);
 			t_group.add(t);
 			X += X_SPACING;
 			

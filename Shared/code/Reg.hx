@@ -22,6 +22,12 @@ class Reg
 	 * Static client reference
 	 */
 	static public var client:SkullClient;
+	
+	static public var pre_state:PreGame;
+	
+	static public var playermap:Map<Int, Player>;
+	
+	static public var playerID:Int;
 	#end
 	
 	#if SERVER

@@ -52,7 +52,7 @@ class Downloader
 		switch (event.type)
 		{
 			case LoaderEventType.Fail(error):
-				Reg.state.downloadError(error);
+				Reg.pre_state.downloadError(error);
 
 			case LoaderEventType.Complete:
 				//Start sub-manifest downloading
@@ -88,7 +88,7 @@ class Downloader
 		switch (event.type)
 		{
 			case LoaderEventType.Fail(error):
-				Reg.state.downloadError(error);
+				Reg.pre_state.downloadError(error);
 				
 
 			case LoaderEventType.Complete:
@@ -203,7 +203,7 @@ class Downloader
 		switch (event.type)
 		{
 			case LoaderEventType.Fail(error):
-				Reg.state.downloadError(error);
+				Reg.pre_state.downloadError(error);
 				
 
 			case LoaderEventType.Complete:

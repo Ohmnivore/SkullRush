@@ -12,7 +12,7 @@ class Util
 	
 	static public function launchGame():Void
 	{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new PreGame());
 	}
 	
 	static public function initXML(S:FlxUIState):Void
