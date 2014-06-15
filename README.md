@@ -18,7 +18,7 @@ At the moment the client source code is a mess. I'll clean it up one day.
 # Graphic assets by:
 * Eris from [OpenGameArt](http://opengameart.org/content/sci-fi-platform-tiles)
 * Sam Driver from [Salt Games](http://www.saltgames.com/)
-* Msyself
+* Myself
 
 # Powered by:
 * [Haxe](http://haxe.org/)
