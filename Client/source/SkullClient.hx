@@ -142,6 +142,9 @@ class SkullClient extends Client
 		
 		if (MsgID == Msg.Manifest.ID)
 		{
+			Reg.pre_state.myTrace("Connection with server established.");
+			Reg.pre_state.myTrace("Received external assets manifest.");
+			
 			if (Msg.Manifest.data.get("url") == "null")
 			{
 				Reg.pre_state.onLoaded();
@@ -159,6 +162,7 @@ class SkullClient extends Client
 				//FlxG.switchState(new PlayState());
 			//Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
 			//trace(Msg.MapMsg.data.get("mapstring"));
+			Reg.pre_state.myTrace("Received map file!");
 			SkullClient.execute = false;
 			FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
 		}
@@ -179,7 +183,7 @@ class SkullClient extends Client
 			Reg.playermap.set(Reg.state.player.ID, Reg.state.player);
 			
 			FlxG.camera.follow(Reg.state.player);
-			FlxG.camera.followLerp = 30.0;
+			FlxG.camera.followLerp = 24.0;
 		}
 		
 		if (MsgID == Msg.PlayerInfoAnnounce.ID)

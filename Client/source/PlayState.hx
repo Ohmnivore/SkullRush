@@ -181,7 +181,7 @@ class PlayState extends FlxState
 				Reg.state.player = p_new;
 				
 				FlxG.camera.follow(Reg.state.player);
-				FlxG.camera.followLerp = 30.0;
+				FlxG.camera.followLerp = 24.0;
 			}
 		}
 		
