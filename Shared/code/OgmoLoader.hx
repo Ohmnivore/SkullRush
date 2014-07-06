@@ -74,7 +74,6 @@ class OgmoLoader
 				var map:FlxTilemap = new FlxTilemap();
 				map.loadMap(x.innerData, ArtifactFix.artefactFix(Assets.getImg(x.att.tileset), 16, 16), 16, 16, 0, 0, 0, 0);
 				State.maps.add(map);
-				//map.pixelPerfectRender = false;
 				
 				interpretData(td, map);
 			}

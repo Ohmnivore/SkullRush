@@ -162,7 +162,8 @@ class SkullClient extends Client
 				//FlxG.switchState(new PlayState());
 			//Reg.state.loadMap(Msg.MapMsg.data.get("mapname"), Msg.MapMsg.data.get("mapstring"));
 			//trace(Msg.MapMsg.data.get("mapstring"));
-			Reg.pre_state.myTrace("Received map file!");
+			if (Reg.pre_state != null)
+				Reg.pre_state.myTrace("Received map file!");
 			SkullClient.execute = false;
 			FlxG.switchState(new PlayState(Msg.MapMsg.data.get("mapstring")));
 		}

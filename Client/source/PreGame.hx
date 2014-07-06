@@ -55,6 +55,8 @@ class PreGame extends FlxState
 		Reg.client.send(Msg.PlayerInfo.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		myTrace("Sending player info to server.");
+		
+		Reg.pre_state = null;
 	}
 	
 	public function downloadError(e:LoaderErrorType):Void

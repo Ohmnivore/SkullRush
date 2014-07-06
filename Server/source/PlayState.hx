@@ -133,7 +133,7 @@ class PlayState extends FlxState
 		Admin.hookCommands();
 		
 		Insomnia.preventSleep();
-		Insomnia.setProcessPriority(Insomnia.P_REALTIME_PRIORITY_CLASS);
+		Insomnia.setProcessPriority(Insomnia.P_HIGH_PRIORITY_CLASS);
 	}
 	
 	public function loadMap(Name:String):Void
