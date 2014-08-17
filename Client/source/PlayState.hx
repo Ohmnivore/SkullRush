@@ -20,6 +20,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxVector;
 import haxe.io.Bytes;
@@ -69,6 +70,16 @@ class PlayState extends FlxState
 	public var cross:FlxCrosshairs;
 	
 	public var buffer_string:String;
+	
+	public var spectating:Bool = false;
+	public var specTarget:Player;
+	private var specTeams:Array<Team>;
+	private var specTimeLeft:Float;
+	private var specStopBtn:FlxButton;
+	private var specText:FlxText;
+	private var specMsg:String = "Currently spectating: ";
+	private var specTip:String = "Left/right mouse click to cycle through players";
+	private var specTipText:FlxText;
 	
 	public function new(BufferString:String = null)
 	{
@@ -188,6 +199,131 @@ class PlayState extends FlxState
 		new FlxTimer(5, delayedThread);
 	}
 	
+	public function beginSpectate(Teams:Array<Team>, TimeLeft:Float):Void
+	{
+		spectating = true;
+		specTeams = Teams;
+		specTimeLeft - TimeLeft;
+		
+		specStopBtn = new FlxButton(0, 0, "Spawn", stopSpec);
+		FlxSpriteUtil.screenCenter(specStopBtn, true, true);
+		specStopBtn.y -= FlxG.height / 4;
+		
+		specText = new FlxText(0, 0, 0, specMsg, 12);
+		FlxSpriteUtil.screenCenter(specText, true, true);
+		specText.y = specStopBtn.y - specText.height;
+		specText.scrollFactor.set();
+		specText.color = 0xffffffff;
+		specText.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+		
+		specTipText = new FlxText(0, 0, 0, specTip, 10);
+		FlxSpriteUtil.screenCenter(specTipText, true, true);
+		specTipText.y = specText.y - specTipText.height;
+		specTipText.scrollFactor.set();
+		specTipText.color = 0xffffffff;
+		specTipText.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
+		
+		hud.add(specStopBtn);
+		hud.add(specText);
+		hud.add(specTipText);
+		
+		for (p in players)
+		{
+			var pl:Player = cast p;
+			
+			if (pl.ID != player.ID && pl.visible)
+			{
+				specTarget = pl;
+				applySpec(pl);
+				break;
+			}
+		}
+	}
+	
+	private function updateSpec():Void
+	{
+		specTimeLeft -= FlxG.elapsed;
+		
+		if (specTimeLeft < 0)
+		{
+			specTimeLeft = 0;
+		}
+		
+		FlxSpriteUtil.screenCenter(specText, true, false);
+		
+		if (FlxG.mouse.justPressed)
+		{
+			for (p in players)
+			{
+				var pl:Player = cast p;
+				
+				if (specTarget == null)
+				{
+					if (pl.ID != player.ID && pl.visible)
+					{
+						specTarget = pl;
+						applySpec(pl);
+						break;
+					}
+				}
+				
+				else if (pl.ID != player.ID && pl.ID > specTarget.ID && pl.visible)
+				{
+					specTarget = pl;
+					applySpec(pl);
+					break;
+				}
+			}
+		}
+		
+		if (FlxG.mouse.justPressedRight)
+		{
+			for (p in players)
+			{
+				var pl:Player = cast p;
+				
+				if (specTarget == null)
+				{
+					if (pl.ID != player.ID && pl.visible)
+					{
+						specTarget = pl;
+						applySpec(pl);
+						break;
+					}
+				}
+				
+				else if (pl.ID != player.ID && pl.ID < specTarget.ID && pl.visible)
+				{
+					specTarget = pl;
+					applySpec(pl);
+					break;
+				}
+			}
+		}
+	}
+	
+	private function applySpec(Target:Player):Void
+	{
+		FlxG.camera.focusOn(new FlxPoint(Target.x, Target.y));
+		FlxG.camera.follow(Target, FlxG.camera.style, FlxG.camera.followLerp);
+		
+		specText.text = specMsg + Target.name;
+		specText.clearFormats();
+		specText.addFormat(new FlxTextFormat(Target.header.color), specMsg.length - 1, specText.text.length);
+	}
+	
+	private function stopSpec():Void
+	{
+		spectating = false;
+		applySpec(player);
+		
+		hud.remove(specStopBtn);
+		hud.remove(specText);
+		hud.remove(specTipText);
+		
+		openSubState(new Spawn(specTeams, specTimeLeft));
+	}
+	
 	public function delayedThread(T:FlxTimer):Void
 	{
 		Thread.create(thread);
@@ -240,6 +376,8 @@ class PlayState extends FlxState
 	
 	public function loadMap(MapName:String, MapString:String):Void
 	{
+		Spawn.LAST_SELECTED = "0";
+		
 		for (m in maps.members.iterator())
 		{
 			m.kill();
@@ -419,6 +557,11 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			Reg.chatbox.toggle();
+		}
+		
+		if (spectating)
+		{
+			updateSpec();
 		}
 		
 		Reg.client.poll();

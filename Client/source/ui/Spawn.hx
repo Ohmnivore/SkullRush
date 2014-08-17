@@ -23,6 +23,7 @@ class Spawn extends FlxUISubState
 	
 	public var radio_g:FlxUIRadioGroup;
 	public var spawnBtn:FlxUIButton;
+	public var spectBtn:FlxUIButton;
 	public var timerLabel:FlxText;
 	public var chosenTeam:String = null;
 	
@@ -30,7 +31,7 @@ class Spawn extends FlxUISubState
 	public static var Y_BORDER:Int = 40;
 	public static var LAST_SELECTED:String = "0";
 	
-	public function new(Teams:Array<Team>, WaitTime:Int) 
+	public function new(Teams:Array<Team>, WaitTime:Float) 
 	{
 		super();
 		
@@ -71,7 +72,12 @@ class Spawn extends FlxUISubState
 		group.add(radio_g);
 		radio_g.selectedId = LAST_SELECTED;
 		
-		spawnBtn = new FlxUIButton(X_BORDER, Y_BORDER + radio_g.height, "Spawn", spawn);
+		spectBtn = new FlxUIButton(X_BORDER, Y_BORDER + radio_g.height, "Spectate", spectate);
+		spectBtn.scrollFactor.set();
+		UIAssets.setBtnGraphic(spectBtn);
+		group.add(spectBtn);
+		
+		spawnBtn = new FlxUIButton(X_BORDER + spectBtn.width * 2, spectBtn.y, "Spawn", spawn);
 		spawnBtn.scrollFactor.set();
 		UIAssets.setBtnGraphic(spawnBtn);
 		group.add(spawnBtn);
@@ -82,7 +88,9 @@ class Spawn extends FlxUISubState
 		group.add(timerLabel);
 		
 		chrome.resize(timerLabel.width + timerLabel.x,
-						spawnBtn.height + spawnBtn.y);
+						spectBtn.height + spectBtn.y);
+		
+		spawnBtn.x = chrome.x + chrome.width - spawnBtn.width - X_BORDER / 2;
 		
 		group.x = (FlxG.width - chrome.width - X_BORDER) / 2;
 		group.y = (FlxG.height - chrome.height - Y_BORDER) / 2;
@@ -106,6 +114,13 @@ class Spawn extends FlxUISubState
 	{
 		Msg.SpawnRequest.data.set("team", Std.parseInt(LAST_SELECTED));
 		Reg.client.send(Msg.SpawnRequest.ID, 1, ENet.ENET_PACKET_FLAG_RELIABLE);
+	}
+	
+	private function spectate():Void
+	{
+		Reg.state.beginSpectate(teams, deathTimer.timeLeft);
+		
+		close();
 	}
 	
 	private function radioCallback(S:String):Void

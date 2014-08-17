@@ -42,7 +42,6 @@ At the moment the client source code is a mess. I'll clean it up one day.
 
 ## Engine:
 * Plugins
-* Spectate
 * Interactive events:
  * Meteorite strike
  * Destruction events
