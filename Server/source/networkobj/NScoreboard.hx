@@ -9,6 +9,8 @@ import flixel.util.FlxSpriteUtil;
 import gamemodes.BaseGamemode;
 import haxe.ds.ArraySort;
 import haxe.Serializer;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 /**
  * ...
@@ -70,11 +72,13 @@ class NScoreboard
 	{
 		if (opened)
 		{
+			back.alpha = 0;
 			group.visible = false;
 		}
 		
 		else
 		{
+			FlxTween.tween(back, { alpha:1 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.cubeIn });
 			group.visible = true;
 		}
 		
