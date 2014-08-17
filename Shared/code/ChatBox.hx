@@ -7,6 +7,9 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
 import flixel.util.FlxSpriteUtil;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import openfl.events.Event;
 
 /**
  * ...
@@ -33,7 +36,7 @@ class ChatBox extends FlxSpriteGroup
 			close();
 		}
 		return _opened;
-	} 
+	}
 	
 	public var text:FlxInputText;
 	public var background:FlxSprite;
@@ -53,6 +56,13 @@ class ChatBox extends FlxSpriteGroup
 		text = new FlxInputText(0, 0, FlxG.width, null, 8);
 		text.callback = _call;
 		text.hasFocus = true;
+		text.textField.multiline = false;
+		text.textField.addEventListener(Event.CHANGE,
+		function test_change(e:Event)
+		{
+			text.text = StringTools.replace(text.text, "\r", "");
+		}
+		);
 		
 		background = new FlxSprite(0, text.height);
 		background.makeGraphic(FlxG.width, Std.int(text.height * 4), 0x99000000);
@@ -76,6 +86,8 @@ class ChatBox extends FlxSpriteGroup
 		
 		var cur_text:FlxText = new FlxText(0, 0, FlxG.width, T);
 		cur_text.addFormat(new FlxTextFormat(Color, 0, markup_index), 0, markup_index);
+		cur_text.alpha = 0;
+		FlxTween.tween(cur_text, { alpha:1 }, 1, {type:FlxTween.ONESHOT, ease:FlxEase.cubeIn});
 		
 		var last_text:FlxText = cur_text;
 		for (i in texts.members.iterator())
@@ -122,14 +134,17 @@ class ChatBox extends FlxSpriteGroup
 		{
 			text.hasFocus = false;
 			text.visible = false;
-			y += text.height * 2;
+			//y += text.height * 2;
+			//FlxTween.tween(text, {alpha:0}, 1);
+			FlxTween.tween(this, {y:FlxG.height - tot_height + text.height * 2}, 1, {type:FlxTween.ONESHOT, ease:FlxEase.quadIn});
 		}
 		
 		else
 		{
 			text.hasFocus = true;
 			text.visible = true;
-			y -= text.height * 2;
+			//y -= text.height * 2;
+			FlxTween.tween(this, {y:FlxG.height - tot_height}, 1, {type:FlxTween.ONESHOT, ease:FlxEase.quadIn});
 		}
 		
 		_opened = !_opened;

@@ -184,6 +184,8 @@ class PlayState extends FlxState
 		}
 		
 		trace('Loaded map $current_map and gamemode $gm.');
+		
+		FlxG.debugger.visible = true;
 	}
 	
 	/**
@@ -245,14 +247,14 @@ class PlayState extends FlxState
 			
 			if (Reg.gm != null)
 			{
-				if (FlxG.keys.justPressed.C)
+				if (FlxG.keys.justPressed.C && !Reg.chatbox.opened)
 				{
 					Assets.loadConfig();
 					
 					Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 				}
 				
-				if (FlxG.keys.justPressed.R)
+				if (FlxG.keys.justPressed.R && !Reg.chatbox.opened)
 				{
 					Admin.reloadMap();
 				}
