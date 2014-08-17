@@ -2,6 +2,7 @@ package gamemodes;
 import enet.ENet;
 import enet.ENetEvent;
 import entities.Spawn;
+import ext.FlxEmitterAuto;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
@@ -48,6 +49,7 @@ class DefaultHooks
 	public static inline var BULLET:Int = 3;
 	
 	public static var spawn_timer:Float = 3.0;
+	public static var deathEmitter:Int;
 	
 	public static function hookEvents(gm:BaseGamemode):Void
 	{
@@ -66,9 +68,24 @@ class DefaultHooks
 	static public function makeWeapons():Void
 	{
 		NWeapon.addWeapon(new Launcher(), 1);
-		NWeapon.addWeapon(new Launcher(), 1);
 		NWeapon.addWeapon(new Splasher(), 2);
 		NWeapon.addWeapon(new Eviscerator(), 3);
+		
+		registerDeathEmitter();
+	}
+	
+	static public function registerDeathEmitter():Void
+	{
+		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		emit.setRotation(0, 0);
+		emit.setMotion(0, 25, 0.9, 360, 35, 0);
+		emit.setAlpha(1, 0.8, 0, 0.2);
+		emit.setColor(0xffFF1726, 0xffFF5D17);
+		emit.setXSpeed(250, 300);
+		emit.setYSpeed(250, 255);
+		emit.bounce = 1;
+		
+		deathEmitter = NEmitter.registerEmitter(emit);
 	}
 	
 	static public function onSpawn(P:Player):Void
@@ -247,6 +264,11 @@ class DefaultHooks
 			DefaultHooks.respawn(victim);
 			DefaultHooks.announceSquish(killer, victim);
 		}
+		
+		//Emitter section
+		NEmitter.playEmitter(deathEmitter, true, Std.int(player.x + player.width / 2),
+				Std.int(player.y + player.height / 2), "assets/images/explosionparticle.png", 1, 0, true, 50);
+		//
 		
 		player.respawnIn(Reg.gm.spawn_time);
 	}
