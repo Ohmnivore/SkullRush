@@ -13,6 +13,7 @@ import gevents.ReceiveEvent;
 import gevents.SetTeamEvent;
 import insomnia.Insomnia;
 import networkobj.NScoreManager;
+import plugins.BasePlugin;
 
 class BaseGamemode extends Sprite
 {
@@ -30,10 +31,14 @@ class BaseGamemode extends Sprite
 	public var teams:Array<Team>;
 	public var spawn_time:Int;
 	
+	private var init:Bool;
+	
 	public function new() 
 	{
 		super();
 		
+		Reg.gm = this;
+		init = true;
 		name = "BASE";
 		scores = new NScoreManager();
 		teams = [];
@@ -45,11 +50,23 @@ class BaseGamemode extends Sprite
 		hookEvents();
 		
 		dispatchEvent(new GenEvent(GenEvent.MAKE_WEAPONS));
+	}
+	
+	private function launchPlugins():Void
+	{
+		Reg.plugins = [];
 		
-		//for each (var plug:BasePlugin in ServerInfo.pl)
-		//{
-			//plug.init();
-		//}
+		var raw:String = Assets.config.get("plugins");
+		var names:Array<String> = raw.split(",");
+		for (n in names)
+		{
+			n = StringTools.trim(n);
+			
+			var c:Class<Dynamic> = Type.resolveClass("plugins." + n);
+			var plugin:BasePlugin = Type.createInstance(c, []);
+			Reg.plugins.push(plugin);
+			plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+		}
 	}
 	
 	public function hookEvents():Void
@@ -139,5 +156,17 @@ class BaseGamemode extends Sprite
 		}
 		
 		Reg.maps = Reg.parseMaps();
+		
+		if (init)
+		{
+			launchPlugins();
+		}
+		
+		for (p in Reg.plugins)
+		{
+			p.onConfig(e);
+		}
+		
+		init = false;
 	}
 }

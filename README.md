@@ -41,8 +41,10 @@ At the moment the client source code is a mess. I'll clean it up one day.
 # TODO:
 
 ## Engine:
-* Plugins
-* Interactive events:
+* Interactive triggers & events:
+ * Button trigger
+ * Area trigger
+ * Time trigger
  * Meteorite strike
  * Destruction events
  * Lasers

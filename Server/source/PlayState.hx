@@ -149,7 +149,7 @@ class PlayState extends FlxState
 		var xml = Xml.parse(current_map_string);
 		var fast = new Fast(xml.firstElement());
 		
-		Reg.gm = Type.createInstance(Type.resolveClass("gamemodes." + fast.att.Gamemode), []);
+		Type.createInstance(Type.resolveClass("gamemodes." + fast.att.Gamemode), []);
 		Reg.gm.dispatchEvent(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		var gm:String = Type.getClassName(Type.getClass(Reg.gm));
 		

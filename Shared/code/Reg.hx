@@ -8,6 +8,7 @@ import networkobj.NReg;
 
 #if SERVER
 import gamemodes.BaseGamemode;
+import plugins.BasePlugin;
 #end
 
 /**
@@ -31,6 +32,11 @@ class Reg
 	#end
 	
 	#if SERVER
+	/**
+	 * Currently active plugins
+	 */
+	static public var plugins:Array<BasePlugin>;
+	
 	/**
 	 * Static server reference
 	 */

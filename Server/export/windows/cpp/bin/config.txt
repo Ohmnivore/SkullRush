@@ -25,6 +25,8 @@ spawntime=4
 
 startingweaps=Launcher, Splasher
 
+plugins=Welcomer
+
 ############################
 
 #ffa config
@@ -45,3 +47,8 @@ koth_spawntime=4
 box_maxtime=5
 box_maxkills=15
 box_spawntime=3
+
+############################
+
+#Welcomer config
+welcomer_msg=Welcome dude!

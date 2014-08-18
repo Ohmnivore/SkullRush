@@ -4,6 +4,9 @@ import gamemodes.BOX;
 import gamemodes.CTF;
 import gamemodes.FFA;
 import gamemodes.KOTH;
+
+import plugins.Welcomer;
+
 import sys.io.File;
 
 /**
@@ -21,6 +24,10 @@ class Lvls
 		CTF;
 		KOTH;
 		BOX;
+		
+		//Write plugins here so that their reference is picked up by the compiler.
+		//Otherwise plugins won't be compiled.
+		Welcomer;
 		
 		return File.getContent("assets/maps/" + Name + ".oel");
 	}
