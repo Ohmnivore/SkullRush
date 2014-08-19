@@ -549,6 +549,7 @@ class PlayState extends FlxState
 		FlxG.collide(tocollide, maps); //collidemap
 		FlxG.collide(bullets, maps, bulletCollide); //collidemap
 		FlxG.overlap(bullets, players, bulletCollidePl);
+		FlxG.overlap(bullets, ent, bulletCollideEnt);
 		FlxG.collide(emitters, maps); //collidemap
 		
 		if (player != null)
@@ -718,6 +719,17 @@ class PlayState extends FlxState
 		
 		if (!wep_ext.template.ignoreCollisions)
 			Bullet.kill();
+	}
+	
+	private function bulletCollideEnt(Bullet:FlxBullet, Ent:FlxSprite):Void
+	{
+		if (Ent.health != 1)
+		{
+			var wep_ext:FlxWeaponExt = cast Bullet._weapon;
+			
+			if (!wep_ext.template.ignoreCollisions)
+				Bullet.kill();
+		}
 	}
 	
 	private function bulletCollidePl(Bullet:FlxBullet, Pl:Player):Void

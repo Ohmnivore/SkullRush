@@ -14,6 +14,7 @@ import gevents.SetTeamEvent;
 import insomnia.Insomnia;
 import networkobj.NScoreManager;
 import plugins.BasePlugin;
+import plugins.SysGravity;
 import plugins.SysMeteor;
 
 class BaseGamemode extends Sprite
@@ -60,6 +61,8 @@ class BaseGamemode extends Sprite
 		//System plugins
 		var sysm:SysMeteor = new SysMeteor();
 		Reg.plugins.set(sysm.pluginName, sysm);
+		var sysg:SysGravity = new SysGravity();
+		Reg.plugins.set(sysg.pluginName, sysg);
 		
 		//Third-party plugins
 		var raw:String = Assets.config.get("plugins");

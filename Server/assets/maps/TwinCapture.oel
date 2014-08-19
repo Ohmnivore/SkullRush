@@ -332,5 +332,8 @@
     <Spawn id="11" x="1872" y="544" Teams="0100" />
     <Flag id="6" x="1984" y="720" team="1" graphic="assets/images/flag_y.png" />
     <Flag id="0" x="208" y="736" team="0" graphic="assets/images/flag_b.png" />
+    <Platform id="12" x="96" y="848" Speed="50" Mode="YOYO">
+      <node x="96" y="576" />
+    </Platform>
   </Entities>
 </level>

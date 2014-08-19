@@ -6,6 +6,7 @@ import gevents.ConfigEvent;
 import networkobj.NReg;
 import networkobj.NTimer;
 import plugins.SysMeteor;
+import plugins.SysGravity;
 
 /**
  * ...
@@ -30,6 +31,7 @@ class Admin
 		FlxG.console.registerFunction("stopTimers", stopTimers);
 		FlxG.console.registerFunction("startTimers", startTimers);
 		FlxG.console.registerFunction("rain", rainHell);
+		FlxG.console.registerFunction("stopgrav", stopGrav);
 		
 		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "", 1, -1);
 	}
@@ -38,6 +40,12 @@ class Admin
 	{
 		var sysm:SysMeteor = cast Reg.plugins.get("SysMeteor");
 		sysm.rainHell();
+	}
+	
+	static public function stopGrav():Void
+	{
+		var sysg:SysGravity = cast Reg.plugins.get("SysGravity");
+		sysg.ruinPhysics();
 	}
 	
 	static public function stopTimers():Void

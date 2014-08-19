@@ -54,6 +54,7 @@ class Assets
 		images.set("assets/images/crate.png", "shared/images/crate.png");
 		images.set("assets/images/meteorite.png", "shared/images/meteorite.png");
 		images.set("assets/images/meteorite_fragment.png", "shared/images/meteorite_fragment.png");
+		images.set("assets/images/platform.png", "shared/images/platform.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic
