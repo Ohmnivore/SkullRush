@@ -25,6 +25,8 @@ import networkobj.NWeapon;
 import ui.DirectConnect;
 import ui.Spawn;
 import ext.FlxEmitterAuto;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 /**
  * ...
@@ -282,7 +284,10 @@ class SkullClient extends Client
 			NReg.HUDS.set(Msg.NewLabel.data.get("id"), t);
 			
 			Reg.state.hud.add(t);
-			//trace("new label: ", t.text);
+			
+			t.alpha = 0;
+			FlxTween.tween(t, { alpha:1 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.cubeIn } );
+			FlxTween.linearMotion(t, t.x, t.y - 20, t.x, t.y, 1, true, { type:FlxTween.ONESHOT, ease:FlxEase.quadIn});
 		}
 		
 		if (MsgID == Msg.SetLabel.ID)
@@ -319,6 +324,8 @@ class SkullClient extends Client
 			{
 				t.color = Msg.SetCounter.data.get("color");
 				t.text = Msg.SetCounter.data.get("base") + ": " + Msg.SetCounter.data.get("count");
+				
+				FlxTween.tween(t, { x:t.x + 10 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.bounceOut, complete:stopTween } );
 			}
 		}
 		
@@ -438,6 +445,11 @@ class SkullClient extends Client
 				{
 					Reflect.setProperty(s, Fields[i], Values[i]);
 					i++;
+					
+					if (Fields[i] == "scale")
+					{
+						s.updateHitbox();
+					}
 				}
 			}
 		}
@@ -658,6 +670,12 @@ class SkullClient extends Client
 		}
 		
 		E = null;
+	}
+	
+	private function stopTween(T:FlxTween):Void
+	{
+		var t:FlxText = Reflect.field(T, "_object");
+		FlxTween.tween(t, { x:t.x - 10 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.bounceOut } );
 	}
 	
 	static public function cloneFromEmitter(E:FlxEmitterAuto, X:Int, Y:Int):FlxEmitterAuto

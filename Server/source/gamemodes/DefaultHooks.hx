@@ -235,7 +235,7 @@ class DefaultHooks
 	
 	public static function handleDeath(info:HurtInfo):Void
 	{
-		var t:Int = info.type;
+		var t:String = info.type;
 		var player:Player = Reg.server.playermap.get(info.victim);
 		
 		if (t == BaseGamemode.TYPE_ENVIRONMENT)

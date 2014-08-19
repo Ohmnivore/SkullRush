@@ -5,6 +5,7 @@ import gamemodes.CTF;
 import gamemodes.FFA;
 import gamemodes.KOTH;
 
+import plugins.SysMeteor;
 import plugins.Welcomer;
 
 import sys.io.File;
@@ -28,6 +29,7 @@ class Lvls
 		//Write plugins here so that their reference is picked up by the compiler.
 		//Otherwise plugins won't be compiled.
 		Welcomer;
+		SysMeteor;
 		
 		return File.getContent("assets/maps/" + Name + ".oel");
 	}

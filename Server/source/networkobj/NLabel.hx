@@ -2,6 +2,8 @@ package networkobj;
 import enet.ENet;
 import flixel.FlxG;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 /**
  * ...
@@ -33,6 +35,10 @@ class NLabel extends NHUD
 			t.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
+			
+			t.alpha = 0;
+			FlxTween.tween(t, { alpha:1 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.cubeIn } );
+			FlxTween.linearMotion(t, t.x, t.y - 20, t.x, t.y, 1, true, { type:FlxTween.ONESHOT, ease:FlxEase.quadIn});
 		}
 		
 		announce(player);

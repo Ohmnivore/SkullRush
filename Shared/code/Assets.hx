@@ -52,6 +52,8 @@ class Assets
 		images.set("assets/images/flag_rh.png", "shared/images/flag_rh.png");
 		images.set("assets/images/powerup_health.png", "shared/images/powerup_health.png");
 		images.set("assets/images/crate.png", "shared/images/crate.png");
+		images.set("assets/images/meteorite.png", "shared/images/meteorite.png");
+		images.set("assets/images/meteorite_fragment.png", "shared/images/meteorite_fragment.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

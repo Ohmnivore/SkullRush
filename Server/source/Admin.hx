@@ -5,6 +5,7 @@ import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import networkobj.NReg;
 import networkobj.NTimer;
+import plugins.SysMeteor;
 
 /**
  * ...
@@ -28,8 +29,15 @@ class Admin
 		FlxG.console.registerFunction("curmap", curMap);
 		FlxG.console.registerFunction("stopTimers", stopTimers);
 		FlxG.console.registerFunction("startTimers", startTimers);
+		FlxG.console.registerFunction("rain", rainHell);
 		
 		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "", 1, -1);
+	}
+	
+	static public function rainHell():Void
+	{
+		var sysm:SysMeteor = cast Reg.plugins.get("SysMeteor");
+		sysm.rainHell();
 	}
 	
 	static public function stopTimers():Void

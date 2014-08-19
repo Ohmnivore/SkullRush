@@ -10,7 +10,7 @@ class HurtInfo
 	public var dmg:Int;
 	public var dmgsource:FlxPoint;
 	public var weapon:NWeapon;
-	public var type:Int = 0;
+	public var type:String;
 	
 	public function new()
 	{

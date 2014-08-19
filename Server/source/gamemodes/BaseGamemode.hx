@@ -14,6 +14,7 @@ import gevents.SetTeamEvent;
 import insomnia.Insomnia;
 import networkobj.NScoreManager;
 import plugins.BasePlugin;
+import plugins.SysMeteor;
 
 class BaseGamemode extends Sprite
 {
@@ -22,10 +23,10 @@ class BaseGamemode extends Sprite
 	public static inline var ENV_FALL:Int = -2;
 	public static inline var ENV_LASER:Int = -3;
 	
-	public static inline var TYPE_DEFAULT:Int = 0;
-	public static inline var TYPE_ENVIRONMENT:Int = 1;
-	public static inline var TYPE_JUMPKILL:Int = 2;
-	public static inline var TYPE_BULLET:Int = 3;
+	public static inline var TYPE_DEFAULT:String = "default";
+	public static inline var TYPE_ENVIRONMENT:String = "environment";
+	public static inline var TYPE_JUMPKILL:String = "jumpkill";
+	public static inline var TYPE_BULLET:String = "bullet";
 	
 	public static var scores:NScoreManager;
 	public var teams:Array<Team>;
@@ -54,8 +55,13 @@ class BaseGamemode extends Sprite
 	
 	private function launchPlugins():Void
 	{
-		Reg.plugins = [];
+		Reg.plugins = new Map<String, BasePlugin>();
 		
+		//System plugins
+		var sysm:SysMeteor = new SysMeteor();
+		Reg.plugins.set(sysm.pluginName, sysm);
+		
+		//Third-party plugins
 		var raw:String = Assets.config.get("plugins");
 		var names:Array<String> = raw.split(",");
 		for (n in names)
@@ -64,7 +70,7 @@ class BaseGamemode extends Sprite
 			
 			var c:Class<Dynamic> = Type.resolveClass("plugins." + n);
 			var plugin:BasePlugin = Type.createInstance(c, []);
-			Reg.plugins.push(plugin);
+			Reg.plugins.set(plugin.pluginName, plugin);
 			plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
 		}
 	}
@@ -162,7 +168,7 @@ class BaseGamemode extends Sprite
 			launchPlugins();
 		}
 		
-		for (p in Reg.plugins)
+		for (p in Reg.plugins.iterator())
 		{
 			p.onConfig(e);
 		}

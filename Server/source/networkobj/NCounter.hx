@@ -3,6 +3,8 @@ package networkobj;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import enet.ENet;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 /**
  * ...
@@ -38,6 +40,10 @@ class NCounter extends NHUD
 			t.setBorderStyle(FlxText.BORDER_OUTLINE, 0xff000000);
 			t.scrollFactor.set();
 			Reg.state.hud.add(t);
+			
+			t.alpha = 0;
+			FlxTween.tween(t, { alpha:1 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.cubeIn } );
+			FlxTween.linearMotion(t, t.x, t.y - 20, t.x, t.y, 1, true, { type:FlxTween.ONESHOT, ease:FlxEase.quadIn});
 		}
 		
 		announce(player);
@@ -97,7 +103,14 @@ class NCounter extends NHUD
 		{
 			t.text = '$base: $count';
 			t.color = color;
+			
+			FlxTween.tween(t, { x:t.x + 10 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.bounceOut, complete:stopTween } );
 		}
+	}
+	
+	private function stopTween(T:FlxTween):Void
+	{
+		FlxTween.tween(t, { x:t.x - 10 }, 1, { type:FlxTween.ONESHOT, ease:FlxEase.bounceOut } );
 	}
 	
 	override public function delete():Void

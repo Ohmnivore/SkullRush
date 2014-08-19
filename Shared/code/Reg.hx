@@ -35,7 +35,7 @@ class Reg
 	/**
 	 * Currently active plugins
 	 */
-	static public var plugins:Array<BasePlugin>;
+	static public var plugins:Map<String, BasePlugin>;
 	
 	/**
 	 * Static server reference
