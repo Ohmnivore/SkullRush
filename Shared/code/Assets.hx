@@ -55,6 +55,8 @@ class Assets
 		images.set("assets/images/meteorite.png", "shared/images/meteorite.png");
 		images.set("assets/images/meteorite_fragment.png", "shared/images/meteorite_fragment.png");
 		images.set("assets/images/platform.png", "shared/images/platform.png");
+		images.set("assets/images/jump_pad.png", "shared/images/jump_pad.png");
+		images.set("assets/images/laser_base.png", "shared/images/laser_base.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

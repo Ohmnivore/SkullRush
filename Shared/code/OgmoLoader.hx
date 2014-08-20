@@ -26,6 +26,8 @@ import entities.Spawn;
 import entities.CapturePoint;
 import entities.Crate;
 import entities.Platform;
+import entities.JumpPad;
+import entities.Laser;
 #end
 
 /**
@@ -48,6 +50,8 @@ class OgmoLoader
 		CapturePoint;
 		Crate;
 		Platform;
+		JumpPad;
+		Laser;
 		#end
 		
 		inits = new Map<String, Bool>();

@@ -81,14 +81,14 @@ class SysGravity extends BasePlugin
 	
 	private function announceRuin():Void
 	{
-		msg = new NLabel(180, 100, 0xffffffff, 0, true);
+		msg = new NLabel(200, 100, 0xffffffff, 0, true);
 		msg.setLabel("Losing artificial gravity!");
 		new FlxTimer(6, deleteAnnounce);
 	}
 	
 	private function undo(Timer:FlxTimer = null):Void
 	{
-		msg = new NLabel(140, 100, 0xffffffff, 0, true);
+		msg = new NLabel(120, 100, 0xffffffff, 0, true);
 		msg.setLabel("Reestablishing artificial gravity. Get to solid ground!");
 		new FlxTimer(6, fixGravity);
 		new FlxTimer(6, deleteAnnounce);

@@ -46,6 +46,7 @@ class Platform extends NSprite
 		super.announce(PlayerID);
 		
 		setFields(0, ["health"], [0]);
+		setFields(0, ["immovable"], [true]);
 	}
 	
 	static public function makeFromXML(D:Fast):Platform
