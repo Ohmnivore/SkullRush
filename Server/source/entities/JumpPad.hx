@@ -4,6 +4,7 @@ import entities.JumpPad.JumpPadSprite;
 import entities.Platform.PlatformSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
@@ -29,9 +30,11 @@ class JumpPad extends NSprite
 {
 	static public var TEMPL:NTemplate;
 	
-	public function new(X:Float, Y:Float) 
+	public function new(X:Float, Y:Float, Angle:Int = 0) 
 	{
 		super(X, Y, TEMPL, JumpPadSprite);
+		
+		s.angle = Angle;
 	}
 	
 	override public function announce(PlayerID:Int):Void
@@ -40,11 +43,12 @@ class JumpPad extends NSprite
 		
 		setFields(0, ["health"], [0]);
 		setFields(0, ["immovable"], [true]);
+		setFields(0, ["angle"], [s.angle]);
 	}
 	
 	static public function makeFromXML(D:Fast):JumpPad
 	{
-		return new JumpPad(Std.parseInt(D.att.x), Std.parseInt(D.att.y));
+		return new JumpPad(Std.parseInt(D.att.x), Std.parseInt(D.att.y), Std.parseInt(D.att.angle));
 	}
 	
 	static public function init():Void
@@ -67,14 +71,17 @@ class JumpPadSprite extends NFlxSprite
 	
 	override public function update():Void 
 	{
+		super.update();
+		
 		FlxG.collide(this, Reg.state.players, collisionHandler);
 		FlxG.overlap(Reg.state.bullets, this, DefaultHooks.bulletCollide);
-		
-		super.update();
 	}
 	
 	private function collisionHandler(Platf:JumpPadSprite, Pl:Player):Void
 	{
-		Pl.velocity.y -= 550;
+		var impulse:FlxPoint = FlxAngle.rotatePoint(0, 550, 0, 0, angle);
+		
+		Pl.velocity.x += impulse.x;
+		Pl.velocity.y += impulse.y;
 	}
 }
