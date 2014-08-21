@@ -46,7 +46,7 @@ class BasePlugin
 	
 	public function shutdown(E:GenEvent = null):Void
 	{
-		
+		trace(pluginName + " (v" + version + ") shut down.");
 	}
 	
 	public function onSpawn(E:GenEvent):Void

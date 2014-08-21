@@ -5,6 +5,7 @@ import flixel.util.FlxTimer;
 import gevents.ConfigEvent;
 import networkobj.NReg;
 import networkobj.NTimer;
+import plugins.BasePlugin;
 import plugins.SysMeteor;
 import plugins.SysGravity;
 
@@ -33,7 +34,86 @@ class Admin
 		FlxG.console.registerFunction("rain", rainHell);
 		FlxG.console.registerFunction("stopgrav", stopGrav);
 		
-		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "", 1, -1);
+		FlxG.console.addCommand(["setmap"], setMap, "Set map, ex: setmap Test", "Map name", 1, -1);
+		FlxG.console.addCommand(["stopplugin"], stopPlugin,
+			"Stop a running non-system plugin, ex: stopplugin Welcomer", "Plugin name", 1, -1);
+		FlxG.console.addCommand(["startplugin"], startPlugin,
+			"Start a plugin, ex: startplugin Welcomer", "Plugin name", 1, -1);
+	}
+	
+	static public function startPlugin(Name:String):Void
+	{
+		if (Reg.plugins.exists(Name))
+		{
+			trace("Plugin " + Name + " already active.");
+		}
+		else
+		{
+			var c:Class<Dynamic>;
+			try
+			{
+				c = Type.resolveClass("plugins." + Name);
+			}
+			catch (e:Dynamic)
+			{
+				trace("No such plugin: " + Name);
+				return;
+			}
+			var plugin:BasePlugin = Type.createInstance(c, []);
+			Reg.plugins.set(plugin.pluginName, plugin);
+			plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+		}
+	}
+	
+	static public function stopPlugin(Name:String):Void
+	{
+		if (Reg.plugins.exists(Name))
+		{
+			if (Name.substr(0, 3) == "Sys")
+			{
+				trace("Can't stop system plugin: " + Name);
+			}
+			else
+			{
+				var plugin:BasePlugin = Reg.plugins.get(Name);
+				
+				plugin.shutdown();
+				
+				Reg.plugins.remove(Name);
+			}
+		}
+		else
+		{
+			trace("No such active plugin: " + Name);
+		}
+	}
+	
+	static public function reloadPlugins():Void
+	{
+		//Third-party plugins
+		var raw:String = Assets.config.get("plugins");
+		var names:Array<String> = raw.split(",");
+		for (n in names)
+		{
+			n = StringTools.trim(n);
+			
+			if (!Reg.plugins.exists(n))
+			{
+				var c:Class<Dynamic>;
+				try
+				{
+					c = Type.resolveClass("plugins." + n);
+				}
+				catch (e:Dynamic)
+				{
+					trace("No such plugin: " + n);
+					return;
+				}
+				var plugin:BasePlugin = Type.createInstance(c, []);
+				Reg.plugins.set(plugin.pluginName, plugin);
+				plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+			}
+		}
 	}
 	
 	static public function rainHell():Void

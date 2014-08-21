@@ -71,10 +71,13 @@ class BaseGamemode extends Sprite
 		{
 			n = StringTools.trim(n);
 			
-			var c:Class<Dynamic> = Type.resolveClass("plugins." + n);
-			var plugin:BasePlugin = Type.createInstance(c, []);
-			Reg.plugins.set(plugin.pluginName, plugin);
-			plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+			if (!Reg.plugins.exists(n))
+			{
+				var c:Class<Dynamic> = Type.resolveClass("plugins." + n);
+				var plugin:BasePlugin = Type.createInstance(c, []);
+				Reg.plugins.set(plugin.pluginName, plugin);
+				plugin.onConfig(new ConfigEvent(ConfigEvent.CONFIG_EVENT));
+			}
 		}
 	}
 	
@@ -169,6 +172,10 @@ class BaseGamemode extends Sprite
 		if (init)
 		{
 			launchPlugins();
+		}
+		else
+		{
+			Admin.reloadPlugins();
 		}
 		
 		for (p in Reg.plugins.iterator())

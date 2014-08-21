@@ -2,6 +2,7 @@ package plugins;
 
 import gamemodes.BaseGamemode;
 import gevents.ConfigEvent;
+import gevents.GenEvent;
 import plugins.BasePlugin;
 import gevents.InitEvent;
 import enet.ENet;
@@ -27,6 +28,13 @@ class Welcomer extends BasePlugin
 		super.hookEvents(Gm);
 		
 		Gm.addEventListener(InitEvent.INIT_EVENT, initPlayer, false, 10);
+	}
+	
+	override public function shutdown(E:GenEvent = null):Void 
+	{
+		super.shutdown(E);
+		
+		Reg.gm.removeEventListener(InitEvent.INIT_EVENT, initPlayer, false);
 	}
 	
 	override public function initPlayer(E:InitEvent):Void 

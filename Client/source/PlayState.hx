@@ -571,6 +571,21 @@ class PlayState extends FlxState
 	
 	private function updatePlayer():Void
 	{
+		if (FlxG.mouse.wheel > 0)
+		{
+			player.current_weap -= 1;
+			
+			if (player.current_weap < 1)
+				player.current_weap = 1;
+		}
+		if (FlxG.mouse.wheel < 0)
+		{
+			player.current_weap += 1;
+			
+			if (player.current_weap > 5)
+				player.current_weap = 5;
+		}
+		
 		if (FlxG.keys.justPressed.ONE)
 		{
 			player.current_weap = 1;
