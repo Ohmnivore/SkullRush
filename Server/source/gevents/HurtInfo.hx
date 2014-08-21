@@ -11,6 +11,7 @@ class HurtInfo
 	public var dmgsource:FlxPoint;
 	public var weapon:NWeapon;
 	public var type:String;
+	public var message:String;
 	
 	public function new()
 	{

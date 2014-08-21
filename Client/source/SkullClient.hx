@@ -588,6 +588,8 @@ class SkullClient extends Client
 				em.angleRange = cast arr[30];
 				em.distance = cast arr[31];
 				em.distanceRange = cast arr[32];
+				
+				em.autoDestroy = cast arr[33];
 			}
 		}
 		
@@ -595,11 +597,21 @@ class SkullClient extends Client
 		{
 			var e:FlxEmitterAuto = cloneFromEmitter(NReg.emitters.get(Msg.EmitterNew.data.get("id")),
 				Msg.EmitterNew.data.get("x"), Msg.EmitterNew.data.get("y"));
-			e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
-				cast(Msg.EmitterNew.data.get("quantity"), Int), cast(Msg.EmitterNew.data.get("rotationFrames"), Int),
-				cast(Msg.EmitterNew.data.get("collide"), Float));
+			var quantity:Int = cast(Msg.EmitterNew.data.get("quantity"), Int);
+			if (quantity == 0)
+			{
+				e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
+					50, cast(Msg.EmitterNew.data.get("rotationFrames"), Int),
+					cast(Msg.EmitterNew.data.get("collide"), Float));
+			}
+			else
+			{
+				e.makeParticles(Assets.images.get(Msg.EmitterNew.data.get("graphic")),
+					quantity, cast(Msg.EmitterNew.data.get("rotationFrames"), Int),
+					cast(Msg.EmitterNew.data.get("collide"), Float));
+			}
 			e.start(Msg.EmitterNew.data.get("explode"), e.life.min, e.frequency,
-				Msg.EmitterNew.data.get("quantity"), e.life.max - e.life.min);
+				quantity, e.life.max - e.life.min);
 			Reg.state.emitters.add(e);
 			
 			NReg.live_emitters.set(Msg.EmitterNew.data.get("id2"), e);
@@ -617,6 +629,56 @@ class SkullClient extends Client
 				NReg.live_emitters.remove(ID);
 				e.kill();
 				e.destroy();
+			}
+		}
+		
+		if (MsgID == Msg.EmitterPause.ID)
+		{
+			var ID:Int = Msg.EmitterDelete.data.get("id");
+			
+			var e:FlxEmitterAuto = NReg.live_emitters.get(ID);
+			
+			if (e != null)
+			{
+				e.on = false;
+			}
+		}
+		
+		if (MsgID == Msg.EmitterResume.ID)
+		{
+			var ID:Int = Msg.EmitterDelete.data.get("id");
+			
+			var e:FlxEmitterAuto = NReg.live_emitters.get(ID);
+			
+			if (e != null)
+			{
+				e.on = true;
+			}
+		}
+		
+		if (MsgID == Msg.LineNew.ID)
+		{
+			var ID:Int = Msg.LineNew.data.get("id");
+			
+			var line:FlxLaserLine = new FlxLaserLine(Msg.LineNew.data.get("x"),
+				Msg.LineNew.data.get("y"),
+				Msg.LineNew.data.get("length"),
+				Msg.LineNew.data.get("angle"));
+			
+			Reg.state.background.add(line);
+			
+			NReg.sprites.set(ID, line);
+		}
+		
+		if (MsgID == Msg.LineToggle.ID)
+		{
+			var ID:Int = Msg.LineNew.data.get("id");
+			
+			if (NReg.sprites.exists(ID))
+			{
+				var line:FlxLaserLine = cast NReg.sprites.get(ID);
+				
+				line.visible = Msg.LineToggle.data.get("visible");
 			}
 		}
 		
@@ -702,7 +764,9 @@ class SkullClient extends Client
 		e.setYSpeed(E.yVelocity.min, E.yVelocity.max);
 		e.setAlpha(E.startAlpha.min, E.startAlpha.max, E.endAlpha.min, E.endAlpha.max);
 		e.setMotion(E.angle / 0.017453293, E.distance, E.life.min,
-			E.angleRange/0.017453293, E.distanceRange, E.life.max - E.life.min);
+			E.angleRange / 0.017453293, E.distanceRange, E.life.max - E.life.min);
+		
+		e.autoDestroy = E.autoDestroy;
 		
 		return e;
 	}

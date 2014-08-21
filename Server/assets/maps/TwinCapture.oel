@@ -338,7 +338,6 @@
     <Platform id="13" x="2048" y="832" Speed="50" Mode="YOYO">
       <node x="2048" y="576" />
     </Platform>
-    <Laser id="14" x="192" y="464" angle="0" />
     <JumpPad id="15" x="528" y="752" angle="0" />
     <JumpPad id="16" x="1072" y="656" angle="0" />
     <JumpPad id="17" x="1616" y="736" angle="0" />

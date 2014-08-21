@@ -344,5 +344,9 @@
     <JumpPad id="17" x="1616" y="736" angle="0" />
     <JumpPad id="18" x="1504" y="624" angle="180" />
     <JumpPad id="19" x="640" y="624" angle="180" />
+    <Laser id="20" x="192" y="944" angle="270" />
+    <Laser id="21" x="448" y="688" angle="180" />
+    <Laser id="22" x="384" y="608" angle="90" />
+    <Laser id="23" x="672" y="704" angle="315" />
   </Entities>
 </level>

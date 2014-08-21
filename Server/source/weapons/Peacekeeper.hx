@@ -12,6 +12,7 @@ import gamemodes.BaseGamemode;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NWeapon;
 import ext.FlxEmitterAuto;
 
@@ -37,7 +38,7 @@ class Peacekeeper extends NWeapon
 		bulletGraphic = "assets/images/gun_peacekeeper_bullet.png";
 		bulletGravity = new FlxPoint(0, 0);
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 10, 0.6, 360, 5, 0.2);
 		emit.setAlpha(1, 1, 0, 0);
@@ -48,7 +49,7 @@ class Peacekeeper extends NWeapon
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 		
-		var t_emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var t_emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		t_emit.setRotation(0, 0);
 		t_emit.setMotion(0, 5, 0.5, 360, 3, 0.1);
 		t_emit.setAlpha(1, 1, 0, 0);

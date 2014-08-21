@@ -32,7 +32,7 @@ class SysMeteor extends BasePlugin
 	{
 		super.hookEvents(Gm);
 		
-		Gm.addEventListener(DeathEvent.DEATH_EVENT, onDeath, false, 10);
+		//Gm.addEventListener(DeathEvent.DEATH_EVENT, onDeath, false, 10);
 	}
 	
 	public function rainHell(Timer:FlxTimer = null):Void

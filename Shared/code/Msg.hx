@@ -54,6 +54,8 @@ class Msg
 	static public var EmitterAnnounce:Message;
 	static public var EmitterNew:Message;
 	static public var EmitterDelete:Message;
+	static public var EmitterPause:Message;
+	static public var EmitterResume:Message;
 	
 	static public var AnnounceGuns:Message;
 	
@@ -61,6 +63,9 @@ class Msg
 	static public var SetSpriteImage:Message;
 	
 	static public var GrantGun:Message;
+	
+	static public var LineNew:Message;
+	static public var LineToggle:Message;
 	
 	static public function initMsg():Void
 	{
@@ -107,13 +112,18 @@ class Msg
 		EmitterNew = new Message(37, ["id", "id2", "x", "y", "graphic", "collide", "rotationFrames",
 			"explode", "quantity"], true);
 		EmitterDelete = new Message(38, ["id"], true);
+		EmitterPause = new Message(42, ["id"], true);
+		EmitterResume = new Message(43, ["id"], true);
 		
 		AnnounceGuns = new Message(39, ["serialized"], true);
 		
 		SetSpriteFields = new Message(40, ["id", "fields", "values"], true);
 		SetSpriteImage = new Message(41, ["id", "graphic"], true);
 		
-		GrantGun = new Message(42, ["slot"], true);
+		GrantGun = new Message(44, ["slot"], true);
+		
+		LineNew = new Message(45, ["id", "x", "y", "length", "angle"], true);
+		LineToggle = new Message(46, ["id", "visible"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -160,6 +170,8 @@ class Msg
 		H.addMessage(EmitterAnnounce);
 		H.addMessage(EmitterNew);
 		H.addMessage(EmitterDelete);
+		H.addMessage(EmitterPause);
+		H.addMessage(EmitterResume);
 		
 		H.addMessage(AnnounceGuns);
 		
@@ -167,5 +179,8 @@ class Msg
 		H.addMessage(SetSpriteImage);
 		
 		H.addMessage(GrantGun);
+		
+		H.addMessage(LineNew);
+		H.addMessage(LineToggle);
 	}
 }

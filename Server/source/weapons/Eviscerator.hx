@@ -12,6 +12,7 @@ import gamemodes.BaseGamemode;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NWeapon;
 import ext.FlxEmitterAuto;
 
@@ -39,7 +40,7 @@ class Eviscerator extends NWeapon
 		spread = 10;
 		bulletGravity = new FlxPoint(0, 100);
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 10, 0.6, 360, 5, 0.2);
 		emit.setAlpha(1, 1, 0, 0);
@@ -50,7 +51,7 @@ class Eviscerator extends NWeapon
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 		
-		var t_emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var t_emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		t_emit.setRotation(0, 0);
 		t_emit.setMotion(0, 5, 0.5, 360, 3, 0.1);
 		t_emit.setAlpha(1, 1, 0, 0);

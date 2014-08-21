@@ -11,6 +11,7 @@ import gamemodes.BaseGamemode;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NWeapon;
 import ext.FlxEmitterAuto;
 
@@ -36,7 +37,7 @@ class Launcher extends NWeapon
 		bulletAcceleration = new FlxPoint(300, 300);
 		bulletMaxSpeed = new FlxPoint(400, 400);
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 17, 0.9, 360, 25, 0);
 		emit.setAlpha(1, 1, 0, 0);
@@ -47,7 +48,7 @@ class Launcher extends NWeapon
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 		
-		var t_emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var t_emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		t_emit.setRotation(0, 0);
 		t_emit.setMotion(0, 17, 0.9, 360, 25, 0);
 		t_emit.setAlpha(1, 1, 0, 0);
@@ -82,16 +83,9 @@ class Launcher extends NWeapon
 				{
 					var map:FlxTilemap = cast m;
 					
-					try
+					if (!map.ray(Bullet.getMidpoint(), pl.getMidpoint()))
 					{
-						if (!map.ray(Bullet.getMidpoint(), pl.getMidpoint()))
-						{
-							no_collision = false;
-						}
-					}
-					catch (e:Dynamic)
-					{
-						
+						no_collision = false;
 					}
 				}
 				

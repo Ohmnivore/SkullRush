@@ -11,6 +11,7 @@ import flash.display.BitmapData;
 import flash.display.StageQuality;
 import flixel.addons.tile.FlxRayCastTilemap;
 import flixel.addons.weapon.FlxBullet;
+import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -75,6 +76,8 @@ class PlayState extends FlxState
 	
 	public var spawns:Array<Spawn>;
 	
+	public var drawArea:DrawArea;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -116,6 +119,10 @@ class PlayState extends FlxState
 		hud = new FlxGroup();
 		add(hud);
 		
+		drawArea = new DrawArea();
+		drawArea.alpha = 0.8;
+		//ent.add(drawArea);
+		
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
 		Reg.chatbox.callback = Reg.server.sendChatMsg;
@@ -134,6 +141,10 @@ class PlayState extends FlxState
 		
 		Insomnia.preventSleep();
 		Insomnia.setProcessPriority(Insomnia.P_HIGH_PRIORITY_CLASS);
+		
+		//var testEmitter:FlxEmitter = new FlxEmitter(500, 500);
+		//testEmitter.makeParticles("assets/images/explosionparticle.png");
+		//testEmitter.start(false, 1.5, 0.1, 0,
 	}
 	
 	public function loadMap(Name:String):Void

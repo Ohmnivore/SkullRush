@@ -18,6 +18,7 @@ import gevents.SetTeamEvent;
 import haxe.Serializer;
 import networkobj.NCounter;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NLabel;
 import networkobj.NReg;
 import networkobj.NTimer;
@@ -76,7 +77,7 @@ class DefaultHooks
 	
 	static public function registerDeathEmitter():Void
 	{
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 25, 0.9, 360, 35, 0);
 		emit.setAlpha(1, 0.8, 0, 0.2);
@@ -237,32 +238,34 @@ class DefaultHooks
 	{
 		var t:String = info.type;
 		var player:Player = Reg.server.playermap.get(info.victim);
+		DefaultHooks.respawn(player);
 		
 		if (t == BaseGamemode.TYPE_ENVIRONMENT)
 		{
-			DefaultHooks.respawn(player);
-			
 			var k:Int = info.attacker;
 			
 			if (k == BaseGamemode.ENV_FALL) DefaultHooks.announceFall(player);
 		}
 		
-		if (t == BaseGamemode.TYPE_BULLET)
+		else if (t == BaseGamemode.TYPE_BULLET)
 		{
 			var killer:Player = Reg.server.playermap.get(info.attacker);
 			var victim:Player = Reg.server.playermap.get(info.victim);
 			
-			DefaultHooks.respawn(victim);
 			DefaultHooks.announceGun(killer, victim, info.weapon.verb);
 		}
 		
-		if (t == BaseGamemode.TYPE_JUMPKILL)
+		else if (t == BaseGamemode.TYPE_JUMPKILL)
 		{
 			var killer:Player = Reg.server.playermap.get(info.attacker);
 			var victim:Player = Reg.server.playermap.get(info.victim);
 			
-			DefaultHooks.respawn(victim);
 			DefaultHooks.announceSquish(killer, victim);
+		}
+		
+		else
+		{
+			DefaultHooks.announceOther(player, info.attacker, info.message);
 		}
 		
 		//Emitter section
@@ -271,6 +274,26 @@ class DefaultHooks
 		//
 		
 		player.respawnIn(Reg.gm.spawn_time);
+	}
+	
+	static public function announceOther(Victim:Player, Attacker:Int, Message:String):Void
+	{
+		var s:String;
+		
+		if (Attacker == 0)
+		{
+			s = Victim.name + ' $Message';
+			Reg.server.announce(s, [new FlxMarkup(0, Victim.name.length, false, Victim.header.color)]);
+		}
+		else
+		{
+			var att:Player = Reg.server.playermap.get(Attacker);
+			
+			s = att.name + ' $Message ' + Victim.name;
+			Reg.server.announce(s,
+				[new FlxMarkup(0, att.name.length, false, att.header.color),
+				new FlxMarkup(att.name.length + Message.length + 2, s.length, false, Victim.header.color)]);
+		}
 	}
 	
 	static public function bulletCollide(Bullet:FlxBullet, Other:Dynamic):Void
@@ -365,6 +388,7 @@ class DefaultHooks
 		Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 		
 		NEmitter.announceEmitters(P.ID);
+		NEmitter.announceLiveEmitters(P);
 		NWeapon.announceWeapons(P.ID);
 	}
 	
@@ -405,6 +429,7 @@ class DefaultHooks
 			Reg.server.sendMsg(P.ID, Msg.Teams.ID, 2, ENet.ENET_PACKET_FLAG_RELIABLE);
 			
 			NEmitter.announceEmitters(P.ID);
+			NEmitter.announceLiveEmitters(P);
 			NWeapon.announceWeapons(P.ID);
 		}
 		

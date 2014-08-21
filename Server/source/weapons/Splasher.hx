@@ -12,6 +12,7 @@ import gamemodes.BaseGamemode;
 import gevents.HurtEvent;
 import gevents.HurtInfo;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NWeapon;
 import ext.FlxEmitterAuto;
 
@@ -41,7 +42,7 @@ class Splasher extends NWeapon
 		bulletGravity = new FlxPoint(0, 300);
 		ignoreCollisions = false;
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 0);
 		emit.setMotion(0, 45, 0.3, 360, 55, 0.1);
 		emit.setAlpha(1, 1, 0.4, 0.4);
@@ -53,7 +54,7 @@ class Splasher extends NWeapon
 		
 		EMITTER = NEmitter.registerEmitter(emit);
 		
-		var t_emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var t_emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		t_emit.setRotation(0, 0);
 		t_emit.setMotion(0, 17, 0.9, 360, 25, 0);
 		t_emit.setAlpha(1, 1, 0, 0);

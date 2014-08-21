@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import networkobj.NEmitter;
+import networkobj.NFlxEmitterAuto;
 import networkobj.NSprite;
 import networkobj.NTemplate;
 import networkobj.NFlxSprite;
@@ -59,7 +60,7 @@ class Meteor extends NSprite
 		TEMPL = new NTemplate("assets/images/meteorite.png", 25, 0, 400);
 		NReg.registerTemplate(TEMPL);
 		
-		var emit:FlxEmitterAuto = new FlxEmitterAuto(Reg.state.emitters);
+		var emit:NFlxEmitterAuto = new NFlxEmitterAuto(Reg.state.emitters);
 		emit.setRotation(0, 100);
 		emit.setMotion(0, 50, 1.5, 360, 50, 1);
 		emit.setAlpha(1, 0.8, 0, 0.2);
@@ -142,6 +143,7 @@ class MeteorSprite extends NFlxSprite
 					info.dmgsource = getMidpoint();
 					info.weapon = null;
 					info.type = Meteor.ENV_METEORITE;
+					info.message = " was in the way of a meteorite.";
 					
 					Reg.gm.dispatchEvent(new HurtEvent(HurtEvent.HURT_EVENT, info));
 				}
