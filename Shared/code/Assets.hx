@@ -58,6 +58,12 @@ class Assets
 		images.set("assets/images/jump_pad.png", "shared/images/jump_pad.png");
 		images.set("assets/images/laser_base.png", "shared/images/laser_base.png");
 		images.set("assets/images/arrow2.png", "shared/images/arrow2.png");
+		images.set("assets/images/teleporter_base.png", "shared/images/teleporter_base.png");
+		images.set("assets/images/explosionparticle_purple.png", "shared/images/explosionparticle_purple.png");
+		images.set("assets/images/explosionparticle_red.png", "shared/images/explosionparticle_red.png");
+		images.set("assets/images/explosionparticle_blue.png", "shared/images/explosionparticle_blue.png");
+		images.set("assets/images/explosionparticle_green.png", "shared/images/explosionparticle_green.png");
+		images.set("assets/images/explosionparticle_yellow.png", "shared/images/explosionparticle_yellow.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

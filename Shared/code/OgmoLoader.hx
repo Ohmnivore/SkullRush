@@ -28,6 +28,7 @@ import entities.Crate;
 import entities.Platform;
 import entities.JumpPad;
 import entities.Laser;
+import entities.Teleporter;
 #end
 
 /**
@@ -52,6 +53,7 @@ class OgmoLoader
 		Platform;
 		JumpPad;
 		Laser;
+		Teleporter;
 		#end
 		
 		inits = new Map<String, Bool>();

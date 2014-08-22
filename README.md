@@ -51,7 +51,6 @@ At the moment the client source code is a mess. I'll clean it up one day.
  * Button trigger
  * Area trigger
  * Time trigger
- * Teleporters
 
 
 ## Gameplay:
