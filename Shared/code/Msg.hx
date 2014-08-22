@@ -67,6 +67,10 @@ class Msg
 	static public var LineNew:Message;
 	static public var LineToggle:Message;
 	
+	static public var ArrowNew:Message;
+	static public var ArrowToggle:Message;
+	static public var ArrowDelete:Message;
+	
 	static public function initMsg():Void
 	{
 		Manifest = new Message(1, ["url"], true);
@@ -124,6 +128,10 @@ class Msg
 		
 		LineNew = new Message(45, ["id", "x", "y", "length", "angle"], true);
 		LineToggle = new Message(46, ["id", "visible"], true);
+		
+		ArrowNew = new Message(47, ["parentid", "color"], true);
+		ArrowToggle = new Message(48, ["parentid", "on"], true);
+		ArrowDelete = new Message(49, ["parentid"], true);
 	}
 	
 	static public function addToHost(H:NetBase):Void
@@ -182,5 +190,9 @@ class Msg
 		
 		H.addMessage(LineNew);
 		H.addMessage(LineToggle);
+		
+		H.addMessage(ArrowNew);
+		H.addMessage(ArrowToggle);
+		H.addMessage(ArrowDelete);
 	}
 }

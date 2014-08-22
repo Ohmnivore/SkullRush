@@ -16,6 +16,7 @@ import haxe.io.BytesInput;
 import haxe.Serializer;
 import haxe.Unserializer;
 import hxudp.UdpSocket;
+import networkobj.NArrow;
 import networkobj.NReg;
 import networkobj.NScoreboard;
 import networkobj.NTemplate;
@@ -679,6 +680,42 @@ class SkullClient extends Client
 				var line:FlxLaserLine = cast NReg.sprites.get(ID);
 				
 				line.visible = Msg.LineToggle.data.get("visible");
+			}
+		}
+		
+		if (MsgID == Msg.ArrowNew.ID)
+		{
+			var ParentID:Int = Msg.ArrowNew.data.get("parentid");
+			var Color:Int = Msg.ArrowNew.data.get("color");
+			
+			var a:NArrow = new NArrow(ParentID, Color);
+			NReg.arrows.set(ParentID, a);
+		}
+		
+		if (MsgID == Msg.ArrowToggle.ID)
+		{
+			var ParentID:Int = Msg.ArrowToggle.data.get("parentid");
+			var On:Bool = Msg.ArrowToggle.data.get("on");
+			
+			if (NReg.arrows.exists(ParentID))
+			{
+				var a:NArrow = NReg.arrows.get(ParentID);
+				
+				a.on = On;
+			}
+		}
+		
+		if (MsgID == Msg.ArrowDelete.ID)
+		{
+			var ParentID:Int = Msg.ArrowDelete.data.get("parentid");
+			
+			if (NReg.arrows.exists(ParentID))
+			{
+				var a:NArrow = NReg.arrows.get(ParentID);
+				
+				NReg.arrows.remove(ParentID);
+				a.kill();
+				a.destroy();
 			}
 		}
 		

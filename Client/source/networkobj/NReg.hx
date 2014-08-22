@@ -16,6 +16,7 @@ class NReg
 	static public var sprites:Map<Int, FlxSprite>;
 	static public var emitters:Map<Int, FlxEmitterAuto>;
 	static public var live_emitters:Map<Int, FlxEmitterAuto>;
+	static public var arrows:Map<Int, NArrow>;
 	
 	static public function init():Void
 	{
@@ -24,5 +25,6 @@ class NReg
 		sprites = new Map<Int, FlxSprite>();
 		emitters = new Map<Int, FlxEmitterAuto>();
 		live_emitters = new Map<Int, FlxEmitterAuto>();
+		arrows = new Map<Int, NArrow>();
 	}
 }

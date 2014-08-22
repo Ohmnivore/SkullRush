@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.util.FlxTimer;
 import gamemodes.CTF;
 import haxe.xml.Fast;
+import networkobj.NArrow;
 import networkobj.NFlxSprite;
 import networkobj.NReg;
 import networkobj.NSprite;
@@ -49,6 +50,9 @@ class Flag extends NSprite
 		super.announce(PlayerID);
 		
 		setImage(PlayerID, graphic);
+		
+		NArrow.create(ID, Reg.gm.teams[team].color, PlayerID);
+		NArrow.toggle(ID, taken, PlayerID);
 	}
 	
 	static public function makeFromXML(D:Fast):Flag
@@ -151,6 +155,8 @@ class FlagSprite extends NFlxSprite
 		P.score += 100;
 		var gm:CTF = cast Reg.gm;
 		gm.setPlayerScoreboard(P);
+		
+		NArrow.toggle(F.ID, F.taken);
 	}
 	
 	static public function returnFlag(P:Player = null, F:Flag):Void
@@ -174,5 +180,7 @@ class FlagSprite extends NFlxSprite
 			var gm:CTF = cast Reg.gm;
 			gm.setPlayerScoreboard(P);
 		}
+		
+		NArrow.toggle(F.ID, F.taken);
 	}
 }

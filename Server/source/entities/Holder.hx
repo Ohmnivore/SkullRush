@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.util.FlxTimer;
 import gamemodes.CTF;
 import haxe.xml.Fast;
+import networkobj.NArrow;
 import networkobj.NFlxSprite;
 import networkobj.NReg;
 import networkobj.NSprite;
@@ -116,5 +117,7 @@ class Stand extends NFlxSprite
 			gm.captures.set(P.ID, cur + 1);
 			gm.setPlayerScoreboard(P);
 		}
+		
+		NArrow.toggle(F.ID, F.taken);
 	}
 }

@@ -57,6 +57,7 @@ class Assets
 		images.set("assets/images/platform.png", "shared/images/platform.png");
 		images.set("assets/images/jump_pad.png", "shared/images/jump_pad.png");
 		images.set("assets/images/laser_base.png", "shared/images/laser_base.png");
+		images.set("assets/images/arrow2.png", "shared/images/arrow2.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic
