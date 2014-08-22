@@ -152,7 +152,7 @@ class TeleporterSprite extends NFlxSprite
 	
 	private function collisionHandler(Platf:TeleporterSprite, Pl:Player):Void
 	{
-		if (teleport.ready && teleport.working)
+		if (teleport.ready && teleport.working && isTouching(FlxObject.UP))
 		{
 			for (t in Teleporter.TELEPORTERS)
 			{
