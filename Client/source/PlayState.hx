@@ -52,6 +52,7 @@ class PlayState extends FlxState
 	public var ent:FlxGroup;
 	public var perma_hud:FlxGroup;
 	public var hud:FlxGroup;
+	public var minimaps:FlxGroup;
 	public var scores:NScoreManager;
 	
 	public var player:Player;
@@ -136,6 +137,9 @@ class PlayState extends FlxState
 		add(perma_hud);
 		hud = new FlxGroup();
 		add(hud);
+		minimaps = new FlxGroup();
+		add(minimaps);
+		minimaps.visible = false;
 		scores = new NScoreManager();
 		
 		//trailArea = new FlxTrailArea(0, 0, FlxG.width, FlxG.height);
@@ -430,6 +434,7 @@ class PlayState extends FlxState
 		//trailArea = new FlxTrailArea(0, 0, FlxG.width, FlxG.height, 0.5, 2, false, true);
 		//under_players.add(trailArea);
 		hud.clear();
+		MiniMap.loadXML(MapString, this);
 		//hud.add(new FlxCrosshairs());
 		cross = new FlxCrosshairs();
 		cross.addToGroup(hud);
@@ -531,6 +536,11 @@ class PlayState extends FlxState
 			{
 				subState.openSubState(new Menu());
 			}
+		}
+		
+		if (FlxG.keys.justPressed.M && !Reg.chatbox.opened)
+		{
+			MiniMap.toggleMap(this);
 		}
 		
 		if (FlxG.keys.justPressed.I)

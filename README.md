@@ -43,7 +43,6 @@ At the moment the client source code is a mess. I'll clean it up one day.
 ## Engine:
 * Animated networked sprites
 * Improve game feel
-* Minimap
 * Bots -> maybe, just maybe
 * Gadgets
 * Secondary weapon fire

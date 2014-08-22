@@ -64,6 +64,7 @@ class Assets
 		images.set("assets/images/explosionparticle_blue.png", "shared/images/explosionparticle_blue.png");
 		images.set("assets/images/explosionparticle_green.png", "shared/images/explosionparticle_green.png");
 		images.set("assets/images/explosionparticle_yellow.png", "shared/images/explosionparticle_yellow.png");
+		images.set("assets/images/minimaptile2.png", "shared/images/minimaptile2.png");
 	}
 	
 	static public function getImg(Key:String):Dynamic

@@ -18,6 +18,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.layer.Region;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
@@ -69,14 +70,13 @@ class PlayState extends FlxState
 	public var emitters:FlxGroup;
 	public var ent:FlxGroup;
 	public var hud:FlxGroup;
+	public var minimaps:FlxGroup;
 	
 	public var spect:Spectator;
 	
 	public var m:Mutex;
 	
 	public var spawns:Array<Spawn>;
-	
-	public var drawArea:DrawArea;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -119,9 +119,9 @@ class PlayState extends FlxState
 		hud = new FlxGroup();
 		add(hud);
 		
-		drawArea = new DrawArea();
-		drawArea.alpha = 0.8;
-		//ent.add(drawArea);
+		minimaps = new FlxGroup();
+		hud.add(minimaps);
+		MiniMap.toggleMap(this);
 		
 		Reg.chatbox = new ChatBox();
 		hud.add(Reg.chatbox);
@@ -171,6 +171,7 @@ class PlayState extends FlxState
 		
 		OgmoLoader.initTilemaps();
 		OgmoLoader.loadXML(current_map_string, this);
+		MiniMap.loadXML(current_map_string, this);
 		
 		spect = new Spectator();
 		add(spect);
@@ -268,6 +269,11 @@ class PlayState extends FlxState
 				if (FlxG.keys.justPressed.R && !Reg.chatbox.opened)
 				{
 					Admin.reloadMap();
+				}
+				
+				if (FlxG.keys.justPressed.M && !Reg.chatbox.opened)
+				{
+					MiniMap.toggleMap(this);
 				}
 				
 				BaseGamemode.scores.update();
