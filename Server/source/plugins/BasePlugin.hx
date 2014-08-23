@@ -17,6 +17,25 @@ class BasePlugin
 {
 	public var version:String;
 	public var pluginName:String;
+	public var working(get, set):Bool;
+	private var _working:Bool;
+	
+	public function get_working():Bool
+	{
+		return _working;
+	}
+	
+	public function set_working(Value:Bool):Bool
+	{
+		_working = Value;
+		
+		return _working;
+	}
+	
+	public function activate():Void
+	{
+		
+	}
 	
 	public function new() 
 	{

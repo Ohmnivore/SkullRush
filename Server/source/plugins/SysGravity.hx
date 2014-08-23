@@ -29,6 +29,13 @@ class SysGravity extends BasePlugin
 		super();
 	}
 	
+	override public function activate():Void 
+	{
+		super.activate();
+		
+		ruinPhysics();
+	}
+	
 	override public function hookEvents(Gm:BaseGamemode):Void 
 	{
 		super.hookEvents(Gm);

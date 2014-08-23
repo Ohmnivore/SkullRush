@@ -29,6 +29,8 @@ import entities.Platform;
 import entities.JumpPad;
 import entities.Laser;
 import entities.Teleporter;
+import entities.TriggerTime;
+import entities.TriggerArea;
 #end
 
 /**
@@ -40,11 +42,14 @@ class OgmoLoader
 {
 	public static var tilemaps:Map<String, String>;
 	public static var inits:Map<String, Bool>;
+	public static var entities:Map<Int, Dynamic>;
 	
-	static public function initTilemaps():Void
+	#if SERVER
+	static public function initEntities():Void
 	{
-		//Initializing entities
-		#if SERVER
+		//Add all entity classes here so that
+		//the compiler can find them as this is
+		//probably the sole reference to them
 		Spawn;
 		Flag;
 		HealthPack;
@@ -54,8 +59,15 @@ class OgmoLoader
 		JumpPad;
 		Laser;
 		Teleporter;
-		#end
+		TriggerTime;
+		TriggerArea;
 		
+		entities = new Map<Int, Dynamic>();
+	}
+	#end
+	
+	static public function initTilemaps():Void
+	{
 		inits = new Map<String, Bool>();
 		
 		tilemaps = new Map<String, String>();
@@ -103,7 +115,9 @@ class OgmoLoader
 						}
 						
 						var funct:Dynamic = Reflect.field(c, "makeFromXML");
-						Reflect.callMethod(c, funct, [ent]);
+						var entityInstance:Dynamic = Reflect.callMethod(c, funct, [ent]);
+						
+						entities.set(Std.parseInt(ent.att.id), entityInstance);
 					}
 					#end
 				}

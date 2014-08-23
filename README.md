@@ -48,8 +48,6 @@ At the moment the client source code is a mess. I'll clean it up one day.
 * Secondary weapon fire
 * Interactive triggers & events:
  * Button trigger
- * Area trigger
- * Time trigger
 
 
 ## Gameplay:

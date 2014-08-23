@@ -170,6 +170,7 @@ class PlayState extends FlxState
 		Msg.MapMsg.data.set("mapstring", current_map_string);
 		
 		OgmoLoader.initTilemaps();
+		OgmoLoader.initEntities();
 		OgmoLoader.loadXML(current_map_string, this);
 		MiniMap.loadXML(current_map_string, this);
 		

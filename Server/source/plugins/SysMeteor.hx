@@ -28,11 +28,16 @@ class SysMeteor extends BasePlugin
 		Meteor.init();
 	}
 	
+	override public function activate():Void 
+	{
+		super.activate();
+		
+		rainHell();
+	}
+	
 	override public function hookEvents(Gm:BaseGamemode):Void 
 	{
 		super.hookEvents(Gm);
-		
-		//Gm.addEventListener(DeathEvent.DEATH_EVENT, onDeath, false, 10);
 	}
 	
 	public function rainHell(Timer:FlxTimer = null):Void
@@ -62,20 +67,5 @@ class SysMeteor extends BasePlugin
 	private function deleteAnnounce(T:FlxTimer):Void
 	{
 		msg.delete();
-	}
-	
-	override public function onDeath(E:DeathEvent):Void 
-	{
-		super.onDeath(E);
-		
-		if (E.deathinfo.type == Meteor.ENV_METEORITE)
-		{
-			var player:Player = Reg.server.playermap.get(E.deathinfo.victim);
-			DefaultHooks.respawn(player);
-			
-			var s:String = player.name + " was in the way of a meteorite.";
-			Reg.server.announce(s,
-				[new FlxMarkup(0, player.name.length, false, player.header.color)]);
-		}
 	}
 }
