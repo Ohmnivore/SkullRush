@@ -86,6 +86,7 @@ class MiniMap
 	static private function interpretData(T:TileDef, S:String):Array<Int>
 	{
 		var Arr:Array<Int> = [];
+		S = StringTools.replace(S, "\n", ","); 
 		var rawArr:Array<String> = S.split(",");
 		
 		var index:Int = 0;
@@ -95,6 +96,7 @@ class MiniMap
 		while (index < rawArr.length)
 		{
 			var x:String = StringTools.trim(rawArr[index]);
+			x = StringTools.trim(x); 
 			var number:Int = Std.parseInt(x);
 			
 			if (T.tiles.exists(number))
