@@ -125,8 +125,6 @@ class FlxWeaponExt extends FlxWeapon
 					i++;
 				}
 			}
-			
-			template.fire(parent, launchX, launchY, Angle, bulletSpeed);
 		}
 		else if (Method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
 		{
@@ -164,6 +162,8 @@ class FlxWeaponExt extends FlxWeapon
 		currentBullet.velocity.y += parent.velocity.y * inheritance.x;
 		
 		currentBullet.angle = FlxAngle.getPolarCoords(currentBullet.velocity.x, currentBullet.velocity.y).y;
+		
+		template.fire(parent, launchX, launchY, Angle, bulletSpeed);
 		
 		return true;
 	}

@@ -27,6 +27,11 @@ class Player extends PlayerBase
 	public var kills:Int = 0;
 	public var deaths:Int = 0;
 	
+	public var _jump:Float;
+	public var doJump:Bool = false;
+	public var jumping:Bool = false;
+	public var wallJumped:Bool = false;
+	
 	public function new(Id:Int, Name:String, X:Int, Y:Int)
 	{
 		super(Id, Name, X, Y);
@@ -41,16 +46,57 @@ class Player extends PlayerBase
 	
 	override public function update():Void 
 	{
+		//Jump code
+		//if (!isTouching(FlxObject.FLOOR))
+			//landBuffer = false;
+		
+		if(doJump && !jumping && canJump)  // Only play the jump sound once per jump
+		{                                                // There are probably better ways to do this, but this is fast and good enough
+			//onJump();
+			jumping = true;
+		}
+		
+		if(_jump >= 0 && doJump && canJump) //You can also use space or any other key you want
+		{
+			_jump += FlxG.elapsed;
+			if(_jump > 0.25) _jump = -1; //You can't jump for more than 0.25 seconds
+		}
+		else _jump = -1;
+
+		if (_jump > 0)
+		{
+			if(_jump < 0.035)   // this number is how long before a short slow jump shifts to a faster, high jump
+			{
+				velocity.y = -.6 * PlayerBase.jumpHeight; //This is the minimum height of the jump
+			}
+			else
+			{
+				velocity.y = -.8 * PlayerBase.jumpHeight;
+			}
+		}
+		
 		if (isTouching(FlxObject.DOWN))
 		{
 			canJump = true;
 			canChoose = false;
+			
+			_jump = 0;
+			jumping = false;
+			wallJumped = false;
 			
 			if (dashing_down)
 			{
 				maxVelocity.y -= 300;
 				dashing_down = false;
 			}
+		}
+		
+		if ((isTouching(FlxObject.LEFT) || isTouching(FlxObject.RIGHT)) && !wallJumped && doJump)
+		{
+			_jump = 0;
+			jumping = false;
+			canJump = true;
+			wallJumped = true;
 		}
 		
 		if (isTouching(FlxObject.ANY) || (velocity.x < 20 && velocity.x > -20))
@@ -191,6 +237,9 @@ class Player extends PlayerBase
 							
 							canChange = false;
 							weap_change_timer.reset(0.3);
+							
+							gun.x = x + width/2 - gun.width / 2;
+							gun.y = y + height/2 - gun.height / 2 + 2;
 						}
 					}
 				}
@@ -224,12 +273,19 @@ class Player extends PlayerBase
 			{
 				if (move_right) //move right
 				{
-					velocity.x += 20;
+					//velocity.x += 50;
+					acceleration.x = PlayerBase.speedX;
 				}
 				
-				if (move_left) //move left
+				else if (move_left) //move left
 				{
-					velocity.x += -20;
+					//velocity.x += -50;
+					acceleration.x = -PlayerBase.speedX;
+				}
+				
+				else
+				{
+					acceleration.x = 0;
 				}
 				
 				if (canChoose && dash_down)
@@ -245,12 +301,19 @@ class Player extends PlayerBase
 			{
 				if (move_right && velocity.x < 0) //move right
 				{
-					velocity.x += 20;
+					//velocity.x += 50;
+					acceleration.x = PlayerBase.speedX;
 				}
 				
-				if (move_left && velocity.x > 0) //move left
+				else if (move_left && velocity.x > 0) //move left
 				{
-					velocity.x += -20;
+					//velocity.x += -50;
+					acceleration.x = -PlayerBase.speedX;
+				}
+				
+				else
+				{
+					acceleration.x = 0;
 				}
 			}
 			
@@ -266,20 +329,20 @@ class Player extends PlayerBase
 					dash(true);
 				}
 			}
-			
+			doJump = move_jump;
 			if (move_jump) //jump
 			{
 				if (isTouching(FlxObject.ANY) && canJump)
 				{
-					velocity.y = -280;
-					canJump = false;
+					//velocity.y = -PlayerBase.jumpHeight;
+					//canJump = false;
 				}
 				
 				else
 				{
-					if (canChoose)
+					if (canChoose && (_jump == 0 || _jump == -1))
 					{
-						velocity.y = -210;
+						velocity.y = -PlayerBase.jumpHeight;
 						canChoose = false;
 					}
 					

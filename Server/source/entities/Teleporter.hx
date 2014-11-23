@@ -160,7 +160,7 @@ class TeleporterSprite extends NFlxSprite
 					&& t.ready && t.working)
 				{
 					Pl.x = t.s.x + 4;
-					Pl.y = t.s.y - 36;
+					Pl.y = t.s.y - 42;
 					Pl.velocity.x = 0;
 					Pl.velocity.y = 0;
 					teleport.ready = false;

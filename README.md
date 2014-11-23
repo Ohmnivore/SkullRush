@@ -46,6 +46,7 @@ At the moment the client source code is a mess. I'll clean it up one day.
 * Bots -> maybe, just maybe
 * Gadgets
 * Secondary weapon fire
+* Fix double jump
 * Interactive triggers & events:
  * Button trigger
 
@@ -57,6 +58,7 @@ At the moment the client source code is a mess. I'll clean it up one day.
 
 ## Bugs:
 * Fix annoying LAN server discovery bug
+* Fix duplicate weapon firing
 
 
 ## Assets:

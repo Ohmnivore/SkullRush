@@ -2,6 +2,7 @@ package weapons;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
@@ -84,6 +85,21 @@ class Splasher extends NWeapon
 				toTroll.remove(player);
 				counter.remove(player.ID);
 			}
+		}
+	}
+	
+	override public function fire(Parent:FlxSprite, LaunchX:Float, LaunchY:Float, Angle:Int, BulletSpeed:Int):Void 
+	{
+		var vect:FlxVector = new FlxVector(1, 0);
+		vect.rotateByDegrees(Angle);
+		vect.x = -vect.x;
+		vect.y = -vect.y;
+		
+		var player:Player = cast Parent;
+		
+		if (player.isTouching(FlxObject.DOWN) && Math.abs(player.velocity.x) < 3)
+		{
+			player.velocity.x = vect.x * 100;
 		}
 	}
 	

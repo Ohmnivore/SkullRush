@@ -51,11 +51,11 @@ class SysGravity extends BasePlugin
 		
 		if (gravityWorking)
 		{
-			p.acceleration.y = 440;
+			p.acceleration.y = PlayerBase.gravity;
 		}
 		else
 		{
-			p.acceleration.y = 0;
+			p.acceleration.y = 50;
 		}
 	}
 	
@@ -82,7 +82,7 @@ class SysGravity extends BasePlugin
 		
 		for (p in Reg.server.playermap.iterator())
 		{
-			p.acceleration.y = 440;
+			p.acceleration.y = PlayerBase.gravity;
 		}
 	}
 	

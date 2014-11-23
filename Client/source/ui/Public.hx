@@ -79,7 +79,8 @@ class Public extends FlxUIState
 				t.resize(FlxG.width - 60, 30);
 				t.setCenterLabelOffset(0, 15);
 				l.add(cast t);
-				l.refreshList();
+				//l.refreshList();
+				Reflect.callMethod(l, "refreshList", []);
 			}
 		}
 		

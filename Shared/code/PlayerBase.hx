@@ -9,9 +9,11 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.util.FlxVelocity;
@@ -28,6 +30,18 @@ import ext.FlxTextExt;
  */
 class PlayerBase extends FlxSprite
 {
+	//public static inline var jumpHeight:Int = 190;
+	//public static inline var gravity:Int = 400;
+	//public static inline var speedX:Int = 400;
+	//public static inline var maxSpeedX:Int = 150;
+	//public static inline var dragX:Int = 400;
+	
+	public static inline var jumpHeight:Int = 380;
+	public static inline var gravity:Int = 800;
+	public static inline var speedX:Int = 800;
+	public static inline var maxSpeedX:Int = 200;
+	public static inline var dragX:Int = 800;
+	
 	public var graphicKey:String;
 	public var name:String;
 	public var team:Int;
@@ -55,6 +69,7 @@ class PlayerBase extends FlxSprite
 	private var gun:FlxSprite;
 	public var guns:FlxGroup;
 	public var guns_arr:Array<FlxWeaponExt>;
+	private var gun_offset:FlxPoint;
 	
 	private var healthBar:FlxBar;
 	public var header:FlxTextExt;
@@ -97,6 +112,7 @@ class PlayerBase extends FlxSprite
 		Reg.state.over_players.add(guns);
 		NWeapon.setUpWeapons(this);
 		#end
+		gun_offset = new FlxPoint();
 		
 		health = 100;
 		healthBar = new FlxBar(8, 26, FlxBar.FILL_LEFT_TO_RIGHT, 38, 6, this, "health", 0, 100, true);
@@ -113,10 +129,9 @@ class PlayerBase extends FlxSprite
 		Reg.state.over_players.add(header);
 		header.color = 0xff00A8C2;
 		
-		acceleration.y = 440;
-		drag.x = 300;
-		maxVelocity.x = 170;
-		maxVelocity.y = 300;
+		drag.x = PlayerBase.dragX;
+		maxVelocity.x = PlayerBase.maxSpeedX;
+		maxVelocity.y = 500;
 		
 		cannon = new FlxWeaponExt("launcher", this, FlxBullet, 0);
 		cannon.makePixelBullet(4, 4, 4, FlxColor.CYAN);
@@ -263,6 +278,9 @@ class PlayerBase extends FlxSprite
 		cannon.fireFromAngle(Std.int(a));
 		
 		last_shot = cannon;
+		
+		gun_offset = FlxAngle.rotatePoint(4, 0, 0, 0, a);
+		FlxTween.tween(gun_offset, { x: 0, y:0 }, 0.30);
 	}
 	
 	private function updateGuns():Void
@@ -341,8 +359,8 @@ class PlayerBase extends FlxSprite
 		header.y = y - header.height - 4;
 		header.x = x - (header.width - width) / 2;
 		
-		gun.x = x + width/2 - gun.width / 2;
-		gun.y = y + height/2 - gun.height / 2 + 2;
+		gun.x = (x + width/2 - gun.width / 2) * 0.53 + gun.x * 0.47 - gun_offset.x;
+		gun.y = (y + height/2 - gun.height / 2 + 2) * 0.53 + gun.y * 0.47 - gun_offset.y;
 	}
 	
 	public function setGun(GunID:Int, Force:Bool = false):Void
@@ -410,125 +428,16 @@ class PlayerBase extends FlxSprite
 	
 	public function c_unserialize(Arr:Array<Dynamic>):Void
 	{
-		_arr = Arr;
 		
-		if (_arr.length == 14) //used to be 7
-		{
-			//velocity.x = ((_arr[1] - x) * 0.3 + _arr[7] * 0.5 + velocity.x * 0.2);
-			//velocity.y = ((_arr[2] - y) * 0.3 + _arr[8] * 0.4 + velocity.y * 0.3);
-			
-			velocity.x = lerp(velocity.x, _arr[7], 0.4);
-			velocity.y = lerp(velocity.y, _arr[8], 0.4);
-			
-			x = lerp(x, _arr[1], 0.8);
-			y = lerp(y, _arr[2], 0.8);
-			
-			//x = _arr[1];
-			//y = _arr[2];
-			
-			a = _arr[3];
-			isRight = _arr[4];
-			shoot = _arr[5];
-			health = _arr[6];
-			dash_left = _arr[9];
-			dash_right = _arr[10];
-			//if (current_weap != _arr[11])
-			//{
-				setGun(_arr[11], true);
-			//}
-			
-			var ind:Int = _arr[13];
-			
-			//if (guns_arr)
-			//{
-				var shot_gun:FlxWeaponExt = guns_arr[ind];
-				if (shot_gun != null)
-				{
-					var diff:Int = Std.int(_arr[12] / 2);
-					diff -= Std.int(shot_gun.fireRate / 2);
-					if (diff > 0)
-					{
-						if (!(shot_gun.fireRate > 0 && FlxG.game.ticks < shot_gun.nextFire))
-						{
-							fire();
-						}
-						else
-						{
-							shoot = false;
-						}
-					}
-				}
-			//}
-		}
 	}
 	
 	public function c_serialize():String
 	{
-		_arr.splice(0, _arr.length);
-		
-		_arr.push(move_right);
-		_arr.push(move_left);
-		_arr.push(move_jump);
-		_arr.push(a);
-		_arr.push(isRight);
-		_arr.push(shoot);
-		_arr.push(dash_left);
-		_arr.push(dash_right);
-		_arr.push(dash_down);
-		_arr.push(current_weap);
-		
-		return Serializer.run(_arr);
+		return "";
 	}
 	
 	public function s_unserialize(S:String):Void
 	{
-		_arr.splice(0, _arr.length);
 		
-		_arr = Unserializer.run(S);
-		
-		if (_arr.length == 10)
-		{
-			move_right = _arr[0];
-			move_left = _arr[1];
-			move_jump = _arr[2];
-			a = _arr[3];
-			isRight = _arr[4];
-			shoot = _arr[5];
-			dash_left = _arr[6];
-			dash_right = _arr[7];
-			dash_down = _arr[8];
-			current_weap = _arr[9];
-			
-			if (move_right) //move right
-			{
-				velocity.x += 20;
-			}
-			
-			if (move_left) //move left
-			{
-				velocity.x += -20;
-			}
-			
-			if (move_jump) //jump
-			{
-				if (isTouching(FlxObject.ANY))
-				{
-					velocity.y = -280;
-				}
-				
-				else
-				{
-					move_jump = false;
-				}
-			}
-			
-			if (shoot && alive) //shoot
-			{
-				if (!(cannon.fireRate > 0 && FlxG.game.ticks < cannon.nextFire))
-					fire();
-				else
-					shoot = false;
-			}
-		}
 	}
 }

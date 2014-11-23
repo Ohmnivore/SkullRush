@@ -2,6 +2,7 @@ package weapons;
 import flixel.addons.weapon.FlxBullet;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
+import flixel.FlxObject;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
@@ -14,6 +15,7 @@ import networkobj.NEmitter;
 import networkobj.NFlxEmitterAuto;
 import networkobj.NWeapon;
 import ext.FlxEmitterAuto;
+import flixel.FlxSprite;
 
 /**
  * ...
@@ -61,6 +63,21 @@ class Launcher extends NWeapon
 		TRAIL_EMITTER_GRAPHIC = "assets/images/explosionparticle.png";
 	}
 	
+	override public function fire(Parent:FlxSprite, LaunchX:Float, LaunchY:Float, Angle:Int, BulletSpeed:Int):Void 
+	{
+		var vect:FlxVector = new FlxVector(1, 0);
+		vect.rotateByDegrees(Angle);
+		vect.x = -vect.x;
+		vect.y = -vect.y;
+		
+		var player:Player = cast Parent;
+		
+		if (player.isTouching(FlxObject.DOWN) && Math.abs(player.velocity.x) < 3)
+		{
+			player.velocity.x = vect.x * 100;
+		}
+	}
+	
 	override public function collide(Bullet:FlxBullet, Other:Dynamic):Void 
 	{
 		if (Other != Bullet._weapon.parent)
@@ -83,9 +100,16 @@ class Launcher extends NWeapon
 				{
 					var map:FlxTilemap = cast m;
 					
-					if (!map.ray(Bullet.getMidpoint(), pl.getMidpoint()))
+					try
 					{
-						no_collision = false;
+						if (!map.ray(Bullet.getMidpoint(), pl.getMidpoint()))
+						{
+							no_collision = false;
+						}
+					}
+					catch (e:Dynamic)
+					{
+						
 					}
 				}
 				

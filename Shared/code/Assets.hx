@@ -27,6 +27,7 @@ class Assets
 		images.set("assets/images/gun_peacekeeper_icon.png", "shared/images/gun_peacekeeper_icon.png");
 		images.set("assets/images/gun_launcher_icon.png", "shared/images/gun_launcher_icon.png");
 		images.set("assets/images/gun_launcher_bullet.png", "shared/images/gun_launcher_bullet.png");
+		images.set("assets/images/gun_launcher_bullet2.png", "shared/images/gun_launcher_bullet2.png");
 		images.set("assets/images/gun_splasher.png", "shared/images/gun_splasher.png");
 		images.set("assets/images/gun_splasher_icon.png", "shared/images/gun_splasher_icon.png");
 		images.set("assets/images/gun_splasher_bullet.png", "shared/images/gun_splasher_bullet.png");

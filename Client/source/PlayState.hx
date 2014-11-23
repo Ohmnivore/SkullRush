@@ -201,6 +201,8 @@ class PlayState extends FlxState
 		}
 		
 		new FlxTimer(5, delayedThread);
+		
+		FlxG.camera.fade(0xff000000, 8, true);
 	}
 	
 	public function beginSpectate(Teams:Array<Team>, TimeLeft:Float):Void

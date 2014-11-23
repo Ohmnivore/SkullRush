@@ -139,9 +139,9 @@ class CrashDumperMail extends CrashDumper
 		}
 		else
 		{
-			if (crashMethod != null)
+			if (postCrashMethod != null)
 			{
-				crashMethod(this);
+				postCrashMethod(this);
 			}
 		}
 	}
