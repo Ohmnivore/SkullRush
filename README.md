@@ -13,7 +13,7 @@ At the moment the client source code is a mess. I'll clean it up one day.
 * [Forums, Guides, and tutorials](http://skullrush.elementfx.com/smf/index.php)
 * [Server browser](http://ms.skullrush.elementfx.com/)
 
-![alt text](https://github.com/Ohmnivore/SkullRush/raw/master/SCREENSHOT.png "")
+![alt text](https://github.com/Ohmnivore/SkullRush/raw/master/SCREENSHOT1_v1.png "")
 
 # Graphic assets by:
 * Eris from [OpenGameArt](http://opengameart.org/content/sci-fi-platform-tiles): https://github.com/Ohmnivore/SkullRush/blob/master/Shared/assets/images/indoor_tileset.png and https://github.com/Ohmnivore/SkullRush/blob/master/Shared/assets/images/background.png
