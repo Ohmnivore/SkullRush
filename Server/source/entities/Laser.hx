@@ -138,9 +138,16 @@ class LaserSprite extends NFlxSprite
 			
 			var res:FlxPoint = new FlxPoint();
 			
-			if (!map.ray(getMidpoint(), finalPoint, res))
+			try
 			{
-				finalPoint.copyFrom(res);
+				if (!map.ray(getMidpoint(), finalPoint, res))
+				{
+					finalPoint.copyFrom(res);
+				}
+			}
+			catch (e:Dynamic)
+			{
+				
 			}
 		}
 		
